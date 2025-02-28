@@ -1,2 +1,0 @@
-FileOpen(c:\tamas\PSAA\Development\Test\Data\tasks_038\Bin\SeresJuditINA821_01.bdf , data_name);
-SaveDataToFile(data_name, c:\tamas\PSAA\Development\Applications\SigForge\SigForge\App\output.bin, 100, 8);

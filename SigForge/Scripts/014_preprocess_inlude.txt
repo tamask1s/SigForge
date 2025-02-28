@@ -1,6 +1,0 @@
-#include ../Scripts/000_filteringGeneratedSines.txt
-#include ../Scripts/011_user_input.txt
-
-CreateSine(sin_1, 10000, 1000, 106 26 6);
-FullSpectrum(sin_1, spec_1, CopyForAllChannels(sin_1, 1), 0 150);
-DisplayData(spec_1, ,2D_map);

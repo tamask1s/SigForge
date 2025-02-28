@@ -1,6 +1,0 @@
-CreateSine(sin_3, 10000, 1000, 10);
-DisplayData(sin_3);
-
-CreateSine(sin_4, 10000, 1000, 10);
-IProd(sin_4, 0.0001);
-DisplayData(sin_4);

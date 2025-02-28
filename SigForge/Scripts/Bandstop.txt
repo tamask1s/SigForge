@@ -1,5 +1,0 @@
-InputFirstData (Inported_Test_1, 1); 
-
-CreateFilter(Filter1, butt bs, 3 3000, 45 55, 1, 3);
-Filter(Inported_Test_1, Filter1);
-DisplayData (Inported_Test_1);

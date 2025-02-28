@@ -1,2 +1,0 @@
-LoadKrit ( Inported_Test_1, F:\_249Hz_27ch_orsoszaml_kritdarab_swmod\krit ); 
-DisplayData (Inported_Test_1);

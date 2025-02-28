@@ -1,6 +1,0 @@
-DataAq(6, 127.0.0.1:8070, 2000 2000 2000 2000 2000 2000 2000 2000, 1 1 1 1 1 1 1 1, 0 1 2 3 4 5 6 7, 100, 4, orig_signal.bdf, orig_signal);
-CreateFilter(filter_low_pass, butt bp, 2 2000, 60 80, 0, 0);
-DisplayData(filter_low_pass);
-SystemInterval(int1, 100){
-    IIRFilter_RT(orig_signal, history_data 12, relayed_signal, 100, 4, relayed_signal.bdf, 1 3 4, filter_low_pass);
-};
