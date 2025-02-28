@@ -1,0 +1,10 @@
+SetStopOnFirstError(false);
+CreateVector(vec1, 1 1 1 1 1 1);
+CreateVector(vec2, 2 2 2 2 2 2);
+CreateVariable(diff, 1, 6);
+DotDiff(diff);
+DotDiff(diff, 0);
+DotDiff(diff, 0, vec1);
+DotDiff(diff, 0, vec1, 0);
+DotDiff(diff, 0, vec1, 0, vec2);
+SystemExit(0);

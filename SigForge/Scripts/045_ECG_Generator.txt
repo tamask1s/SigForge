@@ -1,0 +1,57 @@
+// ECG GENERATOR
+
+#define SAMPLING_RATE 1000
+#define NR_SAMPLES_TO_GENERATE 240000
+
+DataDelete();
+
+GenerateModulatedECG(sim1, NR_SAMPLES_TO_GENERATE, SAMPLING_RATE,
+{
+    "heartbeat_frequency" : 1.2,
+    "alteration_frequency_for_DC_component" : 0.01,
+    "alteration_amplitude_for_DC_component" : 0.2,
+    "alteration_phase_for_DC_component_in_radians": 0,
+    "frequency_HF" : 0.2,
+    "frequency_LF" : 0.08,
+    "amplitude_modulation_depth_for_QRS_by_HF" : 0.04,
+    "frequency_modulation_depth_HF" : 0.3,
+    "frequency_modulation_depth_LF" : 0.3,
+    "phase_HF_radians" : 0,
+    "phase_LF_radians" : 0,
+    "extrasys_frequency" : 0.0,
+    "extrasys_shift_after_last_QRS" : 0.35,
+    "QRS_interval_standard_deviation" : 0.0,
+    "skip_one_QRS_at_every" : 0
+},
+{
+    "amplitude_p" : 0.1,
+    "amplitude_q" : -0.1,
+    "amplitude_r" : 1.0,
+    "amplitude_s" : -0.2,
+    "amplitude_t" : 0.2,
+    "len_p" : 0.08,
+    "len_pq" : 0.08,
+    "len_q" : 0.007,
+    "len_r" : 0.07,
+    "len_s" : 0.024,
+    "len_st" : 0.1,
+    "len_t" : 0.16
+});
+
+Copy(sim3, sim1);
+Normalize(sim3, 0, 255);
+Transpose(sim3_transposed, sim3);
+WriteAscii(sim3_transposed, c:/tamas/sim_255t.ascii, int);
+
+AddNoise(sim1, 0.02, 50.0); //Add 50Hz noise
+AddNoise(sim1, 0.12); //Add white noise
+AddBandLimitedNoise(sim1, 0.95, 30, 70);
+
+Copy(sim2, sim1);
+Cat(sim2, sim2);
+Cat(sim2, sim2);
+Cat(sim2, sim2);
+Cat(sim2, sim2);
+
+DisplayData(sim2,,, A2, 000);
+SaveDataToFile(sim2, simulated_ecg.raw, 100, 10);

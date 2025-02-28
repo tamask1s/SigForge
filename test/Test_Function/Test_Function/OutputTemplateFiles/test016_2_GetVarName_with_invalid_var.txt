@@ -1,0 +1,2 @@
+ERROR: GetVarName: can't find data in variablelist: 'sine'
+An error occurred, but the execution continue

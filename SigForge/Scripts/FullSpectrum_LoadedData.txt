@@ -1,0 +1,8 @@
+DataIn(DATASERIES0, datavartr, 1); 
+
+FullSpectrum(datavartr, 
+             spectrain, 
+             CopyForAllChannels(datavartr, 1), 
+             5 50);
+
+DisplayData(spectrain);

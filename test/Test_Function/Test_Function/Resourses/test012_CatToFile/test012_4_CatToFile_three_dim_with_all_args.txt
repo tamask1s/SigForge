@@ -1,0 +1,3 @@
+LoadAscii(var1, ../Resourses/test012_CatToFile/test012_2_CatToFile_test_data_in.dbascii);
+CatToFile(var1, 1, ../../Test_Function/OutputFiles/test012_4.dbascii, data_name);
+SystemExit(0);

@@ -1,0 +1,5 @@
+SetStopOnFirstError(false);
+CreateSine(sine, 10, 1000, 100);
+Copy(dst);
+Copy(sine);
+SystemExit(0);

@@ -1,0 +1,130 @@
+DataDelete();
+
+#define MCorr 0.7
+#define FCorr -0.5
+
+FileOpen(c:\tamas\PSAA\Development\Test\Data\tasks_038\Bin\SeresJuditINA821_01.bdf, sig);
+DataIn(sig, orig_sig_1, 1 2);
+//Copy(original, orig_sig_1); DisplayData(original,,,, 000);
+CreateFilter(bandpass_filter2, butterworth bp, 2 2000, 0.7 500);
+Filter(orig_sig_1, bandpass_filter2);
+FilterReverse(orig_sig_1, bandpass_filter2);
+
+CreateFilter(bandstop_filter2, butterworth bs, 2 2000, 49.9 50.1);
+Filter(orig_sig_1, bandstop_filter2);
+FilterReverse(orig_sig_1, bandstop_filter2);
+
+Copy(mother_sig1, orig_sig_1, 1);
+Copy(mother_sig2, orig_sig_1, 1);
+
+Copy(fetal_sig1, orig_sig_1, 0);
+Copy(fetal_sig2, orig_sig_1, 0);
+
+def SpikeDetector(ekgsignal, spikes, spike_radius, density_threshold, bo_low, bo_high, details)
+{
+    CreateFilter(bandpass_filter, butterworth bp, 2 2000, bo_low bo_high);
+    CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+    CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+    CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+    Filter(ekgsignal, bandpass_filter);
+    FilterReverse(ekgsignal, bandpass_filter);
+    Filter(ekgsignal, derivative_filter);
+    FilterReverse(ekgsignal, derivative_filter);
+    SQR_Inplace(ekgsignal);
+    Filter(ekgsignal, integrative_filter);
+    FilterReverse(ekgsignal, integrative_filter);
+    Copy(ekgsignal_threshold, ekgsignal);
+    Filter(ekgsignal_threshold, threshold_filter);
+    FilterReverse(ekgsignal_threshold, threshold_filter);
+    DetectSpikes(spikes, ekgsignal, ekgsignal_threshold);
+    CleanupSpikes(ekgsignal, spikes, spike_radius, density_threshold);
+    if (details)
+    {
+        Cat(ekgsignal_threshold, ekgsignal);
+        DisplayData(ekgsignal_threshold, fit_width,, C, 001);
+    };
+};
+
+def SpikeDetecto2(ekgsignal, spikes, spike_radius, density_threshold, bo_low, bo_high, details)
+{
+
+    CreateFilter(bandpass_filter, butterworth bp, 2 2000, bo_low bo_high);
+    CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+    CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);   
+    Filter(ekgsignal, bandpass_filter);
+    FilterReverse(ekgsignal, bandpass_filter);
+    Copy(ekgsignaltmp, ekgsignal);
+    gauss_1d(FKernel, 1480, 2000, 5, -7, 1.0);
+    gauss_1d(FKernelD, 1480, 2000, 5, 7, 1.0);
+    IProd(FKernelD, -1);
+    Add(FKernel, FKernelD);
+    xcorr(correlated1, ekgsignal, FKernel);
+
+    //IProd(correlated1, 10000);
+    Copy(correlated, correlated1);
+
+    Filter(correlated, bandpass_filter);
+    FilterReverse(correlated, bandpass_filter);
+    SQR_Inplace(correlated);
+    Filter(correlated, integrative_filter);
+    FilterReverse(correlated, integrative_filter);
+
+    gauss_1d(PeriodicK, 1850, 2000, 5, 0, 0.000009);
+    gauss_1d(PeriodicK2, 1850, 2000, 5, -780, 0.000009);
+    gauss_1d(PeriodicK3, 1850, 2000, 5, 780, 0.000009);
+    Add(PeriodicK, PeriodicK2);
+    Add(PeriodicK, PeriodicK3);
+    Copy(correlated2, correlated);
+
+    //xcorr(correlated, correlated2, PeriodicK, 3);
+    //IProd(correlated, 0.02);
+
+    CreateFilter(bandpass_filter3, butterworth bp, 1 2000, 2 2.5);
+    Filter(correlated2, bandpass_filter3);
+    FilterReverse(correlated2, bandpass_filter3);
+    Copy(correlated, correlated2);
+
+    Copy(ekgsignal_threshold, correlated);
+    Filter(ekgsignal_threshold, threshold_filter);
+    FilterReverse(ekgsignal_threshold, threshold_filter);
+    DetectSpikes(spikes, correlated, ekgsignal_threshold);
+    RefineSpikesWithCorr(ekgsignaltmp, FKernel, spikes, 0.1);
+    //CleanupSpikes(correlated, spikes, spike_radius, density_threshold);
+    if (details)
+    {
+        Cat(ekgsignal_threshold, ekgsignaltmp);
+        Cat(ekgsignal_threshold, correlated);
+		Cat(ekgsignal_threshold, spikes);
+        Cat(ekgsignal_threshold, debugs);
+
+        DisplayData(ekgsignal_threshold, fit_width,, C, 001);
+        DisplayData(FKernel, fit_width,, A1, 000);
+        DisplayData(PeriodicK, fit_width,, A1, 000);
+    };
+};
+
+SpikeDetector(mother_sig1, maternal_spikes, 0.3, 0.5, 8, 20);
+RefineSpikes(mother_sig2, maternal_spikes, 0.3);
+
+AverageSignalAroundTrigger(fetal_sig1, MAVG, maternal_spikes, 0.21, 0.35, MCorr, AVGOS);
+SubstractSignalAtTriggers(fetal_sig1, maternal_spikes, MAVG, 0.21, 0.35);
+Copy(orig_sig_5, fetal_sig1);
+SpikeDetecto2(fetal_sig1, fetal_spikes, 0.25, 0.5, 20, 100, true);
+//RefineSpikes(orig_sig_5, fetal_spikes, 0.2);
+
+AverageSignalAroundTrigger(orig_sig_5, FAVG, fetal_spikes, 0.25, 0.32, FCorr, FAVGOS);
+
+Cat(orig_sig_5, fetal_spikes);
+Cat(orig_sig_5, correlated);
+Cat(orig_sig_5, maternal_spikes);
+//Cat(orig_sig_5, fetal_sig2);
+
+Cat(mother_sig2, maternal_spikes);
+
+DisplayData(correlated,,, 000);
+DisplayData(orig_sig_5,,, 000);
+DisplayData(MAVG, fit_width,, A1, 000);
+DisplayData(AVGOS, fit_width,, C, 001);
+DisplayData(FAVG, fit_width,, A1, 000);
+DisplayData(FAVGOS, fit_width,, C, 001);
+DisplayData(manage_windows, tile_vertically);

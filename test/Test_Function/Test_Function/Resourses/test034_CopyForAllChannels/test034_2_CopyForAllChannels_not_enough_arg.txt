@@ -1,0 +1,5 @@
+SetStopOnFirstError(false);
+CreateSine(sine, 100 100, 1000 1000, 100 10);
+CreateVector(copy1, CopyForAllChannels(42));
+CreateVector(copy2, CopyForAllChannels(sine));
+SystemExit(0);

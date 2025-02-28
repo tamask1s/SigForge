@@ -1,0 +1,4 @@
+SetStopOnFirstError(false);
+CatToFile(var1);
+CatToFile(var1, 0);
+SystemExit(0);

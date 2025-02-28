@@ -1,0 +1,4 @@
+SetStopOnFirstError(false);
+LoadAscii(var1, ../Resourses/test012_CatToFile/test012_2_CatToFile_test_data_in.dbascii);
+CatToFile(var1, -6, ../../Test_Function/OutputFiles/test012_7.dbascii);
+SystemExit(0);

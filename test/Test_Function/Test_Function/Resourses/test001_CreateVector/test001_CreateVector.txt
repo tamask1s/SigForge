@@ -1,0 +1,3 @@
+CreateVector(data, 1 2 345.678 -9);
+WriteAscii(data, ../../Test_Function/OutputFiles/test001.dbascii);
+SystemExit(0);

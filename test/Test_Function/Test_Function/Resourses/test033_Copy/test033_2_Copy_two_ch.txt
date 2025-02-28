@@ -1,0 +1,4 @@
+CreateSine(sine, 10 10, 1000 1000, 100 10);
+Copy(dst, sine);
+WriteAscii(dst, ../../Test_Function/OutputFiles/test033_2.dbascii);
+SystemExit(0);

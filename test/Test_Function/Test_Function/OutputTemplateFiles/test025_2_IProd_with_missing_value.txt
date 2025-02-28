@@ -1,0 +1,2 @@
+ERROR: IProd: not enough arguments, 'invarname' or 'value' is missing!
+An error occurred, but the execution continue

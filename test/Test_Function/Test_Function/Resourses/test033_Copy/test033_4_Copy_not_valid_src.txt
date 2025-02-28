@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+Copy(dst, src);
+SystemExit(0);

@@ -1,0 +1,2 @@
+ERROR: CreateFilter: Not enough parameters! Filter kind and/or type not provided!
+An error occurred, but the execution continue

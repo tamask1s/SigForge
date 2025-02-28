@@ -1,0 +1,5 @@
+CreateVector(vec, 1 2 3 4 5 6);
+Mean(vec_mean, vec);
+STDev(vec_stdev, vec, vec_mean);
+WriteAscii(vec_stdev, ../../Test_Function/OutputFiles/test028_1.dbascii);
+SystemExit(0);

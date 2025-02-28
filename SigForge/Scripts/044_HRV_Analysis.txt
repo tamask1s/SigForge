@@ -1,0 +1,80 @@
+// ECG HRV ANALYSIS
+
+#define SAMPLING_RATE 1000
+
+DataDelete();
+
+FileOpen(simulated_ecg.raw, Data1);
+DataIn(Data1, orig_sig, 1);
+
+CreateFilter(bandpass_filter2, butterworth bp, 2 SAMPLING_RATE, 0.7 400);
+Filter(orig_sig, bandpass_filter2);
+FilterReverse(orig_sig, bandpass_filter2);
+
+CreateFilter(bandstop_filter2, butterworth bs, 2 SAMPLING_RATE, 49.9 50.1);
+Filter(orig_sig, bandstop_filter2);
+FilterReverse(orig_sig, bandstop_filter2);
+
+Copy(sig_copy, orig_sig, 0);
+
+def SpikeDetector(ekgsignal, spikes, spike_radius, density_threshold, bo_low, bo_high, show_details)
+{
+    CreateFilter(bandpass_filter, butterworth bp, 2 SAMPLING_RATE, bo_low bo_high);
+    CreateFilter(derivative_filter, butterworth hp, 2 SAMPLING_RATE, 10);
+    CreateFilter(integrative_filter, butterworth lp, 2 SAMPLING_RATE, 8);
+    CreateFilter(threshold_filter, butterworth lp, 2 SAMPLING_RATE, 1.5);
+    Filter(ekgsignal, bandpass_filter);
+    FilterReverse(ekgsignal, bandpass_filter);
+    Filter(ekgsignal, derivative_filter);
+    FilterReverse(ekgsignal, derivative_filter);
+    SQR_Inplace(ekgsignal);
+    Filter(ekgsignal, integrative_filter);
+    FilterReverse(ekgsignal, integrative_filter);
+    Copy(threshold_signal, ekgsignal);
+    Filter(threshold_signal, threshold_filter);
+    FilterReverse(threshold_signal, threshold_filter);
+    DetectSpikes(spikes, ekgsignal, threshold_signal);
+    CleanupSpikes(ekgsignal, spikes, spike_radius, density_threshold);
+    if (show_details)
+    {
+        Cat(threshold_signal, ekgsignal);
+        Cat(threshold_signal, spikes);
+        DisplayData(threshold_signal, fit_width,, C, 001);
+    };
+};
+
+SpikeDetector(sig_copy, spikes, 0.3, 0.5, 8, 20, true);
+RefineSpikes(orig_sig, spikes, 0.3);
+
+Cat(orig_sig, spikes);
+
+DisplayData(orig_sig, fit_width,, C, 001);
+
+// ----------------------
+
+DataIn(orig_sig, spikes, 2);
+RR_Distances(spikes, RRs, 0);
+//ARSpectrum(RRs, ar_spectrum, 16, 4, 256);
+ResampleNNIntervals(RRs, RRsResampled, 10);
+RemoveDCComponent(RRsResampled);
+MeanSpectrum(RRsResampled, RR_spectrum, 35, 512);
+
+Transpose(RRs_transposed, RRs);
+WriteAscii(RRs_transposed, RRs.ascii);
+DisplayData(RRs);
+DisplayData(RRsResampled);
+DisplayData(RR_spectrum);
+//DisplayData(ar_spectrum);
+
+//--------------------
+
+DataIn(RRs, poincare, 1);
+Copy(rrs2, poincare);
+PopFront(rrs2, 1);
+PopBack(poincare, 1);
+Cat(poincare, rrs2);
+//Cat(poincare, rrs2);
+//Cat(poincare, poincare);
+
+DisplayData(poincare, fit_width, xy_plot);
+DisplayData(manage_windows, tile_horizontally);

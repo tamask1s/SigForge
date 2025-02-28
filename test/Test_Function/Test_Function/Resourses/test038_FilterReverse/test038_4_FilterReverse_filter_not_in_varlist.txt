@@ -1,0 +1,4 @@
+SetStopOnFirstError(false);
+CreateSine(var, 1000, 10000, 100 20);
+FilterReverse(var, filter);
+SystemExit(0);

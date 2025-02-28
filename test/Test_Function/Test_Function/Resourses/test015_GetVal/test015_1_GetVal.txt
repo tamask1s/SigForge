@@ -1,0 +1,4 @@
+CreateSine(sine, 100 100, 1000 1000, 10 20);
+CreateVector(vec, GetVal(sine, 0, 6));
+WriteAscii(vec, ../../Test_Function/OutputFiles/test015_1.dbascii);
+SystemExit(0);

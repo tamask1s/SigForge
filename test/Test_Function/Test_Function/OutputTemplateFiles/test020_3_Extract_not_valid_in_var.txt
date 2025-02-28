@@ -1,0 +1,2 @@
+ERROR: Extract: can't find data in variablelist: 'var_not_valid'
+An error occurred, but the execution continue

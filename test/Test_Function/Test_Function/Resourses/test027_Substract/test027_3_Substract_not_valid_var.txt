@@ -1,0 +1,6 @@
+SetStopOnFirstError(false);
+CreateVector(vec2, 1 1 1 1 1 1 1);
+Substract(vec1, var2);
+CreateVector(vec3, 1 1 1 1 1 1 1);
+Substract(vec3, var4);
+SystemExit(0);

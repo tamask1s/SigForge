@@ -1,0 +1,2 @@
+ERROR: Cat: not enugh arguments!
+An error occurred, but the execution continue

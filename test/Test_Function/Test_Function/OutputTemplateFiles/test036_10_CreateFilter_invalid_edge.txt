@@ -1,0 +1,2 @@
+ERROR: CreateFilter: Invalid edges given: 30 30
+An error occurred, but the execution continue

@@ -1,0 +1,16 @@
+CreateVector(data, 10);
+DisplayData(data,fit_width,value_list);
+CreateVector(data2, 0);
+DisplayData(data2,fit_width,value_list);
+SystemInterval(int1, 30)   
+{
+    AlterSignal(data2,1);
+    RefreshDataWindow(data2,fit_width);
+    if(IsEqual(data, data2))
+    {
+        SystemInterval(int1);
+        DataIn(data, datavar); 
+        WriteAscii(datavar, ../../Test_Function/OutputFiles/test007.dbascii);
+        SystemExit(0);
+    };
+};

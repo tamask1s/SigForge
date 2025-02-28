@@ -1,0 +1,5 @@
+SetStopOnFirstError(false);
+CreateVector(vec1, 1 2 3 4 5 6);
+DeleteData(vec1);
+DisplayData(vec1);
+SystemExit(0);

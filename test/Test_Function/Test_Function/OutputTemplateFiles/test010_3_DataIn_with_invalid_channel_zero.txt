@@ -1,0 +1,4 @@
+ERROR: DataInput: Invalid channel number: 0
+An error occurred, but the execution continue
+ERROR: WriteAscii: can't find data in variablelist: 'var2'
+An error occurred, but the execution continue

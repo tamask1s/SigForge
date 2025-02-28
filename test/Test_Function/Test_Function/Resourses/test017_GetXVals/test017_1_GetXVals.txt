@@ -1,0 +1,4 @@
+LoadAscii(src, ../Resourses/test017_GetXVals/test017_GetXVals_data_in.dbascii);
+GetXVals(dst, src, >, 9, 0);
+WriteAscii(dst, ../../Test_Function/OutputFiles/test017_1.dbascii);
+SystemExit(0);

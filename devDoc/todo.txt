@@ -1,0 +1,47 @@
+// - investigate spectrum density
+// - heatmap hover
+// - docked script windows from config
+// - vertical unit display somewhere. on setup channels?
+// - have a better magnifying approximator
+// - script editor window disappearing
+// - linked scrolls
+// - sizes for scripts
+// --- TABS in script!!!
+// - cursors on line displays
+// -- check if markers are still working
+// -- user input check
+// - put a dot on hovered data, or an x
+// - use gdi+
+// -- unbind scrolled window if closed!!
+ -- toco, average ecg and ecg simulation data + corresponding scripts
+ - fix syntax highlight if it's easy
+ - markers / annotations load from file
+ - fft
+//    - blocksize,
+    - overlap,
+    - windowing setting
+ - heatmap color bar
+ -- real PSD iplementation, spectrum type refinements
+ -- more displaydata options: 
+//     - grid and
+//     - scale at least +
+//     - bottom align
+//     - left bar display option or hide by default
+     - logar scale?
+// -- recording data simulation from file
+
+
+
+
+
+
+
+
+normal freq 110 160 /min
+max: 1,3 - 3,3 /s 
+
+mother 0,5 35 Hz
+fetal 10 20 Hz
+fetal 0,5 150 Hz
+
+most relevant arrhythmia: skipping beats

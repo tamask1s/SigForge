@@ -1,0 +1,4 @@
+CreateVector(vec, 0 1 0 -1 0 1 0);
+integral(vec, 0, 4, integral);
+WriteAscii(integral, ../../Test_Function/OutputFiles/test024_1.dbascii);
+SystemExit(0);

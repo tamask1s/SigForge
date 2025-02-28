@@ -1,0 +1,21 @@
+DisplayData(manage_windows, tile_horizontally);
+
+def OnSineWaveMousedown(a_data_name, a_button, a_val_x, a_val_y, a_data_channel, a_data_val)
+{
+    if (IsEqual(a_button, 1))
+    {
+        SetValue(a_data_name, a_data_channel, a_val_x, 100);
+        RefreshDataWindow(a_data_name, true);        
+        SaveDataToFile(a_data_name, data_moddd2.bdf, 100, 4);
+    };
+    if (IsEqual(a_button, 2))
+    {
+        SetValue(a_data_name, a_data_channel, a_val_x, 0, 0.1);
+        RefreshDataWindow(a_data_name, true);
+        SaveDataToFile(a_data_name, data_moddd2.bdf, 100, 4);
+    };
+};
+CreateSine(sinewave, 1000 1000, 1000 1000, 10 3 1);
+DisplayData(sinewave, fit_width,, A1, 000);
+OnDataEvent(sinewave, mousedown, OnSineWaveMousedown);
+

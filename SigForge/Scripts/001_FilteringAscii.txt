@@ -1,0 +1,16 @@
+LoadAscii(datavar, d:\\tamas\\PSAA\\Docs\\data.csv);
+Transpose(datavartr, datavar);
+
+
+MeanSpectrum(datavartr, 
+             spectrain, 
+             CopyForAllChannels(datavartr, 4), 
+             CopyForAllChannels(datavartr, 16));
+
+
+CreateFilter(Filter1, butt bs, 2 2000, 45 55, 0, 0);
+Filter(datavartr, Filter1);
+
+DisplayData(spectrain);
+DisplayData(datavartr);
+

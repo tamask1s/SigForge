@@ -1,0 +1,4 @@
+NewMemoryData(new_data, 1, 2, 2);
+DataIn(new_data, var);
+WriteAscii(var, ../../Test_Function/OutputFiles/test026_1.dbascii);
+SystemExit(0);

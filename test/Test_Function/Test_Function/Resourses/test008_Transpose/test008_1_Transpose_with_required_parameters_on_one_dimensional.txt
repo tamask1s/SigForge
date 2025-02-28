@@ -1,0 +1,4 @@
+CreateVector(vec1, 1 2 3 4 5 6);
+Transpose(vec2, vec1);
+WriteAscii(vec2, ../../Test_Function/OutputFiles/test008_1.dbascii);
+SystemExit(0);

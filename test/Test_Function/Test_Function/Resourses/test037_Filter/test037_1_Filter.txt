@@ -1,0 +1,5 @@
+CreateFilter(filter, butt bp, 3 10000, 10 30);
+CreateSine(sine, 2000, 10000, 100 20);
+Filter(sine, filter);
+WriteAscii(sine, ../../Test_Function/OutputFiles/test037_1.dbascii);
+SystemExit(0);

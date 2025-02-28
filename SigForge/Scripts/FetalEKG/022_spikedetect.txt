@@ -1,0 +1,55 @@
+FileOpen(c:\tamas\PSAA\Development\Test\Data\tasks_038\Bin\SeresJuditINA821_01.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, orig_sig_1);
+DataDelete(ekgsignaldata);
+Copy(orig_sig_2, orig_sig_1);
+Copy(orig_sig_3, orig_sig_1);
+
+def SpikeDetector(ekgsignal, spikes, spike_radius, density_threshold)
+{
+    CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 20);
+    CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+    CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+    CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+
+    Filter(ekgsignal, bandpass_filter);
+    FilterReverse(ekgsignal, bandpass_filter);
+    Filter(ekgsignal, derivative_filter);
+    FilterReverse(ekgsignal, derivative_filter);
+    SQR_Inplace(ekgsignal);
+    Filter(ekgsignal, integrative_filter);
+    FilterReverse(ekgsignal, integrative_filter);
+    Copy(ekgsignal_threshold, ekgsignal);
+    Filter(ekgsignal_threshold, threshold_filter);
+    FilterReverse(ekgsignal_threshold, threshold_filter);
+    DetectSpikes(spikes, ekgsignal, ekgsignal_threshold);
+    CleanupSpikes(ekgsignal, spikes, spike_radius, density_threshold);
+    //RefineSpikes(orig_sig_3, spike_signal, 0.3);
+};
+
+SpikeDetector(orig_sig_1, spike_signal, 0.3, 4.0);
+Cat(orig_sig_2, spike_signal);
+
+CreateFilter(bandpass_filter2, butterworth bp, 2 2000, 5 200);
+Filter(orig_sig_3, bandpass_filter2);
+FilterReverse(orig_sig_3, bandpass_filter2);
+
+CleanupSignal_Spike(orig_sig_3, spike_signal, 0.17, EKGAVG);
+Cat(orig_sig_2, orig_sig_3);
+
+SpikeDetector(orig_sig_3, spike_signal, 0.3, 4.0);
+
+//CleanupSignal_Spike(ekgsignal_fetal, spike_signal, 0.17, EKGAVG);
+
+
+Cat(orig_sig_2, spike_signal);
+DisplayData(orig_sig_2);
+
+
+/*Cat(orig_sig_1, ekgsignal_threshold);
+Cat(orig_sig_1, ekgsignal_fetal);
+Cat(orig_sig_3, spike_signal);
+
+DisplayData(orig_sig_1);
+DisplayData(spike_signal);
+DisplayData(orig_sig_3);
+DisplayData(EKGAVG);*/

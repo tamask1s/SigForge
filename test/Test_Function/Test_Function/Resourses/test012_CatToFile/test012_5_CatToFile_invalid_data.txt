@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+CatToFile(var1, 0, ../../Test_Function/OutputFiles/test012_5.dbascii);
+SystemExit(0);

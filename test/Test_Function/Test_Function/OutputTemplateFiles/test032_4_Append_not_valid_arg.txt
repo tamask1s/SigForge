@@ -1,0 +1,4 @@
+ERROR: Append: can't find variable in variablelist: 'vec1' or 'vec3'
+An error occurred, but the execution continue
+ERROR: Append: can't find variable in variablelist: 'vec1' or 'vec4'
+An error occurred, but the execution continue

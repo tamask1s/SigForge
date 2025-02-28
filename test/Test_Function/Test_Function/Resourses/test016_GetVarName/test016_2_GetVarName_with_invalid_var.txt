@@ -1,0 +1,4 @@
+SetStopOnFirstError(false);
+CreateVector(vec, 1 2 3 4 5);
+WriteAscii(GetVarName(sine), ../../Test_Function/OutputFiles/test016_2.dbascii);
+SystemExit(0);

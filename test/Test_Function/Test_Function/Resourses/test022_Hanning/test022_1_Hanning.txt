@@ -1,0 +1,3 @@
+Hanning(hann, 10);
+WriteAscii(hann, ../../Test_Function/OutputFiles/test022_1.dbascii);
+SystemExit(0);

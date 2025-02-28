@@ -1,0 +1,5 @@
+LoadAscii(var1, ../Resourses/test010_DataIn/test010_DataIn_test_in.dbascii);
+DisplayData(var1);
+DataIn(var1, var2, 1);
+WriteAscii(var2, ../../Test_Function/OutputFiles/test010_2.dbascii);
+SystemExit(0);

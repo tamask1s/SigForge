@@ -1,0 +1,34 @@
+object CodecTestForm: TCodecTestForm
+  Left = 0
+  Top = 0
+  Caption = 'CodecTestForm'
+  ClientHeight = 608
+  ClientWidth = 918
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object Memo1: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    Position.X = 8.000000000000000000
+    Position.Y = 40.000000000000000000
+    Size.Width = 905.000000000000000000
+    Size.Height = 561.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+  end
+  object BtnReadFile: TButton
+    Position.X = 96.000000000000000000
+    Position.Y = 8.000000000000000000
+    TabOrder = 1
+    Text = 'BtnReadFile'
+    OnClick = BtnReadFileClick
+  end
+  object BtnCreateFile: TButton
+    Position.X = 8.000000000000000000
+    Position.Y = 8.000000000000000000
+    TabOrder = 2
+    Text = 'BtnCreateFile'
+    OnClick = BtnCreateFileClick
+  end
+end

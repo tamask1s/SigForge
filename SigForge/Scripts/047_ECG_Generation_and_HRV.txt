@@ -1,0 +1,116 @@
+// ECG GENERATOR AND HRV ANALYSIS
+
+#define SAMPLING_RATE 1000
+
+DataDelete();
+
+GenerateModulatedECG(orig_sig, 240000, SAMPLING_RATE,
+{
+    "heartbeat_frequency" : 1.2,
+    "alteration_frequency_for_DC_component" : 0.01,
+    "alteration_amplitude_for_DC_component" : 0.2,
+    "alteration_phase_for_DC_component_in_radians": 0,
+    "frequency_HF" : 0.2,
+    "frequency_LF" : 0.08,
+    "amplitude_modulation_depth_for_QRS_by_HF" : 0.04,
+    "frequency_modulation_depth_HF" : 0.3,
+    "frequency_modulation_depth_LF" : 0.3,
+    "phase_HF_radians" : 0,
+    "phase_LF_radians" : 0,
+    "extrasys_frequency" : 0.0,
+    "extrasys_shift_after_last_QRS" : 0.35,
+    "QRS_interval_standard_deviation" : 0.0,
+    "skip_one_QRS_at_every" : 0
+},
+{
+    "amplitude_p" : 0.1,
+    "amplitude_q" : -0.1,
+    "amplitude_r" : 1.0,
+    "amplitude_s" : -0.2,
+    "amplitude_t" : 0.2,
+    "len_p" : 0.08,
+    "len_pq" : 0.08,
+    "len_q" : 0.007,
+    "len_r" : 0.07,
+    "len_s" : 0.024,
+    "len_st" : 0.1,
+    "len_t" : 0.16
+});
+
+AddNoise(orig_sig, 0.02, 50.0);
+AddNoise(orig_sig, 0.12);
+AddBandLimitedNoise(orig_sig, 0.95, 30, 70);
+
+//-----------------------------
+
+CreateFilter(bandpass_filter2, butterworth bp, 2 SAMPLING_RATE, 0.7 400);
+Filter(orig_sig, bandpass_filter2);
+FilterReverse(orig_sig, bandpass_filter2);
+
+CreateFilter(bandstop_filter2, butterworth bs, 2 SAMPLING_RATE, 49.9 50.1);
+Filter(orig_sig, bandstop_filter2);
+FilterReverse(orig_sig, bandstop_filter2);
+
+Copy(sig_copy, orig_sig, 0);
+
+def SpikeDetector(ekgsignal, spikes, spike_radius, density_threshold, bo_low, bo_high, details)
+{
+    CreateFilter(bandpass_filter, butterworth bp, 2 SAMPLING_RATE, bo_low bo_high);
+    CreateFilter(derivative_filter, butterworth hp, 2 SAMPLING_RATE, 10);
+    CreateFilter(integrative_filter, butterworth lp, 2 SAMPLING_RATE, 8);
+    CreateFilter(threshold_filter, butterworth lp, 2 SAMPLING_RATE, 1.5);
+    Filter(ekgsignal, bandpass_filter);
+    FilterReverse(ekgsignal, bandpass_filter);
+    Filter(ekgsignal, derivative_filter);
+    FilterReverse(ekgsignal, derivative_filter);
+    SQR_Inplace(ekgsignal);
+    Filter(ekgsignal, integrative_filter);
+    FilterReverse(ekgsignal, integrative_filter);
+    Copy(threshold_signal, ekgsignal);
+    Filter(threshold_signal, threshold_filter);
+    FilterReverse(threshold_signal, threshold_filter);
+    DetectSpikes(spikes, ekgsignal, threshold_signal);
+    CleanupSpikes(ekgsignal, spikes, spike_radius, density_threshold);
+    if (details)
+    {
+        Cat(threshold_signal, ekgsignal);
+        Cat(threshold_signal, spikes);
+        DisplayData(threshold_signal, fit_width,, C, 001);
+    };
+};
+
+SpikeDetector(sig_copy, spikes, 0.3, 0.5, 8, 20, true);
+RefineSpikes(orig_sig, spikes, 0.3);
+
+Cat(orig_sig, spikes);
+
+DisplayData(orig_sig, fit_width,, C, 001);
+
+// ----------------------
+
+DataIn(orig_sig, spikes, 2);
+RR_Distances(spikes, RRs, 0);
+//ARSpectrum(RRs, ar_spectrum, 16, 4, 256);
+ResampleNNIntervals(RRs, RRsResampled, 10);
+RemoveDCComponent(RRsResampled);
+MeanSpectrum(RRsResampled, RR_spectrum, 35, 512);
+
+Transpose(RRs_transposed, RRs);
+WriteAscii(RRs_transposed, RRs.ascii);
+DisplayData(RRs, fit_width);
+DisplayData(RRsResampled, fit_width);
+DisplayData(RR_spectrum);
+//DisplayData(ar_spectrum);
+
+//--------------------
+
+DataIn(RRs, poincare, 1);
+Copy(rrs2, poincare);
+PopFront(rrs2, 1);
+PopBack(poincare, 1);
+Cat(poincare, rrs2);
+//Cat(poincare, rrs2);
+//Cat(poincare, poincare);
+
+DisplayData(poincare, fit_width, xy_plot);
+DisplayData(manage_windows, tile_horizontally);

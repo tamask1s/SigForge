@@ -1,0 +1,51 @@
+#define SAMPLING_RATE 2000
+
+DataDelete();
+
+FileOpen(d:\tamas\PSAA\Development\Test\Data\3CH\2021-03-15\2021-03-15_18-14-46_Recording_FEBB_szep.bdf, sig);
+DataIn(sig, orig_sig_1, 1 2);
+//Copy(original, orig_sig_1); DisplayData(original,,,, 000);
+CreateFilter(bandpass_filter2, butterworth bp, 2 SAMPLING_RATE, 0.7 500);
+Filter(orig_sig_1, bandpass_filter2);
+FilterReverse(orig_sig_1, bandpass_filter2);
+
+CreateFilter(bandstop_filter2, butterworth bs, 2 SAMPLING_RATE, 49.9 50.1);
+Filter(orig_sig_1, bandstop_filter2);
+FilterReverse(orig_sig_1, bandstop_filter2);
+
+Copy(mother_sig1, orig_sig_1, 0);
+Copy(mother_sig2, orig_sig_1, 0);
+
+def SpikeDetector(ekgsignal, spikes, spike_radius, density_threshold, bo_low, bo_high, details)
+{
+    CreateFilter(bandpass_filter, butterworth bp, 2 SAMPLING_RATE, bo_low bo_high);
+    CreateFilter(derivative_filter, butterworth hp, 2 SAMPLING_RATE, 10);
+    CreateFilter(integrative_filter, butterworth lp, 2 SAMPLING_RATE, 8);
+    CreateFilter(threshold_filter, butterworth lp, 2 SAMPLING_RATE, 1.5);
+    Filter(ekgsignal, bandpass_filter);
+    FilterReverse(ekgsignal, bandpass_filter);
+    Filter(ekgsignal, derivative_filter);
+    FilterReverse(ekgsignal, derivative_filter);
+    SQR_Inplace(ekgsignal);
+    Filter(ekgsignal, integrative_filter);
+    FilterReverse(ekgsignal, integrative_filter);
+    Copy(ekgsignal_threshold, ekgsignal);
+    Filter(ekgsignal_threshold, threshold_filter);
+    FilterReverse(ekgsignal_threshold, threshold_filter);
+    DetectSpikes(spikes, ekgsignal, ekgsignal_threshold);
+    CleanupSpikes(ekgsignal, spikes, spike_radius, density_threshold);
+    if (details)
+    {
+        Cat(ekgsignal_threshold, ekgsignal);
+        Cat(ekgsignal_threshold, spikes);
+        DisplayData(ekgsignal_threshold, fit_width,, C, 001);
+    };
+};
+
+SpikeDetector(mother_sig1, maternal_spikes, 0.3, 0.5, 8, 20, true);
+RefineSpikes(mother_sig2, maternal_spikes, 0.3);
+
+Cat(mother_sig2, maternal_spikes);
+
+DisplayData(mother_sig2, fit_width,, C, 001);
+DisplayData(manage_windows, tile_vertically);

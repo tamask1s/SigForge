@@ -1,0 +1,5 @@
+CreateVector(vec1, 10 11 12 13 14 15 16 17 18 19);
+DisplayData(vec1, fit_width, value_list);
+InputFirstData(var_vec);
+WriteAscii(var_vec, ../../Test_Function/OutputFiles/test023_1.dbascii);
+SystemExit(0);

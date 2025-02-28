@@ -1,0 +1,8 @@
+SetStopOnFirstError(false);
+CreateVector(vec1, 1 2 3 4 5);
+CreateVector(vec2, 1 2 3);
+Add(vec1, vec2);
+CreateVector(vec3, 1 2 3);
+CreateVector(vec4, 1 2 3 4 5);
+Add(vec3, vec4);
+SystemExit(0);

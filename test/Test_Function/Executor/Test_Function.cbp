@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Test_Function" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="Test_Function" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option additional_output="Test_Function.exe;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-pg" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="Test_Function" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option additional_output="Test_Function.exe;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+			<Add option="-fexceptions -Wno-unused-variable -Wno-unknown-pragmas" />
+			<Add option="-D_WIN32_WINNT=0x0501" />
+			<Add option="-DBOOST_BIMAP_DISABLE_SERIALIZATION" />
+			<Add directory="../../../../../Libs/3rdParty/LIB_Boost" />
+		</Compiler>
+		<Linker>
+			<Add library="Ws2_32" />
+			<Add library="mswsock" />
+		</Linker>
+		<Unit filename="../../../../../Libs/3rdParty/LIB_Boost/libs/filesystem/src/codecvt_error_category.cpp" />
+		<Unit filename="../../../../../Libs/3rdParty/LIB_Boost/libs/filesystem/src/operations.cpp" />
+		<Unit filename="../../../../../Libs/3rdParty/LIB_Boost/libs/filesystem/src/path.cpp" />
+		<Unit filename="../../../../../Libs/3rdParty/LIB_Boost/libs/filesystem/src/path_traits.cpp" />
+		<Unit filename="../../../../../Libs/3rdParty/LIB_Boost/libs/filesystem/src/unique_path.cpp" />
+		<Unit filename="../../../../../Libs/3rdParty/LIB_Boost/libs/filesystem/src/windows_file_codecvt.cpp" />
+		<Unit filename="../../../../../Libs/3rdParty/LIB_Boost/libs/filesystem/src/windows_file_codecvt.hpp" />
+		<Unit filename="Test_FunctionMain.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

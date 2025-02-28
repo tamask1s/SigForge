@@ -1,0 +1,4 @@
+CreateVector(vec, -3.1 -2 -1 0 1 2 3.1);
+IProd(vec, 2);
+WriteAscii(vec, ../../Test_Function/OutputFiles/test025_1.dbascii);
+SystemExit(0);

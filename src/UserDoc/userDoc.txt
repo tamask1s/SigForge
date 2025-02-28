@@ -1,0 +1,3250 @@
+= SigForge user guide
+:toc:
+:toclevels: 4
+:icons:
+
+After you read this document, you may want to check link:../../devDoc/devDoc.html[SigForge's developer guide].
+
+== What is SigForge
+
+SigForge is scriptable data viewing, data acquisition, and digital signal processing application, running under Windows OS.
+
+image:res/SigForge2.png[SigForge]
+
+The data representations are 2 dimensional data sets, typical to multichannel biological data.
+
+The signal processing algorithms can be executed by running Data Browser scripts.
+
+SigForge is extendible with customized data processing algorithms, and data acquisition modules. This is achieved by SigForge's plugin-based architecture. In order to use new plugins, those needs to be copied in the proper plugin directories. For more information on developing plugins, please check link:../../devDoc/devDoc.html[SigForge's developer guide].
+
+SigForge's data engine is also a plugin, which can be used for automation, or can be included into customized applications, allowing one to use the scripts developed in SigForge to run in a specially tailored environment. For more information on this topic, please check SigForge's developer guide.
+
+== SigForge's menu
+
+File, Edit, Window, Options, Tools, Help
+
+=== File Menu
+
+.Fhe Following are implemented:
+* "Open data file": opens a data file. Supported formats are:
+** EDF (Europian data format)
+** BDF (Biosemi data format)
+** DAT (DADiSP data format)
+* "New script window": opens a new <<script_window, script editor window>>
+
+=== Edit Menu
+
+Not implemented.
+
+=== Window Menu
+
+.Works as a classical Windows OS MDI (Multi document interface) menu, letting the user to
+* switch between wopened windows,
+* tile them horizontally,
+* tile vertically,
+* cascade them.
+
+=== Options, Tools, Help Menus
+
+Not implemented.
+
+[[DataTypes]]
+== SigForge data providers
+
+.SigForge can have its data from its data providers. These can be:
+* Data File codecs, supporting the following file types: EDF, BDF or DADiSP dat files. This type of provider opens the file, and makes its whole content available at once.
+
+|===
+|DATA FILE CODEC |EXTENSION |USE IN SCRIPTS
+
+|EDF
+|.edf; .edfp
+|1
+
+|BDF
+|.bdf
+|4
+
+|DADiSP
+|.dat
+|3
+
+|===
+
+* Data Acquisition devices. In this case, the data is streaming, it is arriving continuously, and the resulting data is growing in size as the time passes.
+
+== SigForge scripting
+
+SigForge has a basic scripting language working with SigForge's data representations.
+
+The scripting supports function calls only, operators are not supported.
+
+=== Data representation
+
+.SigForge has 2 types of data
+* data opened and visualized by display windows are persistent: they survive script runs. They are called 'data'.
+* while running a script, data imported in a script running context are ephemeral: they lives only during script runs. They are called 'variable'.
+
+All 'data' objects are stored in a data list, while all 'variables' are stored in a variable list, and are accessable only from scripts. These lists are global objects. All data in the data list is displayed in SigForge's windows, and all variables in the variable list are living only during a script call, then the variable list is cleared.
+
+'Variables' from the variable list can be *moved* into the data list by displaying them (calling the <<DisplayData, DisplayData>> function).
+
+'Data' objects can be imported, *copied* into the variable list during a script run by calling the <<DataIn, DataIn>> function.
+
+The script may change that variable, and it may display it. If it is displayed, it means that it is moved back to the data list. In this case it overwrites the data with the same name relyig in the specific display window.
+
+If a variable was not displayed, it will be deleted as the script ends.
+
+As a result all persistent data can be seen in windows, and no invisble memory leak can be produced in this level.
+
+.Data and variable both have the following properties:
+* name
+* number of channels
+* horizontal units (usually sec(s))
+* vertical units (a value for each channel, example mV, 1/s(Hz), etc.)
+* number of samples (a value for each channel)
+* sampling rates (a value for each channel)
+
+=== Script types
+
+.Once we press the "Run" button on the <<script_window, script editor window>>, SigForge will run the script in that window. The script may
+* finish completely after its last function returns
+* or it may trigger an interval, which will re-run a portion of the script periodically. See Interval() function. The variables living in a script running context will not outlive the interval's execution end, therefore any information needed to be available for re-entering intervals, needs to be persisted in a 'data', usually called as *history* 'data'.
+
+=== Function types
+
+.Functions may work with
+* 'data'
+* 'variable'
+* both 'data' and 'variable'
+
+.Functions may be 'simple', or 'real-time'.
+* Simple functions are working on whole or specified parts of a 'data' or 'variable'
+* Real time (RT) functions are working with 'data' provided by data acquisition devices, which are continuously growing in size. They are intended to process only the newly arrived data chunks. In order to do this, they need a *history* 'data' as a parameter, in order to persist the information needed for the signal processing (at least the last position of the processing, but possibly more). They are working usually with 'data' parameters, but not necessarily. RT functions are marked with the '_RT' characters.
+
+While RT functions are just simple functions with a *history* 'data' parameter, in any other aspect they are the same, and they are distinguished by their intended usage only, this categorization is important because only RT functions can process effectively streamed data.
+
+=== Syntax
+
+Basic function call:
+
+-----
+
+function1(param1, param2, ...);
+
+-----
+
+Most functions are working with variables or data 'parameters', without a return value, but some functions may return plain text results.
+
+-----
+
+function1(function2(param1, ...), param2, ...);
+
+-----
+
+Some functions may have a body:
+
+-----
+
+function1(...)
+{
+    function2(...)
+};
+
+This may be useful if a block needs to be executed multiple times (loop), or after a timeout, or periodically (interval).
+Note that in the basic case the script is not reaching its end, therefore all the variables created till the execution of the block will be available, while in case of a timeout or an interval the variable list will be cleaned before the execution reaches the block.
+As a result, all timeouts and intervals are starting with a clean context (empty variable list).
+
+-----
+
+All the parameters are plain text strings, only the actual function decides how to interpret them.
+
+
+The parameters are separated by commas.
+
+There is a maximum number of 8 parameters. Therefore some functions may interpret one single parameter as 2 real parameters, like param2 and param3 in the example bellow:
+
+-----
+
+function1(param1, param2 param3, param4, ...);
+
+-----
+
+
+[[script_window]]
+=== Script editor window
+
+SigForges’s script editor is a text editor with a basic syntax highlight.
+
+image:res/scripting_window.gif[Scripting window]
+
+== *Scripting functions delivered with SigForge and its basic signal processing plugins*
+
+SigForge comes with a basic set of digital signal processing and helper functions:
+
+// Template for a script in the userDoc
+//[[ScriptName]]
+//=== ScriptName
+//
+//_In progress_
+// Works with 'data/variable'. Description of the given script
+//
+//Syntax: 'here put the script syntax'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+
+[[DisplayData]]
+=== DisplayData
+
+Works with 'variable' and 'data'. Moves the specified variable from the variable list into the data list, and displays its content in a display window jus as a data file would be opened.
+
+Syntax: 'DisplayData([var_name], [fit_width], [display_type], [offset_setting], [other_setting])'
+
+.'Parameters'
+
+* 'var_name': the variable name what we want to display in a display window.
+* 'fit_width': optional. Defaulted to false. Set to "true" or "fit_width" will fit all the data into the window.
+* 'display_type': optional. Defaulted to basic multiline display ("multiline"). It can have the following other values:
+** 'multiline': data is displayed as multiple series of lines
+** '2D_map': data is displayed as a heatmap
+** '2D_map_surface': data is displayed as a heatmap with map contour lines
+** 'value_list': data is displayed in a table of values
+* 'offset_setting': optional. Defaulted to ("A1"). It can have the following other values:
+** 'N': no extra offsets are set, only fixed offsets to all channels proportional to their channel index.
+** 'A1': offsets are approximated for all channels with algorithm 1 to fit into screen one channel after another.
+** 'A2': offsets are approximated for all channels with algorithm 2 to fit into screen one channel after another.
+** 'B': the zero coordinate is set to be at the bottom of the 'y' axis for all the channels. Useful for spectrums.
+** 'C': the zero coordinate is set to the middle of the 'y' axis.
+* 'other_setting': optional. Defaulted to display without grids, using antialiased lines with width 1. It is a 4 digit setting, the first digit standing for the horizontal, whilest the second for the vertical grid behaviour. The third stands for line drawing style, and the fourth for the line width.
+** first 2 digits:
+*** '0' no grid are displayed
+*** '1' major grids are displayed only
+*** '2' both major and minor grids are displayed
+** 3rd digit:
+*** '0' antialiased (default)
+*** '1' normal line
+** 4th digit: line width in pixels
+
+Note: Horizontal grids can only be displayed in the cases when all the channels have a common 'y' axis. This may be the case if only one channel is displayed, or either the 'B' or 'C' offset settings are used.
+
+.'Returns'
+* -
+
+[[example_009]]
+*Example*
+
+----
+CreateSine(sinewave, 10000 10000, 1000 1000, 250);
+MeanSpectrum(sinewave, amp_normalized,
+             CopyForAllChannels(sinewave, 1),
+             CopyForAllChannels(sinewave, 1), ampn);
+DisplayData(amp_normalized, fit_width,, B, 21);
+----
+
+==== Data display's features
+
+image:res/DisplayData01.png[Displaying spectrum]
+
+Note: heatmap views are working slowly if the data has thousands of channels (rows).
+
+==== Data display's 'Settings' window
+
+Visible channels can be set up by using the 'Settings' window of the display window. Additional information is also accessible here:
+
+* channel labels
+* horizontal units
+* vertical units
+* data length
+
+image:res/SettingsWindow.gif[Settings window]
+
+In the abouve settings window the visible channels of a data with 2 channels can be set. The data has no labels. Vertical units are in 'mV', the sampling rate is '1000 Samples per second', and the data length is '10 seconds'.
+
+==== Data display's relative scaling of 'y' axis
+
+image:res/RelativeScaling.png[Settings window]
+
+By clicking the bar on the left of the display window, a panel with sliders can be shown. By adjusting the sliders, a relative scaling of the 'y' axis of the corresponding channel can be achieved.
+
+==== DisplayData's window management functions
+
+Syntax: 'DisplayData(manage_windows, [managing_action], [target_window])'
+
+.'Parameters'
+
+* 'managing_action': can have the following values:
+** tile_horizontally
+** tile_vertically
+** cascade
+** maximize
+* 'target_window': optional. In case of 'maximize', the window which needs to be maximized
+
+==== DisplayData's scaling functions
+
+Syntax: 'DisplayData(scale_window, [scaling_action], [target_window])'
+
+.'Parameters'
+
+* 'scaling_action': can have the following values:
+** horzontally_in: scales the 'x' axis in
+** horzontally_out: scales the 'x' axis out
+** reset_horzontal: resets the scaling to default for x axis.
+* 'target_window': the window which going to be scaled
+
+Note: scaling actions are cumulating. If you keep a window opened, then running a script multiple times will scale your window more and more. You need to reset the scaling if you want to avoid the cumulative effect.
+
+[[example_010]]
+*Example*
+
+----
+
+CreateSine(sinewave, 10000, 1000, 30);
+DisplayData(sinewave);
+for (sine_frequency, 30, 190){
+    AppendSine(sinewave, 1000, Iterator(sine_frequency));
+};
+RefreshDataWindow(sinewave, true);
+DataIn(sinewave, sinewave_, 1);
+
+FullSpectrum(sinewave_,
+             fullspectrum,
+             CopyForAllChannels(sinewave_, 1),
+             5 200);
+DisplayData(fullspectrum,,2D_map);
+BindScrolling(sinewave, fullspectrum);
+DisplayData(manage_windows, tile_horizontally);
+DisplayData(scale_window, reset_horizontal, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+
+----
+
+----
+
+CreateSine(sin_1, 10000, 1000, 26 6);
+CreateSine(sin_2, 10000, 1000, 31 11);
+DisplayData(sin_1);
+DisplayData(sin_2);
+BindScrolling(sin_1, sin_2);
+DisplayData(manage_windows, tile_horizontally);
+
+----
+
+[[Add]]
+=== Add
+
+_In progress - Final - Checked_
+
+Works with 'variable'. Adds the second variable to the first variable.
+
+Syntax: 'Add([var_name_1], [var_name_2])'
+
+.'Parameters'
+
+* 'var_name_1': the first variable name to which we add the second variable
+* 'var_name_2': the second variable what we add to the first variable
+
+.'Returns'
+* -
+
+[[AlterSignal]]
+=== AlterSignal
+
+Works with 'data'. It alters a data's values by a single value by adding it to every value.
+
+Syntax: 'AlterSignal([data_name], [value])'
+
+.'Parameters'
+
+* 'data_name': the name of the data in the data list
+* 'value': the value we want to add to the data's values
+
+.'Returns'
+* -
+
+[[Append]]
+=== Append
+
+_In progress - Final - Checked_
+
+Works with 'variable'. Appends the source variable to the end of the destination variable. As a result, the number of channels will not change, while the number of samples in affected channels will be the sum of the input variable's number of samples.
+
+Syntax: 'Append([dst_var_name], [src_var_name])'
+
+.'Parameters'
+
+* 'dst_var_name': the destination variable name to which we append the source variable
+* 'src_var_name': the source variable name what we append to the destination variable
+
+.'Returns'
+* -
+
+[[AppendSine]]
+=== AppendSine
+
+_In progress - Final - Checked_
+
+
+Works with 'data'. Appends sine wave(s) to the end of the data given with the data's sampling rate.
+
+Syntax: AppendSine([data_name], [number_of_samples], [frequencies])'
+
+.'Parameters'
+
+* 'data_name': the data name which we want to add sine wave(s).
+* 'number_of_samples': the number of samples what we want to add.
+* 'frequencies': the list of the frequencies of the sine waves to be added. It could be one or more frequency.
+
+.'Returns'
+* -
+
+[[Ascii]]
+=== Ascii
+
+[[LoadAscii]]
+==== LoadAscii
+
+Works with 'variable'. Loads a tab (\t) and new line (\n) delimited ASCII file, and stores it in a variable.
+
+Note: the speed is ~50 kBytes / sec. While loading a file, SigForge is unresponsive.
+
+Syntax: 'LoadAscii([var_name], [ascii_file_path], [is_fast])'
+
+.'Parameters'
+
+* 'var_name': the name of the variable where we load the data from the ASCII file
+* 'ascii_file_path': the full path of the ascii file with it's name and extension
+* 'is_fast': if set to "true" or "fast", the function will perform faster (~4 MBytes / sec), but it might loose some of its precision.
+
+.'Returns'
+* -
+
+*Example*
+
+----
+
+LoadAscii(vec1, c:/vec1.ascii);
+DisplayData(vec1);
+
+----
+
+Note: surface views are working slowly if the data has thousands of channels (rows).
+
+[[WriteAscii]]
+==== WriteAscii
+
+Works with 'variable'. Writes a variable into a tab (\t) and new line (\n) delimited ASCII file.
+
+Syntax: 'WriteAscii([var_name], [ascii_file_path])'
+
+.'Parameters'
+
+* 'var_name': the variable name what we want to write to the ASCII file
+* 'ascii_file_path': the name of file with the path. We can use relative (relative from the binary of the program) or absolute file path.
+
+.'Returns'
+* -
+
+[[example_002]]
+*Example*
+
+----
+
+FileOpen(c:\data_with_2_channels_and_6_samples_each_channel.bdf, data1);
+DataIn(data1, vec1);
+WriteAscii(vec1, c:/vec1.ascii);
+
+----
+
+The content of the file will be like:
+
+----
+
+-0.9360910	-0.9343029	-0.9289384	-0.9295345	-0.9337068	-0.9384752
+-0.8884073	-0.8812547	-0.8776784	-0.8764864	-0.8741022	-0.8741022
+
+----
+
+//[format="csv",cols="6",options="header"]
+//|===========================================================================
+//col1, col2, col3, col4, col5, col6
+//-0.9360910, -0.9343029, -0.9289384, -0.9295345, -0.9337068, -0.9384752
+//-0.8884073, -0.8812547, -0.8776784, -0.8764864, -0.8741022, -0.8741022
+//|===========================================================================
+
+
+[[BindScrolling]]
+=== BindScrolling
+
+Binds the scrollbars of a data window with anther data window's scrollbar.
+
+Syntax: 'BindScrolling([src_data_name], [target_data_name], [binding_action])'
+
+.'Parameters'
+
+* 'src_data_name': the source window's data name
+* 'target_data_name': the target window's data name. The target window will be scrolled every time the source window is scrolled.
+* 'binding_action': optional. If set to 'false', the binding will be removed. Otherwise, or left unset, the binding will be performed if it's possible.
+
+.'Returns'
+* -
+
+Note: If circular redundancy is detected, the function throws an error.
+
+<<example_010, *Example*>>
+
+[[Cat]]
+=== Cat
+
+Works with 'variable'. Concatenates a variable with another variable's rows by extending the original variable with the rows of the other, resulting the new number of rows to be equal with: original rows + added rows.
+
+Syntax: 'Cat([variable_name], [variable_name_tocat])'
+
+.'Parameters'
+
+* 'variable_name': specifies the name of the variable which is going to be extended with new rows
+* 'variable_name_tocat': the name of the variable which's rows are going to be concatenated to the variable specified by the 'variable_name' parameter.
+
+.'Returns'
+* -
+
+<<example_004, *Example*>>
+
+
+[[CatStrings]]
+=== CatStrings
+
+_In progress - Final_ - Checked_
+
+Cats all parameters into one string up to a maximum of 8 strings.
+
+Syntax:
+----
+
+CatStrings([str_1], [str_2], [str_3], [str_4], [str_5], [str_6], [str_7], [str_8]);
+
+----
+
+.'Parameters'
+
+* 'str_1': not optional
+* 'str_2': not optional
+* 'str_3, str_4, str_5, str_6, str_7, str_8': optional
+
+.'Returns'
+* conacatenated string
+
+<<example_007, *Example*>>
+
+
+[[CatToFile]]
+=== CatToFile
+
+_In progress - Final - Checked_
+
+Works with 'variable'. It takes out a sample of data with the specified index from each channel from the input variable. The function will put the extracted sample data to the output file. If the input has more than one channel it converts the extracted data to one channel and the channel will have as much sample data as there are channels of the input variable.
+
+Syntax: 'CatToFile ([in_var_name], [sample_index], [file_name], [name])'
+
+.'Parameters'
+
+* 'in_var_name': the name of the input variable
+* 'sample_index': the sample index of the 'extracted' data. The index starts from 0.
+* 'file_name': the name of the file where we want to save the data.
+* 'name': Optional. You can name the data in the file.
+
+.'Returns'
+* -
+
+[[CleanupCodec]]
+=== CleanupCodec
+
+_In progress - Final - Checked_
+
+Works with 'data'. Frees up the data's memory. If you use big data and you don't need it any more then you can free the memory what the data use.
+
+Syntax: 'CleanupCodec([data_name])'
+
+.'Parameters'
+
+* 'data_name': the name of the data in the data list.
+
+.'Returns'
+* -
+
+[[CleanupFirstCodec]]
+=== CleanupFirstCodec
+
+_In progress - Final - Checked_
+
+Works with 'data'. Frees up the first data's memory from the data list.
+See <<CleanupCodec>>.
+
+
+Syntax: 'CleanupFirstCodec([dummy])'
+
+.'Parameters'
+
+* 'dummy': a dummy string for example '0'.
+
+.'Returns'
+* -
+
+[[CleanupSignal_Spike]]
+=== CleanupSignal_Spike
+
+_In progress_
+
+Works with 'variable'.
+
+Syntax: 'CleanupSignal_Spike([var_name], [spike_var_name], [spike_radius], [a_2])'
+
+.'Parameters'
+
+* 'var_name': the name of the variable on which we want to run the function
+* 'spike_var_name': the name of the spike variable
+* 'spike_radius': the radius of the spike
+* 'a_2': not in use
+
+.'Returns'
+* -
+
+[[CleanupSpikes]]
+=== CleanupSpikes
+
+_In progress_
+
+Works with 'variable'.
+
+Syntax: 'CleanupSpikes([var_name], [spike_var_name], [spike_radius], [density_threshold])'
+
+.'Parameters'
+
+* 'var_name': the name of the variable on which we want to run the function
+* 'spike_var_name': the name of the spike variable
+* 'spike_radius': the radius of the spike
+* 'density_threshold':
+
+.'Returns'
+* -
+
+[[Copy]]
+=== Copy
+
+Works with 'variable'. Copies a source variable into a newly created destination variable.
+
+Syntax: 'Copy([dst_var_name], [src_var_name])'
+
+.'Parameters'
+
+* 'dst_var_name': destination variable name what we create to copy the source data.
+* 'src_var_name': source variable name where we want to copy data to destination.
+
+.'Returns'
+* -
+
+[[CopyForAllChannels]]
+=== CopyForAllChannels
+
+Works with 'variable'. Multiplicates the text passed as second parameter, times the number of channels of the variable passed as first parameter.
+
+Syntax: 'CopyForAllChannels([var_name], [text])'
+
+.'Parameters'
+
+* 'var_name': the variable name where we count the channels
+* 'text': the text which is going to be multiplicated
+
+.'Returns'
+* A text containing the [text] parameter, concatenated multiple times, separated by space(s).
+
+*Example*
+
+----
+
+CopyForAllChannels(variable_with_4_channels_and_1000_samples_each, 9);
+
+----
+
+Results in the following text: "9 9 9 9"
+
+[[Cover1]]
+=== Cover1
+
+_In progress - Final - Checked_
+
+*Obsolate* Works with 'variable'. Creates an envelope curve of the input signal, and replaces the signal with the enevelope.
+
+Syntax: 'Cover1([var_name])'
+
+.'Parameters'
+
+* 'var_name': the variable name
+
+.'Returns'
+* -
+
+[[CreateVariable]]
+=== CreateVariable
+
+_In progress - Final - Checked_
+
+Works with 'variable'. Creates a variable with a given number of samples and given sampling rates.
+
+Syntax: 'CreateVariable([var_name], [nr_samples], [sampling_rates])'
+
+.'Parameters'
+
+* 'var_name': the name of the signal
+* 'nr_samples': a list containing the numbers of samples for each channel of the signal
+* 'sampling_rates': a list containing the the sampling rates
+
+Note: the size of the 'nr_samples' and 'sampling_rates' lists must match, and will determine the number of channels in the output variable.
+
+.'Returns'
+* -
+
+[[CreateSine]]
+=== CreateSine
+
+_In progress - Final - Checked_
+
+Works with 'variable'. Creates a sine wave with a number of samples in a given sampling rate and frequency in the variable list with the given name.
+In the 'number_of_samples_list' and 'sample_rate_list' you may provide a single number, or a list of numbers separated by spaces. The size of this two lists must be equal, and the size of the lists determine the number of channels.
+In the 'frequency_list' you may also provide a single floating point number, or a list of numbers separated by spaces. Each frequency provided will appear in the output variable as a frequency component, resulting a signal containing a combination of sine waves of different frequencies.
+
+Syntax: 'CreateSine([var_name], [number_of_samples_list], [sample_rate_list], [frequency_list])'
+
+.'Parameters'
+
+* 'var_name': the variable name where we store the sine wave
+* 'number_of_samples_list': a list containing the number of samples for each channel
+* 'sample_rate_list': a list containing the sampling rates of the sine waves
+* 'frequency_list': a list of numbers determining the frequency components of the output variable
+
+.'Returns'
+* -
+
+*Examples*
+
+* Regular sine curve
+----
+
+CreateSine(s1, 10000, 1000, 10);
+DisplayData(s1);
+
+----
+
+* Sine curve with 2 channels and multiple frequency
+----
+
+CreateSine(s1, 10000 10000, 1000 1000, 10 5);
+DisplayData(s1);
+
+----
+
+[[CreateSpline]]
+=== CreateSpline
+
+_In progress - Final - Checked_
+
+Works with 'variable'. Creates an approximate curve from the given data (x and y coordinates) with spline interpolation method. The created variable will have the given number of samples, and the sampling rate of the data will be 1. As a result, x coordinates will correspond the data indexes.
+
+Syntax: 'CreateSpline([var_name], [samples], [x_coord_values], [y_coord_values])'
+
+.'Parameters'
+
+* 'var_name': the variable name where we store the created spline
+* 'samples': the number of samples in each channel
+* 'x_coord_values': the list of x coordinates
+* 'y_coord_values': the list of the given data values
+
+.'Returns'
+* -
+
+*Example*
+----
+CreateSpline(spline, 100, 0 7 29 50 99, 15 0 10 5 10);
+DisplayData(spline, fit_width);
+----
+The result will be a variable with one channel and the channel has 100 samples. The '0 7 29 50 99' are the x coordinates of the given data and the '15 0 10 5 10' are the values (y coordinates) of the data. The function will calculate the intermediate datas with spline interpolation.
+
+[[CreateVector]]
+=== CreateVector
+
+Works with 'variable'. Creates a vector (a variable with a dimension of N x 1).
+
+Syntax: 'CreateVector([var_name], [element1 element2 ...])'
+
+.'Parameters'
+
+* 'var_name': the output variable name
+* 'element1 element2 ...': elements separated with spaces
+
+.'Returns'
+* -
+
+<<example_001, *Example*>>
+
+[[DataAq]]
+=== DataAq
+
+_In progress_
+
+Works with data acquisition devices and save data to the data list and the given file type.
+
+Syntax: 'DataAq([dataAq_device_type], [dataAq_params], [sampling_rates], [gain], [physical_mapping], [milliSeconds_to_read], [fileCodec_type], [file_name], [signal_name])'
+
+.'Parameters'
+
+* 'dataAq_device_type': the data acquisition device type
+* 'dataAq_params': the  data acquisition device parameters
+* 'sampling_rates': set the sampling rates per channel ('2000 2000' if you have 2 channels)
+* 'gain': set the gain per channel ('1 1' if you have 2 channels)
+* 'physical_mapping': map the physical channels with the channels in the data
+* 'milliSeconds_to_read': set how many milliseconds to read from the given device
+* 'fileCodec_type': set the file codec type (4: bdf). See <<DataTypes>>.
+* 'file_name': the name of the file where the data will be stored
+* 'signal_name': the name of the data name. This is optional, but if you don't set you can't refer to the data in the future.
+
+.'Returns'
+* -
+
+image:res/DataAq.png[DataAq]
+
+[[DataIn]]
+=== DataIn
+
+Works with 'data' -> 'variable'. Copies the content of a data object into a newly created variable, and adds the new variable to the variable list.
+
+Syntax: 'DataIn([data_name], [variable_name], [active_channel_list])'
+
+.'Parameters'
+
+* 'data_name': data object name
+* 'variable_name': variable name where we store data
+* 'active_channel_list' (optional): if you don't use by default copy all active channels. If you use this might be a list of channel indexes counted from '1' marking the active channels needs to be copied into the new variable. It will copy the same order the channels as in the source no matter what is the order you add.
+
+.'Returns'
+* -
+
+<<example_002, *Example*>>
+
+[[DateAndTime]]
+=== DateAndTime
+
+_In progress - Final - Checked_
+
+Makes a string from the actual date and time in the 'YYYY-MM-DD_HH-MM-SS' format. You can add prefix and/or suffix to the string '(prefix)YYYY-MM-DD_HH-MM-SS(suffix)'.
+
+Syntax: 'DateAndTime([prefix], [suffix])'
+
+.'Parameters'
+
+* 'prefix' (optional): a string what you want to add before the actual date and time format
+* 'suffix' (optional): a string what you want to add after the actual date and time format.
+
+.'Returns'
+* Returns with a string with the actual date and time optionally with prefix and/or suffix.
+
+*Examples:*
+
+----
+DateAndTime();                -->       2020-10-14_13-01-12
+DateAndTime(prefix)           --> prefix2020-10-14_13-01-12
+DateAndTime(, suffix)         -->       2020-10-14_13-01-12suffix
+DateAndTime(prefix, suffix)   --> prefix2020-10-14_13-01-12suffix
+----
+
+[[DeleteData]]
+=== DeleteData
+
+_In progress - Final - Checked_
+
+Works with 'variable'. Deletes a variable from the variable list.
+
+Syntax: 'DeleteData([in_var_name])'
+
+.'Parameters'
+
+* 'in_var_name': the name of the variable to be deleted
+
+
+.'Returns'
+* -
+
+[[DataDelete]]
+=== DataDelete
+
+_In progress - Final - Checked_
+
+Works with 'data'. Deletes a data from the data list, and also closes its display window. If no parameter is given, all data windows will close.
+
+Syntax: 'DataDelete([data_name])'
+
+.'Parameters'
+
+* 'var_name': optional. The name of the data to be deleted
+
+.'Returns'
+* -
+
+[[Deriv]]
+=== Deriv
+
+_In progress - Final_
+
+Works with 'variable'. The function calculates the signal slope at each point, and replaces the values in the variable datas.
+
+Syntax: 'Deriv([in_var_name])'
+
+.'Parameters'
+
+* 'in_var_name': the name of the variable
+
+.'Returns'
+* -
+
+[[DerivReal]]
+=== DerivReal
+
+_In progress - Final_
+
+Works with 'variable'. The function calculates the input variable signal slope at each point, and add a new variable to the variable list with the given name.
+
+Syntax: 'DerivReal([out_var_name], [in_var_name])'
+
+.'Parameters'
+
+* 'out_var_name': the name of the output variable
+* 'in_var_name': the name of the input variable
+
+.'Returns'
+* -
+
+[[DetectSpikes]]
+=== DetectSpikes
+
+Works with 'variable'  inputs and outputs. Detects spikes in a signal, based on a threshold signal, and outputting a newly created signal filled with *zeros* by default, and *marker values* where spikes were detected.
+
+Syntax: 'DetectSpikes([dst_name], [spike_signal], [threshold_signal], [marker_value], [refractory_period], [previous_spike_reference_ratio], [previous_spike_reference_attenuation])'
+
+[[example_003]]
+*Example*
+
+----
+
+FileOpen(Recording_01.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal);
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 20);
+Filter(ekgsignal, bandpass_filter);
+FilterReverse(ekgsignal, bandpass_filter);
+
+CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+Filter(ekgsignal, derivative_filter);
+FilterReverse(ekgsignal, derivative_filter);
+
+SQR_Inplace(ekgsignal);
+
+CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+Filter(ekgsignal, integrative_filter);
+FilterReverse(ekgsignal, integrative_filter);
+
+Copy(ekgsignal_threshold, ekgsignal);
+
+CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+Filter(ekgsignal_threshold, threshold_filter);
+FilterReverse(ekgsignal_threshold, threshold_filter);
+
+DetectSpikes(spike_signal, ekgsignal, ekgsignal_threshold);
+
+Cat(ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, spike_signal);
+
+DisplayData(ekgsignal);
+
+----
+
+image:res/DetectSpikes.png[Spike detection]
+
+.'Parameters'
+
+* 'dst_name': the name of the output signal the detected spikes will be marked in
+* 'spike_signal': the name of the original signal with spikes to be detected
+* 'threshold_signal': a signal which serves as a threshold for spike detection
+* 'marker_value':
+** The spike locations will be marked by this value in the output variable
+** Optional. Default value is '1'.
+* 'refractory_period':
+** After a spike was detected, within this period no new spike should be detected. The refractory_period is measured in the spike_signal's horizontal units (likely milliseconds).
+** Optional. Default value is '200'.
+* 'previous_spike_reference_ratio':
+** The new spike, in order to be detected, should be greater than the previous spike multiplied by this ratio
+** Optional. Default value is '0.5'.
+* 'previous_spike_reference_attenuation':
+** If there was no spike detected due to a high previous spike amplitude value, then the memorized spike amplitude value is attenuated (lowered) on every evaluation of a new sample by the following equation: *previous_spike_amplitude /= 1.0 + 'previous_spike_reference_attenuation' / sampling_rate*.
+** Optional. Default value is '30'.
+
+.'Returns'
+* -
+
+[[DirectRelay_RT]]
+=== DirectRelay_RT
+
+_In progress_
+
+Works with 'data'. Relays a changing source data (src) to a destination data (dst), potentially passing the actual increment through a processing unit.
+
+Syntax: 'DirectRelay_RT([src_data_name], [history_data_name], [dst_data_name], [window_milliseconds], [codec_type], [filename], [channels_to_relay], [processor])'
+
+.'Parameters'
+
+* 'src_data_name': the name of the source data.
+* 'history_data_name': he name of the data where the history of processing is stored. The history data contains at least one row (channel). The size of each row in the history data is equal to the number of channels in the source data. Relaying history is stored in the 0th channel. Every value stored is the sample index where the processing/relaying was left (the last sample index in the source data which was already relayed). Further channels in history data if present, are used by IRuntimeProcessor objects.
+* 'dst_data_name': the name of the destination data
+* 'window_milliseconds': the output file timewindow
+* 'codec_type': the description of the parameter
+* 'filename': the description of the parameter...
+* 'channels_to_relay': Optional. The channel indexes to relay from src to dst.
+
+.'Returns'
+* -
+
+[[Downsample]]
+=== Downsample
+
+_In progress - Final_
+
+Works with 'variable'. The function reduce the sampling in a given variable with the given ratio.
+
+Syntax: 'Downsample([in_var_name], [output_var_name], [ratio])'
+
+.'Parameters'
+
+* 'in_var_name': the name of the input variable
+* 'output_var_name': the name of the output variable
+* 'ratio': the down sample ratio. The ratio must be bigger than 1.
+
+.'Returns'
+* -
+
+*Example*
+
+----
+CreateVector(vec, 1 2 3 4 5 6 7 8 9 10);
+Downsample(vec, vec_down, 2);
+DisplayData(vec, fit_width, value_list);
+DisplayData(vec_down, fit_width, value_list);
+----
+
+The output: '1 3 5 7 9'
+
+[[DotDiff]]
+=== DotDiff
+
+_In progress - Final_ - Checked_
+
+Performs a dot difference of 2 dataseries.
+
+Syntax:
+----
+
+DotDiff([a_outvar], [a_out_ch], [a_lhs], [a_lhs_ch], [a_rhs], [a_rhs_ch])
+
+----
+
+.'Parameters'
+
+* 'a_outvar': destination variable
+* 'a_out_ch': channel index counted from 0 of the dataseries in destination variable
+* 'a_lhs': left hand side variable name
+* 'a_lhs_ch': channel index of the dataseries in left hand side variable to be substracted from
+* 'a_rhs': right hand side variable name
+* 'a_rhs_ch': channel index of the dataseries in right hand side variable to be substracted
+
+.'Returns'
+* -
+
+[[example_008]]
+*Example*
+
+----
+
+CreateSine(sinewave1, 10000 10000, 1000 1000, 30);
+CreateSine(sinewave2, 10000 10000, 1000 1000, 3);
+
+CreateVariable(difference, 1 1, 1000 1000);
+DotDiff(difference, 0, sinewave1, 0, sinewave2, 1);
+DotDiff(difference, 1, sinewave2, 0, sinewave1, 1);
+
+DisplayData(sinewave1);
+DisplayData(sinewave2);
+DisplayData(difference);
+
+----
+
+Note: destination variable must be created preamble with proper number of channels.
+
+image:res/DotDiff.jpg[Spike detection]
+
+
+[[DownsampleGauss]]
+=== DownsampleGauss
+
+_In progress - Final_
+
+Works with 'variable'. The function reduce the sampling in a given variable with the given ratio using a Gaussian curve.
+
+Syntax: 'DownsampleGauss([in_var_name], [output_var_name], [ratio])'
+
+.'Parameters'
+
+* 'in_var_name': the name of the input variable
+* 'output_var_name': the name of the output variable
+* 'ratio': the down sample ratio. The ratio must be bigger than 1.
+
+.'Returns'
+* -
+
+*Example*
+
+----
+CreateVector(vec, 1 2 3 4 5 6 7 8 9 10);
+DownsampleGauss(vec, vec_down, 2);
+DisplayData(vec, fit_width, value_list);
+DisplayData(vec_down, fit_width, value_list);
+----
+
+The output: '1.537738 3.040112 5.000000 6.994827 8.821049'
+
+[[Extract]]
+=== Extract
+
+Works with 'variable'. Extracts a portion of a source variable into a destination variable. The start and length needs to be specified in horiyontal units.
+
+Syntax: 'Extract([src_name], [dst_name], [units_start], [nr_units])'
+
+.'Parameters'
+
+* 'src_name': the name of the source variable
+* 'dst_name': the name of the destination variable
+* 'units_start': the start sample index from where the extraction should be started
+* 'nr_units': the number of samples to be extracted
+
+.'Returns'
+* -
+
+[[example_004]]
+*Example*
+
+----
+
+CreateVector(vec1, 10 20 30 40 50 60 50 40 30 20 10);
+Cat(vec1, vec1);
+
+Extract(vec1, vec2, 1, 7);
+
+DisplayData(vec1, fit_width);
+DisplayData(vec2, fit_width);
+
+----
+
+[[FileOpen]]
+=== FileOpen
+
+Opens a file for reading resulting a 'data', and displays it in a display window. The data is added to the data list.
+
+Syntax: 'FileOpen([file_name], [data_name])'
+
+.'Parameters'
+
+* 'file_name': name of the file
+* 'data_name': specifies the name of the data. The file content will be available by using this name when calling the appropriate functions.
+
+.'Returns'
+* -
+
+[[Filters]]
+=== Filters
+
+Filter related script functions.
+
+[[CreateFilter]]
+==== CreateFilter
+
+Works with 'variable'. Creates IIR filter coefficients, and stores them in a variable.
+
+Syntax: 'CreateFilter([variable_name], [shape_kind], [order_sampling_rate], [edges], [ripple], [ellipstopbandedge])'
+
+.'Parameters'
+
+* 'variable_name': the name of the created filter in the variable list
+* 'shape_kind': filter type (Butterworth, Chebyshev, Elliptic) and kind (hp, lp, bp, bs) separated by space(s)
+* 'order_sampling_rate': filter order (1, 2, 3) and sampling rate (integer) separated by space(s)
+* 'edges': 1 or 2 edge frequencies (double), separated by space(s)
+* 'ripple': in case of elliptic filters (double)
+* 'ellipstopbandedge': in case of elliptic filters (double)
+
+.'Returns'
+* -
+
+[[Filter]]
+==== Filter
+
+Works with 'variable'. Filters a variable with the specified IIR filter created by the <<CreateFilter, CreateFilter>> function.
+
+As it is an IIR filter, it induces frequency dependent phase shifts in the signal. These can be shifted back by using a <<ReverseFilter, ReverseFilter>> with the same filter coefficients. Note that by using a ReverseFilter, the frequency attenuations will be summarized.
+
+Syntax: 'Filter([variable_name], [filter_name])'
+
+.'Parameters'
+
+* 'variable_name': the variable name what we want to filter
+* 'filter_name': the name of the filter what we created before and want to use
+
+.'Returns'
+* -
+
+<<example_003, *Example*>>
+
+[[FilterReverse]]
+==== FilterReverse
+
+Filters a variable with the specified filter created by the <<CreateFilter, CreateFilter>> function.
+
+The filtering process is started from the end of the variable, and ends on the start of it, resulting in phase shifts introduced by a previous <<Filter, Filter()>> call to be eliminated.
+
+Syntax: 'FilterReverse([variable_name], [filter_name])'
+
+.'Parameters'
+
+* 'variable_name': the variable name what we want to filter
+* 'filter_name': the name of the filter what is in the variable list
+
+.'Returns'
+* -
+
+<<example_003, *Example*>>
+
+[[Filterx]]
+==== Filterx
+
+_In progress - Final_
+
+*Obsolate*
+// Description of the given script
+//
+//Syntax: 'Filterx(src, des)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[MovingWindowFilter]]
+==== MovingWindowFilter
+
+_In progress - Final_
+
+Under implementation.
+
+Works with 'variable'. Moves a window (kernel) over the variable data, sample by sample from the half of the window size until the window last element doesn't reach the variable last sample and filters the variable with the kernel.
+
+Syntax: 'MovingWindowFilter([dst_var_name], [src_var_name], [kernel_name])'
+
+.'Parameters'
+
+* 'dst_var_name': the name of the destination variable
+* 'src_var_name': the name of the source variable
+* 'kernel_name': the name of the filtering kernel. The kernel size must be odd.
+
+.'Returns'
+* -
+
+[[ABSBandpassButterbase6thOrderZerophaseC]]
+==== ABSBandpassButterbase6thOrderZerophaseC
+
+_In progress_
+
+Works with 'variable'. Description of the script
+
+Syntax: 'ABSBandpassButterbase6thOrderZerophaseC(invarname,varnametostore, lbound, hbound)'
+
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[HighpassButterbase6thOrderZerophase]]
+==== HighpassButterbase6thOrderZerophase
+
+_In progress_
+// Description of the given script
+
+Syntax: 'HighpassButterbase6thOrderZerophase(invarname, lbound)'
+
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[BandpassButterbase6thOrderZerophase]]
+=== BandpassButterbase6thOrderZerophase
+
+_In progress_
+
+Works with 'variable'. Description of the given script
+
+Syntax: 'BandpassButterbase6thOrderZerophase(invarname, lbound, hbound)'
+
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[BandpassButterbase6thOrderZerophaseC]]
+==== BandpassButterbase6thOrderZerophaseC
+
+_In progress_
+// Description of the given script
+
+Syntax: 'BandpassButterbase6thOrderZerophaseC(invarname, varnametostore, lbound, hbound)'
+
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[SQRBandpassButterbase6thOrderZerophaseC]]
+==== SQRBandpassButterbase6thOrderZerophaseC
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'SQRBandpassButterbase6thOrderZerophaseC(invarname, varnametostore, lbound, hbound)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[for]]
+=== for statement
+
+_In progress - Final_ - Checked_
+
+For loop.
+
+Syntax:
+----
+
+for([iterator_var_name], [from], [to], [step])
+{
+    [body]
+};
+
+----
+
+.'Parameters'
+
+* 'iterator_var_name': a variable name used as iterator
+* 'from': iterator init value
+* 'to': iterator stop value, inclusive
+* 'step': increment step
+
+.'Returns'
+* -
+
+[[example_007]]
+*Example*
+
+----
+
+for (i, 1, 20)
+{
+    FileOpen(
+        CatStrings(C:\ninfea1.0.0\bin_format_ecg_and_respiration\, Iterator(i), .bin),
+        CatStrings(data_, Iterator(i))
+    );
+    DataIn(CatStrings(data_, Iterator(i)), CatStrings(filtered_, Iterator(i)), 1 2 3);
+    DataDelete(CatStrings(data_, Iterator(i)));
+
+    CreateFilter(notch_filter, butt bs, 2 2048, 49.5 50.5, 0, 0);
+    Filter(CatStrings(filtered_, Iterator(i)), notch_filter);
+    FilterReverse(CatStrings(filtered_, Iterator(i)), notch_filter);
+
+    CreateFilter(bandpass_filter, butt bp, 2 2048, 0.5 70, 0, 0);
+    Filter(CatStrings(filtered_, Iterator(i)), bandpass_filter);
+    FilterReverse(CatStrings(filtered_, Iterator(i)), bandpass_filter);
+
+    DisplayData(CatStrings(filtered_, Iterator(i)));
+    SaveDataToFile(CatStrings(filtered_, Iterator(i)), CatStrings(C:\ninfea1.0.0\filtered\filtered_, Iterator(i), .bdf), 1000);
+};
+
+----
+
+This script will perform batch filtering on a set of data located in the folder 'C:\ninfea1.0.0\bin_format_ecg_and_respiration\'. The filenames are numbers, with an extension of '.bin'.
+
+. In order for this funtion to work you will need
+* files like:
+** 'C:\ninfea1.0.0\bin_format_ecg_and_respiration\1.bin',
+** 'C:\ninfea1.0.0\bin_format_ecg_and_respiration\2.bin' etc.
+* a folder 'C:\ninfea1.0.0\filtered\'
+
+[[GenerateModulatedECG]]
+=== GenerateModulatedECG
+
+Works with 'variable'. Creates an ECG signal with a number of samples in a given sampling rate and frequency, and stores into the variable list with the given name.
+In the 'number_of_samples_list' and 'sample_rate_list' you may provide a single number, or a list of numbers separated by spaces. The size of this two lists must be equal, and the size of the lists determine the number of channels.
+
+Syntax: 'GenerateModulatedECG([out_data_name], [number_of_samples_list], [sample_rate_list], [simulation_params], [qrs_params])'
+.'Parameters'
+
+* 'out_data_name': the variable name where we store the sine wave
+* 'number_of_samples_list': a list containing the number of samples for each channel
+* 'sample_rate_list': a list containing the sampling rates of the sine waves
+* 'simulation_params' and 'qrs_params':
+
+image:res/GenerateModulatedECG.png[Generation parameters]
+
+.'Returns'
+* -
+
+*Examples*
+
+* Regular ECG signal
+----
+
+GenerateModulatedECG(s1, 240000, 1000,
+{
+    "heartbeat_frequency" : 1.0,
+    "alteration_frequency_for_DC_component" : 0.0,
+    "alteration_amplitude_for_DC_component" : 0.0,
+    "alteration_phase_for_DC_component_in_radians": 0,
+    "frequency_HF" : 0.0,
+    "frequency_LF" : 0.0,
+    "amplitude_modulation_depth_for_QRS_by_HF" : 0.0,
+    "frequency_modulation_depth_HF" : 0.0,
+    "frequency_modulation_depth_LF" : 0.0,
+    "phase_HF_radians" : 0,
+    "phase_LF_radians" : 0,
+    "extrasys_frequency" : 0.0,
+    "extrasys_shift_after_last_QRS" : 0.0,
+    "skip_one_QRS_at_every" : 0,
+    "QRS_interval_standard_deviation" : 0.0
+},
+{
+    "amplitude_p" : 0.1,
+    "amplitude_q" : -0.1,
+    "amplitude_r" : 1.0,
+    "amplitude_s" : -0.2,
+    "amplitude_t" : 0.2,
+    "len_p" : 0.08,
+    "len_pq" : 0.08,
+    "len_q" : 0.007,
+    "len_r" : 0.1,
+    "len_s" : 0.007,
+    "len_st" : 0.1,
+    "len_t" : 0.16
+});
+DisplayData(s1);
+
+----
+
+image:res/ecg_1ch.png[Generated ECG]
+
+* Sine curve with 2 channels and multiple modulations
+----
+
+GenerateModulatedECG(s1, 240000 240000, 1000 1000,
+{
+    "heartbeat_frequency" : 1.0,
+    "alteration_frequency_for_DC_component" : 0.01,
+    "alteration_amplitude_for_DC_component" : 0.2,
+    "alteration_phase_for_DC_component_in_radians": 0,
+    "frequency_HF" : 0.2,
+    "frequency_LF" : 0.1,
+    "amplitude_modulation_depth_for_QRS_by_HF" : 0.2,
+    "frequency_modulation_depth_HF" : 0.3,
+    "frequency_modulation_depth_LF" : 0.3,
+    "phase_HF_radians" : 0,
+    "phase_LF_radians" : 0,
+    "extrasys_frequency" : 0.0,
+    "extrasys_shift_after_last_QRS" : 0.5,
+    "QRS_interval_standard_deviation" : 0.0,
+    "skip_one_QRS_at_every" : 0
+},
+{
+    "amplitude_p" : 0.1,
+    "amplitude_q" : -0.1,
+    "amplitude_r" : 1.0,
+    "amplitude_s" : -0.2,
+    "amplitude_t" : 0.2,
+    "len_p" : 0.08,
+    "len_pq" : 0.08,
+    "len_q" : 0.007,
+    "len_r" : 0.1,
+    "len_s" : 0.007,
+    "len_st" : 0.1,
+    "len_t" : 0.16
+});
+DisplayData(s1);
+
+----
+
+image:res/ecg.png[Generated ECG]
+
+[[GetDataName]]
+=== GetDataName
+
+_In progress - Final_
+
+*Obsolate*. Works with 'data'. This function always returns with the 'DATASERIES0' string.
+
+Syntax: 'GetDataName([data_index])'
+
+.'Parameters'
+
+* 'data_index': the index of the data you are looking for in the data list.
+
+.'Returns'
+* Returns with the 'DATASERIES0' string.
+
+[[GetVal]]
+=== GetVal
+
+_In progress - Final_
+
+Works with 'variable'. This function gets the sample data in the specified position (x and y coordinates) from the variable and it returns as a string. The x and y coordinates start from 0.
+
+QUESTION: There are no bounds checks in the x and y coordinates. Implement it?
+
+Syntax: 'GetVal([src_var_name], [x_coord], [y_coord])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the variable from which we want to extract the given data
+* 'x_coord': the x coordinate of the given data, this is the channel index. The indexing starts from 0.
+* 'y_coord': the y coordinate of the given data, this is the sample index of the data. The indexing start from 0.
+
+.'Returns'
+* It returns with the specified data as a string (3.1415926).
+
+[[GetVarName]]
+=== GetVarName
+
+_In progress - Final_
+
+Works with 'variable'. The function returns the given variable name as a string.
+
+Syntax: 'GetVarName([src_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the variable
+
+.'Returns'
+* Returns the variable name as a string ('DATA15').
+
+[[GetXVals]]
+=== GetXVals
+
+_In progress - Final_
+
+Works with 'variable'. This function returns with the indexes from the source variable’s first channel which are greater than the specified value.
+
+QUESTION1: only the '>' condition is implemented. Implement other conditions as well ('<', '=', '>=', '<=', '!=')?
+QUESTION2: the second value is not in use. Implement to use as an upper limit in the condition?
+
+Syntax: 'GetXVals([dst_var_name], [src_var_name], [condition], [value1], [value2])'
+
+.'Parameters'
+
+* dst_var_name'': the name of the destination variable
+* 'src_var_name': the name of the source variable
+* 'condition': must be '>'
+* 'value1': the minimum value, we are looking for values greater than this in the first channel of the source variable. The minimum value is exclusive.
+* 'value2': not used
+
+.'Returns'
+* Here is the return value
+
+[[Hanning]]
+=== Hanning
+
+_In progress - Final_
+
+Works with 'variable'. Makes a Hann window with the given samples number.
+
+Syntax: 'Hanning([output_var_name], [samples])'
+
+.'Parameters'
+
+* 'output_var_name': the name of the output variable
+* 'samples': the number of the samples in the output variable
+
+.'Returns'
+* -
+
+[[if]]
+=== if statement
+
+_In progress - Final_ - Checked_
+
+We could make a branching with the 'if()' script function. It has a 'condition' and a 'body'. If the 'condition' is true it evaluates the 'body' of the 'if()' script function.
+Don't forget the ';' from the end of the 'body' part.
+
+Syntax:
+----
+
+if([condition])
+{
+    [body]
+};
+
+----
+
+.'Parameters'
+
+* 'condition': this is a condition
+* 'body': evaluate this if the condition is true
+
+.'Returns'
+* -
+
+[[example_006]]
+*Example*
+
+----
+
+CreateVector(data_1, 10);
+CreateVector(data_2, 10);
+if(1)
+{
+    DisplayData(data_1);
+};
+if(0)
+{
+    DisplayData(data_2);
+};
+
+----
+
+This will only display the 'data_1', because the 'if' condition is true.
+
+[[IIRFilter_RT]]
+=== IIRFilter_RT
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'IIRFilter_RT(a_src_dataname'the input data', a_history_dataname'last positions where the processing was left', a_dst_dataname'the output', window_milliseconds'the output file timewindow',codec_type'the output codec type', filename'the output filename', a_channels_to_relay'channel indexes to relay', a_filter_dataname)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[InputFirstData]]
+=== InputFirstData
+
+_In progress - Final_
+
+Works with 'data -> variable'. Moves the first data from the datalist to the variablelist. Optionally you can set which channel you want to move, by default it moves every channel to the output variable.
+
+Syntax: 'InputFirstData([output_var_name], [active_channels])'
+
+.'Parameters'
+
+* 'output_var_name': the name of the output variable
+* 'active_channels' (optional): by default moves every channel. The channel numbering starts from 1.
+
+.'Returns'
+* -
+
+[[integral]]
+=== integral
+
+_In progress - Final_
+
+Works with 'variable'. The function calculates the integral of a signal from a start index to a stop index. It means it calculates the area under the signal. If the signal is above the x axis it counts the area as plus, and if the signal is under the x axis it counts the area as negative.
+
+Syntax: 'integral([in_var_name], [unit_start], [unit_stop], [output_var_name])'
+
+.'Parameters'
+
+* 'in_var_name': the name of the input variable name
+* 'unit_start': the start index of the signal sample. It starts from 0.
+* 'unit_stop': the stop index of the signal sample.
+* 'output_var_name': the name of the output variable name
+
+.'Returns'
+* -
+
+[[IntegTrapezoid]]
+=== IntegTrapezoid
+
+_In progress_
+
+Works with 'variable'.
+
+Syntax: 'IntegTrapezoid([in_var_name], [output_var_name], [spectrum])'
+
+.'Parameters'
+
+* 'in_var_name': the name of the input variable
+* 'output_var_name': the name of the output variable
+*  'spectrum': the spectrum name
+
+.'Returns'
+* -
+
+[[Intersect]]
+=== Intersect
+
+_In progress - Final_
+
+*Obsolate* Works with 'variable'. The function calculates the indexes where the given variable intersects the x-axis. In the output variable we get the intersections indexes.
+
+Syntax: 'Intersect([in_var_name], [output_var_name], [value])'
+
+.'Parameters'
+
+* 'in_var_name': the name of the input variable
+* 'output_var_name': the name of the output variable
+*  'value': not in use
+
+.'Returns'
+* -
+
+[[IAdd]]
+=== IAdd
+
+_In progress_
+
+Works with 'variable'. The function adds the given value to each element of the given variable.
+
+Syntax: 'IAdd([var_name], [value])'
+
+.'Parameters'
+
+* 'var_name': the name of the variable
+* 'value': the value we want to add
+
+.'Returns'
+* -
+
+
+[[IProd]]
+=== IProd
+
+_In progress - Final_
+
+Works with 'variable'. The function multiplies each element of the given variable by the given value.
+
+Syntax: 'IProd([var_name], [value])'
+
+.'Parameters'
+
+* 'var_name': the name of the variable which elements we want to multiply
+* 'value': the value we want to multiply
+
+.'Returns'
+* -
+
+[[IsEqual]]
+=== IsEqual
+
+_In progress - Final_ - Checked_
+
+Works with 'data'. Checks if the given datas are equal or not. We could use this function in another function's parameter, for example in the 'if()' function.
+
+Syntax: 'IsEqual([first_data_name], [second_data_name])'
+
+.'Parameters'
+
+* 'first_data_name': the name of the first data name we want to compare
+* 'second_data_name': the name of the second data name we want to compare
+
+.'Returns'
+* returns a text '1' if the two data is equal and '0' if not.
+
+[[example_007]]
+*Example*
+
+----
+
+CreateVector(vector_1, 10);
+CreateVector(vector_2, 10);
+DisplayData(vector_1);
+DisplayData(vector_2);
+CreateSine(sinewave, 10000, 1000, 10);
+if(IsEqual(vector_1, vector_2))
+{
+    DisplayData(sinewave);
+};
+
+----
+
+In this example will display the sine wave, because the two data is equal.
+
+[[LoadKrit]]
+=== LoadKrit
+
+_In progress_
+// Description of the given script
+
+Syntax: 'LoadKrit(outdataname, critfilename)'
+
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[mean]]
+=== Mean
+
+Calculates the mean of a variable. The mean is calculated for all the channels, outputting a new variable containing number of channels mean values.
+
+Syntax: 'Mean([mean_var_name], [src_var_name])'
+
+.'Parameters'
+
+* 'mean_var_name': the output variable name
+* 'src_var_name': the source variable name
+
+.'Returns'
+* -
+
+=== Markers
+
+[[AddMarker]]
+==== AddMarker
+
+_In progress - Final_
+
+Works with 'variable'. Adds a single marker to a variable.
+
+Syntax: 'AddMarker([in_var_name], [a_start], [a_length], [a_label], [a_channel_index], [a_color], [a_id])'
+
+.'Parameters'
+
+* 'in_var_name': the name of the input variable
+* 'a_start': the start value of the marker in horiyontal units.
+* 'a_length': length of the marker in horiyontal units.
+* 'a_label': optional
+* 'a_channel_index': optional
+* 'a_color': optional
+* 'a_id': optional
+
+.'Returns'
+* -
+
+[[GetMarkerStart]]
+==== GetMarkerStart
+
+_In progress - Final_
+
+Works with 'variable'. Adds a single marker to a variable.
+
+Syntax: 'GetMarkerStart([var_name], [marker_index])'
+
+.'Parameters'
+
+* 'var_name': the name of the input variable
+* 'marker_index': index of marker in the marker list.
+
+.'Returns'
+* start value in horizontal units
+
+[[GetMarkerLength]]
+==== GetMarkerLength
+
+_In progress - Final_
+
+Works with 'variable'. Adds a single marker to a variable.
+
+Syntax: 'GetMarkerLength([var_name], [marker_index])'
+
+.'Parameters'
+
+* 'var_name': the name of the input variable
+* 'marker_index': index of marker in the marker list.
+
+.'Returns'
+* length of the marker in horizontal units
+
+[[GetMarkerChannel]]
+==== GetMarkerChannel
+
+_In progress - Final_
+
+Works with 'variable'. Adds a single marker to a variable.
+
+Syntax: 'GetMarkerChannel([var_name], [marker_index])'
+
+.'Parameters'
+
+* 'var_name': the name of the input variable
+* 'marker_index': index of marker in the marker list.
+
+.'Returns'
+* channel index of marker
+
+[[PutTMarkersOnValues]]
+==== PutTMarkersOnValues
+
+_In progress - Final_
+
+Works with 'variable'. In the given input variable put vertical markers on the given values.
+
+Syntax: 'PutTMarkersOnValues([in_var_name], [values])'
+
+.'Parameters'
+
+* 'in_var_name': the name of the input variable
+* 'values': the list of the values where you want to add markers. The list must be a space separated list.
+
+.'Returns'
+* -
+
+[[example_011]]
+*Example*
+
+----
+
+CreateVector(data, 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1);
+Cat(data,data);
+AddMarker(data, 5, 18, "a_label", 0, 100, some_id);
+UserInput(data,fit_width);
+Extract(data, data2, GetMarkerStart(data, 0), GetMarkerLength(data, 0));
+DisplayData(data2,fit_width);
+DisplayData(data,fit_width);
+DisplayData(manage_windows, tile_horizontally);
+
+----
+
+[[MeanSpectrum]]
+=== MeanSpectrum
+
+_In progress - Final_
+
+Works with 'variable'. Creates a spectrum of the variable for each channel channel using the Fast Fourier transformation.
+
+The spectrum will have its size half of the input size +1, the first element being the DC component, whilst the last element the Nyquist component.
+
+Syntax: 'MeanSpectrum([src_var_name], [dst_var_name], [number_of_horizontal_units], [number_of_fft_horizontal_units], [spectrum_presentation])'
+
+.'Parameters'
+
+* 'src_var_name': the input variable name what we want to analyze
+* 'dst_var_name': the output variable name where we store the analyzed values
+* 'number_of_horizontal_units': a list with numbers of horizontal units. The input data will be sliced to lengths corresponding to this value.
+* 'number_of_fft_horizontal_units': a list with numbers the fast Fourier transformation will really be performed on, in horizontal units. It may be equal to the previous parameter, or higher. Providing a higher value will increase the resolution of the spectrum).
+* 'spectrum_presentation': the way the spectrum will be presented.
+
+. Spectrum presentation settings:
+* 'ampn' Normalized amplitude. The units will match the units of the fft's input. The output is the normalized square of the power spectrum density.
+* 'amp' Amplitude without normalization. The units will match the units of the fft's input. The output is the square of the power spectrum density.
+* 'psd' Power spectrum density. Units will be 'fft_input_vertical_units ^ 2 * fft_input_horizontal_units'
+* 'psdn' Power spectrum density normalized. Units will be 'fft_input_vertical_units ^ 2 * fft_input_horizontal_units'
+* 'dbi' Decibels 20.0 * log10(amp). Units will be decibels: log10(fft_input_vertical_units).
+
+.'Returns'
+* -
+
+.Processing steps:
+
+* the input data will be sliced into pieces of 'number_of_horizontal_units'
+* a hanning windowing will be performed on all the slices, having the input windowed in a nearest power of 2 sized memory space corresponding to 'number_of_fft_horizontal_units'
+* * an FFT transformation will be performed on all the slices
+* power spectrum density and normalization
+* averaging of slices
+
+[[example_005]]
+*Example*
+
+----
+
+CreateSine(sinewave, 10000 10000, 1000 1000, 100 30 10);
+MeanSpectrum(sinewave,
+             spectrain,
+             CopyForAllChannels(sinewave, 1),
+             CopyForAllChannels(sinewave, 1));
+DisplayData(sinewave, fit_width);
+DisplayData(spectrain, fit_width);
+
+----
+
+
+
+image:res/MeanSpectrum_01.png[Mean Spectrum]
+
+[[median]]
+=== Median
+
+Calculates the median of a variable. The median is calculated for all the channels, outputting a new variable containing number of channels median values.
+
+Syntax: 'Median([median_var_name], [src_var_name])'
+
+.'Parameters'
+
+* 'median_var_name': the output variable name
+* 'src_var_name': the source variable name
+
+.'Returns'
+* -
+
+[[mfilter_rev_bp]]
+=== mfilter_rev_bp
+
+_In progress_
+// Description of the given script
+
+Syntax: 'mfilter_rev_bp(indataname'the input data')'
+
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[mutato]]
+=== mutato
+
+_In progress_
+// Description of the given script
+
+Syntax: 'mutato(spavgpos1, spavgneg1, spavgpos2, spavgneg2, spcountandswrel)'
+
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[Mutato2]]
+=== Mutato2
+
+_In progress_
+// Description of the given script
+
+Syntax: 'Mutato2(spavgpos1, spavgneg1, spavgpos2, spavgneg2, spcountandswrel)'
+
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[NewFileDataBasedOnData]]
+=== NewFileDataBasedOnData
+
+_In progress - Final_
+
+Works with 'data'. Creates a new file based on the given template data and will be displayed on the GUI.
+
+Syntax: 'NewFileDataBasedOnData([dst_data_name], [template_data_name], [window_milliseconds], [fileCodec_type], [filename], [channels])'
+
+.'Parameters'
+
+* 'dst_data_name': the name of the output data
+* 'template_data_name': the name of the input template data
+* 'window_milliseconds': the window size in milliseconds
+* 'fileCodec_type': set the file codec type (4: bdf). See <<DataTypes>>.
+* 'filename': the name of the output file with the file extension corresponding to the specified codec type.
+* 'channels': optional, by default is every channel in the input template data
+
+.'Returns'
+* -
+
+[[NewMemoryData]]
+=== NewMemoryData
+
+_In progress - Final_
+
+Works with 'data'. Creates a data with the given parameters in the memory. You have to set the number of channel, the sample rates per channel and the horizontal unit. After it creates the data will be displayed on the GUI.
+
+Syntax: 'NewMemoryData([dst_data_name], [nr_channels], [sample_rates], [nr_horizontal_units])'
+
+.'Parameters'
+
+* 'dst_data_name': the name of the created data
+* 'nr_channels': the number of channels in the created data
+* 'sample_rates': the sample rates per channel. If you have more than 1 channel you have to set the sample rates for every channel. You can use space separated list
+* 'nr_horizontal_units': the number of horizontal units in each channel
+
+.'Returns'
+* -
+
+[[OnDataChange]]
+=== OnDataChange
+
+_In progress - Final_
+
+Works with 'data'. The program handles a map (key-value list). The program checks this list every 50ms and if the program find any data in this list it will be triggered. This function puts the given data as the key and puts it's 'body' as the value to this list.
+
+Syntax:
+
+----
+OnDataChange([data_name])
+{
+[body]
+};
+----
+.'Parameters'
+
+* 'data_name': the name of the data what you want to add to the list as a key
+* 'body': function(s) what you want to run on the given data
+
+.'Returns'
+* -
+
+*Example*
+
+----
+DataAq(6, COM5, 3360, 1 , 0 , 200, 4, FileName04.bdf, dataname);
+OnDataChange(dataname)
+{
+    Spectrum_RT(dataname, 1, actual_spectrum);
+    DisplayData(actual_spectrum, fit_width);
+};
+----
+
+[[orsocounter]]
+=== orsocounter
+
+_In progress_
+
+Works with 'variable'.
+
+Syntax: 'orsocounter([in_var_name], [spswkrits] , [spindx], [spcountandswrel])'
+
+.'Parameters'
+
+* 'in_var_name': the description of the parameter
+* 'spswkrits': the description of the parameter...
+* 'spindx': the description of the parameter...
+* 'spcountandswrel': the description of the parameter...
+
+.'Returns'
+* -
+
+[[Orsocounter2]]
+=== Orsocounter2
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'Orsocounter2(invarname, spswkrits, spindx, spcountandswrel)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[oszamlesf]]
+=== oszamlesf
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'oszamlesf(covereddata, spavgpos, spavgneg, slowwaves)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[Oversample]]
+=== Oversample
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'Oversample(indataname'the input data', outputdataname'the output',ratio)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+
+[[PutTwoSpindleTMarkers]]
+=== PutTwoSpindleTMarkers
+
+_In progress - Final_
+
+*Obsolate* Works with 'variable'.
+
+Syntax: 'PutTwoSpindleTMarkers([in_var_name], [RMDSGExtracted], [intersections])'
+
+.'Parameters'
+
+* 'in_var_name': the name of the input varialbe
+* 'RMDSGExtracted': the name of the...
+* 'intersections': the list of...
+
+.'Returns'
+* -
+
+[[RefineSpikes]]
+=== RefineSpikes
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'RefineSpikes(var_name, spikes, spike_radius)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[RefreshDataWindow]]
+=== RefreshDataWindow
+
+_In progress - Final_
+
+Works with 'data'. Refreshes the data on the display window.
+
+Syntax: 'RefreshDataWindow([data_name], [full_change])'
+
+.'Parameters'
+
+* 'data_name': the data what we want to refresh in a window
+* 'full_change': optional, the default is false. If true, the magnifier is approximated, and the scrollbar values are reset. If the dimensions (either horizontal or vertical) of the data are changed, it needs to be set to 'true' at least once in order for the data to display correctly. If only the values are changed, a value of 'false' should do.
+
+.'Returns'
+* -
+
+[[RowMean]]
+=== RowMean
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'RowMean(indataname'the input data', outdataname)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[RowMeanE]]
+=== RowMeanE
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'RowMeanE(invarname, outdataname, enable)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[SaveDataToFile]]
+=== SaveDataToFile
+
+_In progress - Final_
+
+Works with 'data'. Saves a given data to a file in a given window in milliseconds. The file type could be '.edf', '.bdf' and '.dat', depends on the chosen file codec type. The default file codec type is 'BDF'. If you specify another 'file_codec_type', the corresponding file extension must be specified in the 'file_name'. See <<DataTypes>>.
+
+Syntax: 'SaveDataToFile([var_name], [file_name], [window_milliseconds], [file_codec_type])'
+
+.'Parameters'
+
+* 'var_name': the variable name what we want to save to file
+* 'file_name': the file name where we want to save the
+* 'window_milliseconds': the time window what we want to save to the file in milliseconds
+* 'file_codec_type': Optional, the default file codec type is 4 which is the 'BDF'. set the file codec type (1: EDF). See <<DataTypes>>.
+
+.'Returns'
+* -
+
+[[SetStopOnFirstError]]
+=== SetStopOnFirstError
+
+_In progress - Final_
+
+By default the script runner stops when the first error occurs. With this function we can modify this behavior to not stop running when the first error occurs.
+
+Syntax: 'SetStopOnFirstError([bool])'
+
+.'Parameters'
+
+* 'bool' (true/false): the default is 'true'. If you call this function with 'false' the script continues to run the script even after the first error. The valid parameter can only be true or false.
+
+.'Returns'
+* -
+
+
+[[Spectrums]]
+=== Spectrums
+
+[[FullSpectrum]]
+==== FullSpectrum
+
+_In progress - Final_
+
+Works with 'variable'. Creates a spectrum of the variable, resulting in a new 2D heatmap data per channel.
+
+Every spectrum will have its size half of the input size +1, the first element being the DC component, whilst the last element the Nyquist component.
+
+The resulting data will have a size corresponding to the length of the input divided by the number of units the data will be sliced into.
+
+The horizontal units will match the horizontal units of the input data, the vertical units will be the frequency, having each channel in the output data represent a frequency component.
+
+Syntax: 'FullSpectrum([src_var_name], [dst_var_name], [number_of_horizontal_units], [frequency_list], [spectrum_presentation])'
+
+.'Parameters'
+
+* 'src_var_name': the input variable name what we want to analyze
+* 'dst_var_name': the output variable name, or a prefix to it, where we store the analyzed values. The whole name of the output variables are the 'dst_var_name' suffixed with the index of the channel, counted from 0. If the name is 'dst_name' and the input variable has 2 channels, the output variables will be 'dst_name0' and 'dst_name1'. If the input has one channel only, no suffix will be added.
+* 'number_of_horizontal_units': a list with numbers of horizontal units. The input data will be sliced to lengths corresponding to this value. No overlapping is supported currently.
+* 'frequency_list': the start and the stop frequencies. Between these frequencies the result will be presented, and frequency components outside of this range will be dropped.
+* 'spectrum_presentation': the way the spectrum will be presented.
+
+. Spectrum presentation settings:
+* 'ampn' Normalized amplitude. The units will match the units of the fft's input. The output is the normalized square of the power spectrum density.
+* 'amp' Amplitude without normalization. The units will match the units of the fft's input. The output is the square of the power spectrum density.
+* 'psd' Power spectrum density. Units will be 'fft_input_vertical_units ^ 2 * fft_input_horizontal_units'
+* 'psdn' Power spectrum density normalized. Units will be 'fft_input_vertical_units ^ 2 * fft_input_horizontal_units'
+* 'dbi' Decibels 20.0 * log10(amp). Units will be decibels: log10(fft_input_vertical_units).
+
+The output is normalized such as an 1mV amplitude sine wave in the input will result in an 1mV peak in the output.
+
+
+.'Returns'
+* -
+
+.Processing steps:
+
+* the input data will be sliced into pieces of 'number_of_horizontal_units'
+* a hanning windowing will be performed on all the slices, having the input windowed in a nearest power of 2 sized memory space corresponding to 'number_of_fft_horizontal_units'
+* * an FFT transformation will be performed on all the slices
+* power spectrum density and normalization
+* every spectrum resulted corresponding to a slice, will be inserted into the output data
+
+*Example with one single channel data*
+----
+CreateSine(sin, 10000, 1000, 106 26 6);
+FullSpectrum(sin, spec, CopyForAllChannels(sin, 1), 0 150);
+DisplayData(spec, ,2D_map);
+----
+
+*Example with multiple channel data*
+----
+CreateSine(sin, 10000 10000, 1000 1000, 106 26 6);
+FullSpectrum(sin, spec_, CopyForAllChannels(sin, 1), 0 150);
+DisplayData(spec_0, ,2D_map);
+DisplayData(spec_1, ,2D_map);
+----
+
+Note: In case of multiple channels, there will be no data named exactly as given in the parameter. Multpile output data objects will be created, with indexed names.
+
+
+[[Spectrogram]]
+==== Spectrogram
+
+_In progress - Final_
+
+Works with 'variable'. Creates a spectrogram of the variable, resulting in a new 2D heatmap data per channel.
+
+The resulting data will have a size of the input divided by the length of the block_size the data will be sliced into.
+
+Every spectrum will have its size half of the block_size +1, the first element being the DC component, whilst the last element the Nyquist component.
+
+The horizontal units will match the horizontal units of the input data, the vertical units will be the frequency, having each channel in the output data represent a frequency component.
+
+Syntax: 'Spectrogram([src_var_name], [src_channel], [dst_var_name], [a_block_len], [spectrum_bounds], [overlapping], [spectrum_presentation])'
+
+.'Parameters'
+
+* 'src_var_name': the input variable name what we want to analyze
+* 'src_channel': the input channel index to analyze
+* 'dst_var_name': the output variable name, or a prefix to it, where we store the analyzed values. The whole name of the output variables are the 'dst_var_name' suffixed with the index of the channel, counted from 0. If the name is 'dst_name' and the input variable has 2 channels, the output variables will be 'dst_name0' and 'dst_name1'. If the input has one channel only, no suffix will be added.
+* 'a_block_len': a numbers in horizontal units. The input data will be sliced to lengths corresponding to this value.
+* 'overlapping': Percentage value setting the percentage the slices will overlap (example 25, 50, 75, 87.5).
+* 'frequency_list': the start and the stop frequencies. Between these frequencies the result will be presented, and frequency components outside of this range will be dropped.
+* 'spectrum_presentation': the way the spectrum will be presented.
+
+. Spectrum presentation settings:
+* 'ampn' Normalized amplitude. The units will match the units of the fft's input. The output is the normalized square of the power spectrum density.
+* 'amp' Amplitude without normalization. The units will match the units of the fft's input. The output is the square of the power spectrum density.
+* 'psd' Power spectrum density. Units will be 'fft_input_vertical_units ^ 2 * fft_input_horizontal_units'
+* 'psdn' Power spectrum density normalized. Units will be 'fft_input_vertical_units ^ 2 * fft_input_horizontal_units'
+* 'dbi' Decibels 20.0 * log10(amp). Units will be decibels: log10(fft_input_vertical_units).
+
+The output is normalized such as an 1mV amplitude sine wave in the input will result in an 1mV peak in the output.
+
+
+.'Returns'
+* -
+
+.Processing steps:
+
+* the input data will be sliced into pieces of 'a_block_len'
+* a hanning windowing will be performed on all the slices, having the input windowed in a nearest power of 2 sized memory space corresponding to 'number_of_fft_horizontal_units'
+* * an FFT transformation will be performed on all the slices
+* power spectrum density and normalization
+* every spectrum resulted corresponding to a slice, will be inserted into the output data
+
+*Example*
+----
+CreateSine(sinewave, 1000, 1000, 30);
+DisplayData(sinewave);
+for (sine_frequency, 30, 100, 2){
+    AppendSine(sinewave, 1000, Iterator(sine_frequency));
+};
+RefreshDataWindow(sinewave, true);
+DataIn(sinewave, sinewave_, 1);
+Spectrogram(sinewave_, 0, fullspectrum, 1, 5 200, ,ampn);
+DisplayData(fullspectrum,fit_width,2D_map);
+Spectrogram(sinewave_, 0, fullspectrum2, 1, 5 200, 87.5,ampn);
+DisplayData(fullspectrum2,fit_width,2D_map);
+DisplayData(manage_windows, tile_horizontally);
+----
+
+
+[[Spectrum_RT]]
+==== Spectrum_RT
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'Spectrum_RT(data1, data2, data3)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[SpectrumTimeline_RT]]
+==== SpectrumTimeline_RT
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'SpectrumTimeline_RT(data1, data2, data3)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[SpikeDetect]]
+=== SpikeDetect
+
+_In progress - Final_
+
+Works with 'variable'. Detects spikes according to the specified criteria. You have to set two criteria, an amplitude value and a horizontal value. If the samples are above the specified amplitude in the specified width (horizontal value) then in the output variable indicates sample with an index that meets the criteria.
+
+Syntax: 'SpikeDetect([out_var_name], [in_var_name], [kriter], [spikelen])'
+
+.'Parameters'
+
+* 'out_var_name': the name of the output variable
+* 'in_var_name': the name of the input variable, where you want to detect spikes
+* 'kriter': the
+*  'spikelen':
+
+.'Returns'
+* -
+
+[[SpindleCount]]
+=== SpindleCount
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'SpindleCount(invarname, spswkrits, spindx, spcountandswrel)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[SQR_Inplace]]
+=== SQR_Inplace
+
+Work with 'variable'. Squares all sample values in a variable.
+
+Syntax: 'SQR_Inplace([variable_name])'
+
+.'Parameters'
+
+* 'variable_name': the name of the variable
+
+.'Returns'
+* -
+
+<<example_003, *Example*>>
+
+[[SQRT_Inplace]]
+=== SQRT_Inplace
+
+_In progress - Final_
+
+Works with 'variable'. Calculates its square roots for all sample values in a variable.
+
+Syntax: 'SQRT_Inplace(var_name)'
+
+.'Parameters'
+
+* 'var_name': the name of the variable
+
+.'Returns'
+* -
+
+[[stdev]]
+=== STDev
+
+Calculates the standard deviation of a variable and the <<mean, mean>> of that variable. The standard deviation is calculated for all the channels, outputting a new variable containing number of channels standard deviation values.
+
+Syntax: 'STDev([stdev_var_name], [src_var_name], [mean_var_name])'
+
+.'Parameters'
+
+* 'stdev_var_name': the output variable name
+* 'src_var_name': the source variable name
+* 'mean_var_name': the mean variable name
+
+.'Returns'
+* -
+
+[[Substract]]
+=== Substract
+
+_In progress - Final_
+
+Works with 'variable'. Subtracts one variable from the other.
+
+Syntax: 'Substract(minuend_var, subtrahend_var)'
+
+.'Parameters'
+
+* 'minuend_var': the name of the variable from which we subtract the other the variable
+* 'subtrahend_var': the name of the variable we subtract from the other variable
+
+.'Returns'
+* -
+
+[[swindxdetect]]
+=== swindxdetect
+
+_In progress_
+// Description of the given script
+//
+//Syntax: 'swindxdetect(invarname, outdataname, spswkrits)'
+//
+//.'Parameters'
+//
+//* 'first param': the description of the parameter
+//* 'second param': the description of the parameter...
+//
+//.'Returns'
+//* Here is the return value
+
+[[SystemExit]]
+=== SystemExit
+
+Exit from the whole program.
+
+Syntax: 'SystemExit(0)'
+
+.'Parameters'
+
+* -
+
+.'Returns'
+* -
+
+[[SystemInterval]]
+=== SystemInterval
+
+SystemInterval function may have a body. The body may contain a script. The script in the body will be called periodically.
+
+If the function does not have a body, a previously defined interval with the same name will be deleted (regardless of the interval's period).
+
+Syntax:
+----
+
+SystemInterval([interval_name], [interval_millisecs])
+{
+    ...
+};
+
+----
+
+*Example*
+
+----
+
+CreateVector(data, 11);
+DisplayData(data, fit_width,value_list);
+SystemInterval(int1, 1000)
+{
+    AlterSignal(data, 12);
+    RefreshDataWindow(data, fit_width,value_list);
+    SystemInterval(int1);
+};
+
+----
+
+.'Parameters'
+
+* 'interval_name': the name of the interval
+* 'interval_millisecs': the interval's period in milliseoconds
+
+.'Returns'
+* -
+
+[[ToString]]
+=== ToString
+
+_In progress - Final_
+
+
+Works with 'varialbe'. Creates a space separated list from the data of the first channel of the input variable and returns it.
+
+Syntax: 'ToString([input_var_name])'
+
+.'Parameters'
+
+* 'input_var_name': the name of the input variable
+
+.'Returns'
+* a text which is a space separated data list from first channel of the input variable
+
+*Example*
+
+----
+CreateVector(vec, 1 2 3 4 5);
+ToString(vec);
+----
+
+The return text: "1.0000000 2.0000000 3.0000000 4.0000000 5.0000000"
+
+
+[[Transpose]]
+=== Transpose
+
+_In progress - Final_ - Checked_
+
+Works with 'variable'. Transposes a source variable into a destination variable. The 'start' and 'stop' parameters are optional, and if you want to use them you need to set both of them. If you only set the source and the destination variable the 'Transpose' function will transpose the whole data in the source to the destination variable. The indexing starts from 0. The 'start' parameter indexes are inclusive and the 'stop' parameter indexes are exclusive.
+
+Syntax: 'Transpose([dst_var_name], [src_var_name], [src_start_channel_index], [src_start_element_index], [src_stop_channel_index], [src_stop_element_index])'
+
+.'Parameters'
+
+* 'dst_var_name': the name of the destination variable
+* 'src_var_name': the name of the source variable
+* 'src_start_channel_index': Optional by default this is the first channel. In the source variable this is the start number of the channels what we want to transpose to the destination variable.
+* 'src_start_element_index': Optional by default this is the first element in the channel(s). In the source variable this is the start number of the element in a channel what we want to transpose to the destination variable.
+* 'src_stop_channel_index': Optional by default this is the last channel. In the source variable this is the last channel number exclusively what we want to transpose to the destination variable.
+* 'src_stop_element_index': Optional by default this is the last element in the channel(s). In the source variable this is the last element in a channel exclusively what we want to transpose to the destination variable.
+
+.'Returns'
+* -
+
+*Example*
+We have a variable with 2 channels and each channel have 4 values.
+
+Source variable:
+----
+Element index:         0  1  2  3
+Channel 1 (index 0): [10 11 12 13]
+Channel 2 (index 1): [20 21 22 23]
+----
+
+Script:
+----
+Transpose(dst, src, 0, 0, 2, 2,)
+----
+
+Destination variable:
+----
+Element index:         0  1
+Channel 1 (index 0): [10 20]
+Channel 2 (index 1): [11 21]
+----
+
+
+[[example_001]]
+*Example*
+
+----
+
+CreateVector(vec1, 1 2 3 4 5 6);
+Transpose(vec2, vec1);
+DisplayData(vec1, fit_width, value_list);
+DisplayData(vec2, fit_width, value_list);
+
+----
+
+Note: surface views are working slowly if the data has thousands of channels (rows).
+
+[[TriggerDataChanged]]
+=== TriggerDataChanged
+
+_In progress - Final_
+
+*Obsolate* Description of the given script
+
+Syntax: 'TriggerDataChanged([data_var_name])'
+
+.'Parameters'
+
+* 'data_var_name': the name of the variable
+
+.'Returns'
+* -
+
+[[TruncateSTDev]]
+=== TruncateSTDev
+
+Truncates a signal based on the signal's <<median, median>>, its <<stdev, standard deviation>>, and a ratio. All the channels of the signal will be truncated in-place (no new output variable will be created).
+
+.All values
+* above *madian + standard deviation * ratio* will be truncated to *madian + standard deviation * ratio*
+* and all bellow *-1 * (madian + standard deviation * ratio)* will be truncated to *-1 * (madian + standard deviation * ratio)*.
+
+The function can be used to remove artifacts from a signal.
+
+Before using this functionality the signal is likely to be high-pass filtered, like in the example bellow:
+
+*Example*
+
+----
+
+FileOpen(Recording_01.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal);
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 30);
+Filter(ekgsignal, bandpass_filter);
+
+Mean(ekg_mean, ekgsignal);
+Median(ekg_median, ekgsignal);
+STDev(ekg_stdev, ekgsignal, ekg_mean);
+TruncateSTDev(ekgsignal, ekg_median, ekg_stdev, 0.2);
+
+DisplayData(ekgsignal);
+
+----
+
+image:res/TruncateSTDev.png[TruncateSTDev]
+
+Syntax: 'STDev([variable_name], [median_variable_name], [stdev_var_name], [ratio])'
+
+.'Parameters'
+
+* 'variable_name': input and output
+* 'median_variable_name':
+* 'stdev_var_name':
+* 'ratio':
+
+.'Returns'
+* -
+
+[[UserInput]]
+=== UserInput
+
+_In progress - Final_
+
+Works with 'varialbe'. Display the input variable in a separate window and set active that window. This stops the program execution until you close the opened window.
+
+While the window is open, markers on the window can be changed interactively. The changed markers can be used then to change the parameters of the further processing.
+
+Syntax: 'UserInput([input_var_name], ...)'
+
+.'Parameters'
+
+* 'input_var_name': the name of the input variable
+* '...': same options as the function DisplayData()
+
+.'Returns'
+* -
+
+<<example_011, *Example*>>
+
+
+[[xcorr]]
+=== xcorr
+
+_In progress_
+
+Works with 'variable'. The function returns some kind of difference or the correlation between the entries of the input variable and the kernel with the given method.
+
+The following methods can be used:
+
+* EUCL: Euclidian distance
+* SOSD: Sum of squared distances
+* TXCB: Manhattan / Taxicab / Cityblock
+* ANGL: Angle between vectors
+* PCC (defalut): Pearson correlation
+* CONV: Convolution
+
+Syntax: 'xcorr([dst_var_name], [src_var_name], [kernel_name], [method])'
+
+.'Parameters'
+
+* 'dst_var_name': the name of the output variable
+* 'src_var_name': the name of the input variable on which we execute the function
+* 'kernel_name': the name of the kernel
+* 'method' (optional): the name of the specified method, the default is 'PCC'. For the methods see the description above.
+
+.'Returns'
+* -
+
+[[ImpArtCanc]]
+=== ImpArtCanc
+
+Works with 'variable'. The function eliminates big impulse artefacts on each channel of the signal, by replacing the samples that are bigger than the treshold with the mean of the channel.
+
+Syntax: 'ImpArtCanc([src_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the variable on which we execute the function 
+
+.'Returns'
+* -
+
+[[ICA]]
+=== ICA
+
+Works with 'variable'. Independent component analysis. From an 'n' channel signal it will create a new variable with 'n' independent component. It uses the fixed point algorithm of Hyvarinen with deflationary ortogonalization and hyperbolic cosine as contrast function. It uses the random numbers provided in the 'random_var_name' variable as the initial values, when calculating the demixing matrix. The random values should be between -0.5 and 0.5 and the variable should contain at least n*n elements.
+
+Syntax: 'ICA([src_var_name], [dst_var_name], [random_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable on which we execute the function
+* 'dst_var_name': the name of the output variable
+* 'random_var_name': the name of a variable with random numbers for initialization
+
+.'Returns'
+* -
+
+[[Whitening]]
+=== Whitening
+
+Works with 'variable'. Performs signal whitening. It includes the centering of the signal and the eigen value decomposition of it's covariance matrix. The whitening matrix will be the diagonal matrix (containing the square roots of the eigenvalues) multiplied by the transposed eigenvector matrix. The channels of the resulting variable will be uncorrelated and their variances equal unity.
+
+Syntax: 'Whitening([src_var_name], [dst_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable on which we execute the function
+* 'dst_var_name': the name of the output variable
+
+.'Returns'
+* -
+
+[[ToComplex]]
+=== ToComplex
+
+Works with 'variable'. Converts the signal to complex form. The output will be twice as long as the input. The elements with even index will hold the real part and the elements with odd index will hold the imaginary part of the number. As this function converts real signal to complex form the imaginery parts will be 0 for all elements.
+
+Syntax: 'ToComplex([src_var_name], [dst_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable. Signal in real form.
+* 'dst_var_name': the name of the output variable. Signal in complex form.
+
+.'Returns'
+* -
+
+[[ToReal]]
+=== ToReal
+
+Works with 'variable'. Converts the signal from complex form to real form. The output will be half as long as the input. The function ignores the imaginary part of the complex numbers and retrieves only the real parts.
+
+Syntax: 'ToReal([src_var_name], [dst_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable. Signal in complex form.
+* 'dst_var_name': the name of the output variable. Signal in real form.
+
+.'Returns'
+* -
+
+[[FastFourierTransform]]
+=== FastFourierTransform
+
+Works with 'variable'. Calculates the fast fourier transform of the input using the FFTW libary. The input has to be in complex form, and the output will be in complex form too.
+
+Syntax: 'FastFourierTransform([src_var_name], [dst_var_name], [sign])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable in complex form.
+* 'dst_var_name': the name of the output variable in complex form.
+* 'sign': sign of the FFT. Forward FFT: -1. Backward FFT: 1. 
+
+.'Returns'
+* -
+
+[[PaddingSpectrum]]
+=== PaddingSpectrum
+
+Works with 'variable'. Takes a double sided spectrum (complex form) and extends it with 0s in the higher frequency range. The ratio of the extension will depend on the 'rate' input.
+
+Syntax: 'PaddingSpectrum([src_var_name], [dst_var_name], [rate])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable in complex form.
+* 'dst_var_name': the name of the output variable in complex form.
+* 'rate': ratio of the number of new and old samples. It has to be equal or bigger than 2.
+
+.'Returns'
+* -
+
+[[Interpolation]]
+=== Interpolation
+
+Works with 'variable'. Uses fourier interpolation to create a more detailed signal. It calls the following functions on temporary variables: ToComplex, FastFourierTransform, PaddingSpectrum, FastFourierTransform, ToReal. The output variable will be 'rate' times as long as the input variable.
+
+Syntax: 'Interpolation([src_var_name], [dst_var_name], [rate])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable.
+* 'dst_var_name': the name of the output variable.
+* 'rate': ratio of the new and the old sampling frequency. It has to be equal or bigger than 2.
+
+.'Returns'
+* -
+
+[[SelectBestChannel]]
+=== SelectBestChannel
+
+Works with 'variable'. Chooses the best channel for maternal QRS detection, based on a priori knowledge on its pseudo-periodicity. It applies a derivative filter on the signal, with a 16 ms long window, then a moving average filter, with a 9 ms long window. Then it calculates the mean of maximum values of each channel on windows of 8 s, 2 s, and 0.2 (mD6, mD2, mD02). The quality factor of each channel will be determined with the following equation: -mD2 / (mD02 + mD8). The best channel will be the one with the smallest quality value. The best channel from the original input variable will be copied into the output variable.
+
+Syntax: 'SelectBestChannel([src_var_name], [dst_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable.
+* 'dst_var_name': the name of the output variable, with the best channel.
+
+.'Returns'
+* -
+
+[[Centering]]
+=== Centering
+
+Works with 'variable'. The function will modify each channel of the signal by subtracting the mean of the channel and dividing with the standard deviation. The resulting channels will have a mean of 0 and a standard deviation of 1.
+
+Syntax: 'Centering([src_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable. It will be modified, the resulting signal will be centered.
+
+.'Returns'
+* -
+
+[[Squaring]]
+=== Squaring
+
+Works with 'variable'. The function will square each sample of each channel.
+
+Syntax: 'Squaring([src_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable. It will be modified, the resulting signal will be squared.
+
+.'Returns'
+* -
+
+[[Normalize]]
+=== Normalize
+
+Works with 'variable'. The function will normalize each channel of the signal, by dividing every sample with the maximum of the channel.
+
+Syntax: 'Normalize([src_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable. It will be modified, the resulting signal will be normalized.
+
+.'Returns'
+* -
+
+[[Divide]]
+=== Divide
+
+Works with 'variable'. The function will divide each sample of each channel with the divisor.
+
+Syntax: 'Divide([src_var_name, divisor])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable. It will be modified, the resulting signal will be normalized.
+* 'divisor': divide with this.
+
+.'Returns'
+* -
+
+[[CustomFilter]]
+=== CustomFilter
+
+Works with 'variable'. The function will create a variable copying the numbers from the denominator to the first channel numerator to the first channel of the filter variable, and the numbers from the numerator to the second channel of the filter. This function works also without denominator input. In this case the first channel will contain zeros.
+
+Syntax: 'CustomFilter([filt_var_name, numerator, denominator])'
+
+.'Parameters'
+
+* 'filt_var_name': the name of the output variable.
+* 'numerator': the list of the values of the numerator.
+* 'denominator': the list of the values of the denominator.
+
+.'Returns'
+* -
+
+
+[[DerivativeFilter]]
+=== DerivativeFilter
+
+Works with 'variable'. The function will create a temporary derivative filter, and apply that on the input variable. Filter and FilterReverse functions will be used on the input variable.
+
+Syntax: 'DerivativeFilter([src_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable.
+
+.'Returns'
+* -
+
+[[MovingAverageFilter]]
+=== MovingAverageFilter
+
+Works with 'variable'. The function will calculate the moving average of each channel of the given input. The length of the input will be 'win_length' s long. If 'win_length' is missing, the length of the window will be 0.15 s long.
+
+Syntax: 'MovingAverageFilter([src_var_name, win_length])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable.
+* 'win_length': the length of the moving window in s.
+
+.'Returns'
+* -
+
+[[FindPeaks]]
+=== FindPeaks
+
+Works with 'variable'. The function will find the local maximums on each channels of the given variable. It will modify the input variable, replacing the samples that are peaks with 1, and the samples that are not peaks with 0.  The local maximum will be calculated based on the derivative of the signal. The function will only find the local maximums with a height bigger than a minimum peak height, and with a minimum peak distance between each other.
+
+Syntax: 'FindPeaks([src_var_name, peak_height, peak_distance])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable.
+* 'peak_height': the minimum peak height will be calculated as the 'peak_height' fraction of the biggest value of the channel. Default value: 7
+* 'peak_distance': the minimum peak distance in s. Default value: 0.2 s
+
+.'Returns'
+* -
+
+[[CorrectPeaks]]
+=== CorrectPeaks
+
+Works with 'variable'. The function will correct the location of the peaks by searching for the maximum value of the signal in the 'win_length' viscinity of the peaks. The peaks variable will contain 1 where a peak is found on the signal and 0 where there's no peak.
+
+Syntax: 'CorrectPeaks([src_var_name, peaks_var_name, win_length])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input signal.
+* 'peaks_var_name': the name of the variable that contains the peaks detected on each channel.
+* 'win_length': length of the correction window in s. Default value: 0.08 s
+
+.'Returns'
+* -
+
+[[CreateOutput]]
+=== CreateOutput
+
+Works with 'variable'. The function will create the output variable with 3 channel, containing the first channel of the signal, the maternal peaks and the fetal peaks. The channels of the peaks will contain 1 where a peak is found on the signal and 0 where there's no peak.
+
+Syntax: 'CreateOutput([src_var_name, mother_peaks_var_name, fetal_peaks_var_name, output_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable.
+* 'mother_peaks_var_name': the name of the variable containing the maternal peaks.
+* 'fetal_peaks_var_name': the name of the variable containing the fetal peaks.
+* 'output_var_name': the name of the output variable.
+
+.'Returns'
+* -
+
+[[DeleteChannel]]
+=== DeleteChannel
+
+Works with 'variable'. The function will delete a channel of the variable defined in the index input. The index of the first channel is 0.
+
+Syntax: 'DeleteChannel([src_var_name, index])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable.
+* 'index': index of the channel to delete.
+
+.'Returns'
+* -
+
+[[DownsamplePeaks]]
+=== DownsamplePeaks
+
+Works with 'variable'. The function will determine the difference between the sampling frequencies of the long and short signals and modify the peaks variable. The peaks variable will contain the same peaks but on the smaller sampling frequency. Peaks are signaled with 1 while the non-peak samples are signaled with 0.
+
+Syntax: 'DownsamplePeaks([long_var_name, short_var_name, peaks_var_name])'
+
+.'Parameters'
+
+* 'long_var_name': the name of the variable containing the signal with the bigger sampling frequency.
+* 'short_var_name': the name of the variable containing the signal with the smaller sampling frequency.
+* 'peaks_var_name': the name of the input variable containing the peaks to downsample.
+
+.'Returns'
+* -
+
+
+[[CreateMotherSignal]]
+=== CreateMotherSignal
+
+Works with 'variable'. The function will create the mother signal from each channel of the input variable. It will create a matrix containing the QRS complexes defined in the peaks variable. Singular value decomposition will be performed in this matrix. The 3 strongest singular values will be kept, the others will be evaluated before rebuilding the signal. With this, the fetal peaks and the noises will be removed, and only the mother signal will remain.
+
+Syntax: 'CreateMotherSignal([src_var_name, peaks_var_name, out_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable containing the signal.
+* 'peaks_var_name': the name of the peaks variable containing the maternal peaks detected on the signal.
+* 'out_var_name': the name of the output variable.
+
+.'Returns'
+* -
+
+[[QrsFDetection]]
+=== QrsFDetection
+
+Works with 'variable'. The function will detect the fetal peaks on each channels of the input variable. The input signal should contain only the fetal QRS complexes, without the mother QRS complexes. 
+
+Syntax: 'QrsFDetection([src_var_name, maternal_peaks_var_name, out_var_name])'
+
+.'Parameters'
+
+* 'src_var_name': the name of the input variable containing the signal.
+* 'maternal_peaks_var_name': the name of the peaks variable containing the maternal peaks detected on the signal.
+* 'out_var_name': the name of the output variable containing the fetal peaks.
+
+.'Returns'
+* -
+
+[[SelectBestFChannel]]
+=== SelectBestFChannel
+
+Works with 'variable'. The function will select the best channel from the fetal peaks variable. The peaks are signalled with 1, while the non-peak samples are 0.
+
+Syntax: 'SelectBestFChannel([fetal_peaks_var_name, maternal_peaks_var_name, out_var_name])'
+
+.'Parameters'
+
+* 'fetal_peaks_var_name': the name of the peaks variable containing the fetal peaks.
+* 'maternal_peaks_var_name': the name of the peaks variable containing the maternal peaks.
+* 'out_var_name': the name of the output variable containing the chosen fetal peaks channel.
+
+.'Returns'
+* -
+
+[[CreateRandomVec]]
+=== CreateRandomVec
+
+Works with 'variable'. The function will create a variable. The variable will have 1 channel, with 'vec_length' number of values randomly choosen from the ['min_value', 'max_value') interval, using uniform distribution.
+
+Syntax: 'CreateRandomVec([out_var_name, vec_length, min_value, max_value])'
+
+.'Parameters'
+
+* 'out_var_name': the name of the output variable containing the random vector.
+* 'vec_length': the length of the random vector.
+* 'min_value': minimum random value.
+* 'max_value': maximum random value.
+
+
+.'Returns'
+* -

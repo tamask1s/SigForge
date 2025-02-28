@@ -1,0 +1,749 @@
+DataAq(1, 192.168.4.1:80, 2000 2000 2000 2000 2000 2000 2000 2000, 1 1 1 1 1 1 1 1, 0 1 2 3 4 5 6 7, 100, 4, FileName04.bdf);
+DataAq(1, 127.0.0.1:8070, 2000 2000 2000 2000 2000 2000 2000 2000, 1 1 1 1 1 1 1 1, 0 1 2 3 4 5 6 7, 100, 4, FileName04.bdf);
+DataAq(5, COM5, 3360, 1 , 0 , 200, 4, FileName04.bdf);
+DataAq(5, COM5, 1680 1680, 1 1, 0 1, 200, 4, FileName04.bdf);
+
+
+
+FileOpen(c:/tamas/PSAA/Herceghalom_BDF_format/Malac2 Pest 01.bdf, Data0);
+FileOpen(c:/tamas/PSAA/Herceghalom_BDF_format/Malac2 Pest 02.bdf, Data1);
+FileOpen(c:/tamas/PSAA/Herceghalom_BDF_format/Malac2 Pest 03.bdf, Data2);
+DataIn(Data0, appended, 1); 
+DataIn(Data1, to_append1, 1); 
+DataIn(Data2, to_append2, 1); 
+Append(appended, to_append1);
+Append(appended, to_append2);
+DisplayData(appended);
+DataIn(appended, datavartr, 1); 
+FullSpectrum(datavartr, 
+             spectrain, 
+             CopyForAllChannels(datavartr, 1), 
+             5 200);
+DisplayData(spectrain,fit_width,2D_map);
+
+
+
+
+CreateSine(sinewave, 10000 10000, 1000 1000, 100 30 10);
+DisplayData(sinewave);
+SaveDataToFile(sinewave, sinevawe002.bdf, 100);
+SystemInterval(int1, 1000){
+    CreateSine(sinewave, 10000 10000, 1000 1000, 100 30 10);
+    DisplayData(sinewave);
+};
+
+
+
+
+CreateSine (sinewave, 10000 10000, 1000 1000, 100 30 10);
+DisplayData (sinewave);
+SystemInterval(int1, 1000){
+    AppendSine (sinewave, 1000 , 1000 300 1);
+    RefreshDataWindow (sinewave, 0);
+    DataIn(sinewave, datavartr, 1); 
+    MeanSpectrum(datavartr, 
+                 spectrain, 
+                 CopyForAllChannels(datavartr, 1), 
+                 CopyForAllChannels(datavartr, 1));
+    DisplayData(spectrain,fit_width);
+};
+
+
+
+
+SystemInterval(int1);
+SystemExit(0);
+
+
+
+
+CreateVector(data, 1 2 3 4 5);
+DisplayData(data,fit_width,value_list);
+AlterSignal(data,-2.5);
+RefreshDataWindow(data);
+CreateVector(data2, 1 2 3 4 5);
+DisplayData(data2,fit_width,value_list);
+if(IsEqual(data, data2))
+{
+    AlterSignal(data2,10);
+    RefreshDataWindow(data2,fit_width,value_list);
+};
+
+
+
+
+CreateVector(data, 10);
+DisplayData(data,fit_width,value_list);
+CreateVector(data2, 0);
+DisplayData(data2,fit_width,value_list);
+SystemInterval(int1, 500)   
+{
+    AlterSignal(data2,1);
+    RefreshDataWindow(data2,fit_width,value_list);
+    if(IsEqual(data, data2))
+    {
+        SystemInterval(int1);
+    };
+};
+
+
+
+
+CreateVector(sine_frequency, 300);
+DisplayData(sine_frequency, fit_width,value_list);
+CreateSine(sinewave, 10000, 1000, 100 30 10);
+DisplayData(sinewave);
+SystemInterval(int1, 1000){
+    AlterSignal(sine_frequency, 10);
+    DataIn(sine_frequency, sine_frequency_, 1); 
+    AppendSine(sinewave, 1000, 1000 GetVal(sine_frequency_, 0, 0) 1);
+    RefreshDataWindow(sinewave, true);
+    DataIn(sinewave, datavartr, 1); 
+    MeanSpectrum(datavartr, 
+                 spectrain, 
+                 CopyForAllChannels(datavartr, 1), 
+                 CopyForAllChannels(datavartr, 1));
+    DisplayData(spectrain,fit_width);
+};
+
+
+
+
+DataAq(5, COM5, 3360, 1 , 0 , 200, 4, FileName04.bdf);
+OnDataChange(DATASERIES0)
+{
+    Spectrum_RT(DATASERIES0, 1, actual_spectrum);
+    DisplayData(actual_spectrum, fit_width);
+};
+
+DataAq(1, 192.168.4.1:80, 2000 2000 2000 2000, 1 1 1 1, 0 1 2 3, 200, 4, FileName04.bdf);
+DataAq(1, 192.168.4.1:80, 2000 2000, 1 1, 0 1, 200, 4, FileName04.bdf);
+OnDataChange(DATASERIES0)
+{
+    SpectrumTimeline_RT(sinewave, 1 1, actual_spectrum, 0 400);
+    //Spectrum_RT(DATASERIES0, 1, actual_spectrum);
+    //DisplayData(actual_spectrum, fit_width);
+};
+
+
+CreateSine(sinewave, 100000, 3000, 1000 500 100);
+DisplayData(sinewave);
+Spectrum_RT(sinewave, 1, actual_spectrum_);
+DisplayData(actual_spectrum_, fit_width);
+SpectrumTimeline_RT(sinewave, 1, actual_spectrum, 0 1100);
+SpectrumTimeline_RT(sinewave, 1, actual_spectrum, 0 1100);
+
+
+
+
+CreateVector(sine_frequency, 300);
+DisplayData(sine_frequency, fit_width,value_list);
+CreateSine(sinewave, 10000, 1000, 100 30 10);
+DisplayData(sinewave);
+SystemInterval(int1, 30){
+    AlterSignal(sine_frequency, 10);
+    RefreshDataWindow(sine_frequency, true);
+    DataIn(sine_frequency, sine_frequency_, 1); 
+    AppendSine(sinewave, 1000, 1000 GetVal(sine_frequency_, 0, 0) 1);
+    RefreshDataWindow(sinewave, true);
+    SpectrumTimeline_RT(sinewave, 1, actual_spectrum, 0 400);
+};
+
+
+
+
+CreateVector(sine_frequency, 300 50);
+DisplayData(sine_frequency, fit_width,value_list);
+CreateSine(sinewave, 10000, 1000, 100 30 10);
+DisplayData(sinewave);
+SystemInterval(int1, 100){
+    AlterSignal(sine_frequency, 3);
+    RefreshDataWindow(sine_frequency, true);
+    DataIn(sine_frequency, sine_frequency_, 1); 
+    AppendSine(sinewave, 1000, 1000 GetVal(sine_frequency_, 0, 0) GetVal(sine_frequency_, 0, 1) 1);
+    RefreshDataWindow(sinewave, true);
+    SpectrumTimeline_RT(sinewave, 1, actual_spectrum, 0 400);
+};
+
+
+
+CreateVector(sine_frequency, 300 50);
+DisplayData(sine_frequency, fit_width,value_list);
+CreateSine(sinewave, 10000 10000, 1000 1000, 100 30 10);
+DisplayData(sinewave);
+SystemInterval(int1, 100){
+    AlterSignal(sine_frequency, 3);
+    RefreshDataWindow(sine_frequency, true);
+    DataIn(sine_frequency, sine_frequency_, 1); 
+    AppendSine(sinewave, 1000 1000, 1000 GetVal(sine_frequency_, 0, 0) GetVal(sine_frequency_, 0, 1) 1);
+    RefreshDataWindow(sinewave, true);
+    //Spectrum_RT(sinewave, 1 1, actual_spectrum);
+    DataIn(sinewave, datavartr); 
+    MeanSpectrum(datavartr, 
+                 actual_spectrum, 
+                 CopyForAllChannels(datavartr, 1), 
+                 CopyForAllChannels(datavartr, 1));
+    DisplayData(actual_spectrum, fit_width);
+};
+
+
+
+CreateVector(sine_frequency, 300 50);
+DisplayData(sine_frequency, fit_width,value_list);
+CreateSine(sinewave, 10000 10000, 1000 1000, 100 30 10);
+DisplayData(sinewave);
+SystemInterval(int1, 100){
+    AlterSignal(sine_frequency, 3);
+    RefreshDataWindow(sine_frequency, true);
+    DataIn(sine_frequency, sine_frequency_, 1); 
+    AppendSine(sinewave, 1000 1000, 5 GetVal(sine_frequency_, 0, 0) GetVal(sine_frequency_, 0, 1) 1);
+    RefreshDataWindow(sinewave, true);
+    SpectrumTimeline_RT(sinewave, 1 1, actual_spectrum, 0 400);
+    //Spectrum_RT(sinewave, 1 1, actual_spectrum);
+    //DisplayData(actual_spectrum, fit_width);
+};
+
+
+
+FileOpen(c:/tamas/PS/Development/Projects/SigForge/Bin/alvas_tamas_FileName04.bdf, Data0);
+DataIn(Data0, datavartr, 1); 
+MeanSpectrum(datavartr, spectrain, CopyForAllChannels(datavartr, 4), CopyForAllChannels(datavartr, 16));
+FullSpectrum(datavartr, spectrain2, CopyForAllChannels(datavartr, 1), 3 1000);
+DisplayData(spectrain2,fit_width,2D_map);
+
+
+
+
+FileOpen(c:/tamas/PS/Development/Projects/SigForge/Bin/FileName04.bdf, Data1);
+DataIn(Data1, actdata, 1); 
+MeanSpectrum(actdata, spectrainy, CopyForAllChannels(actdata, 4), CopyForAllChannels(actdata, 16));
+FullSpectrum(actdata, spectrainx, CopyForAllChannels(actdata, 1), 2 60);
+DisplayData(spectrainx,fit_width,2D_map);
+
+
+FileOpen(c:/tamas/PS/Development/Projects/SigForge/Bin/FileName04.bdf, Data1);
+DataIn(Data1, actdata, 1); 
+MeanSpectrum(actdata, spectrainy, CopyForAllChannels(actdata, 4), CopyForAllChannels(actdata, 16));
+FullSpectrum(actdata, spectrainx, CopyForAllChannels(actdata, 1), 3 15);
+DisplayData(spectrainx,fit_width,2D_map);
+
+
+
+
+
+
+FileOpen(c:/tamas/PS/Development/Projects/SigForge/Bin\barany_20200122_nyers_adat\record-[2020.01.22-15.43.24].edf, Data0);
+DataIn(Data0, var1, 2); 
+Oversample(var1, var1_oversampled, 13.125);
+DisplayData(var1_oversampled);
+SaveDataToFile(var1_oversampled, var1_oversampled.bdf, 100);
+
+FileOpen(c:/tamas/PS/Development/Projects/SigForge/Bin/var1_oversampled.bdf, Data0); 
+FileOpen(c:/tamas/PS/Development/Projects/SigForge/Bin/barany_20200122_.bdf, Data1);
+DataIn(Data0, var0, 1); 
+DataIn(Data1, var1, 1); 
+Cat(var0, var1);
+DisplayData(var0);
+
+
+
+
+
+
+DataAq(6, 127.0.0.1:8070, 2000 2000 2000 2000 2000 2000 2000 2000, 1 1 1 1 1 1 1 1, 0 1 2 3 4 5 6 7, 100, 4, FileName04.bdf);
+CreateSine(sinewave, 2000 2000 2000 2000 2000 2000 2000 2000, 1 1 1 1 1 1 1 1, 100 30 10);
+DisplayData(sinewave);
+SystemInterval(int1, 100)
+{
+    DirectRelay_RT(DATASERIES0, sinewave, tempvar);
+};
+
+
+
+NewFileDataBasedOnData(new_data, DATASERIES0, 100, 4, empty_file_with_header.bdf);
+
+
+
+DataAq(6, 127.0.0.1:8070, 2000 2000 2000 2000 2000 2000 2000 2000, 1 1 1 1 1 1 1 1, 0 1 2 3 4 5 6 7, 100, 4, orig_signal.bdf, orig_signal);
+//NewFileDataBasedOnData(relayed_signal, orig_signal, 100, 4, relayed_signal.bdf);
+SystemInterval(int1, 100){
+    DirectRelay_RT(orig_signal, history_data_name 3, relayed_signal, 100, 4, relayed_signal.bdf, 1 3 4);
+};
+
+
+
+CreateSine(sinewave1, 10000 10000, 1000 1000, 30);
+CreateSine(sinewave2, 10000 10000, 1000 1000, 10);
+Substract(sinewave1, sinewave2);
+DisplayData(sinewave1);
+DisplayData(sinewave2);
+
+
+
+FileOpen(c:/NagyAbrahamDorina0201.bdf, Data1);
+DataIn(Data1, channels, 4 8);
+DataIn(Data1, channel_to_extract, 3);
+Substract(channels, channel_to_extract);
+CreateFilter(filter_notch, butt bs, 2 2000, 49.9 50.1, 0, 0);
+CreateFilter(filter_low_pass, butt lp, 2 2000, 40, 0, 0);
+CreateFilter(filter_high_pass, butt hp, 2 2000, 2, 0, 0);
+Filter(channels, filter_notch);
+Filter(channels, filter_low_pass);
+Filter(channels, filter_high_pass);
+MeanSpectrum(channels, 
+             spectraout, 
+             CopyForAllChannels(channels, 4), 
+             CopyForAllChannels(channels, 16));
+DisplayData(spectraout, fit_width);
+DisplayData(channels);
+
+
+
+DataAq(6, 127.0.0.1:8070, 2000 2000 2000 2000 2000 2000 2000 2000, 1 1 1 1 1 1 1 1, 0 1 2 3 4 5 6 7, 100, 4, orig_signal.bdf, orig_signal);
+CreateFilter(filter_low_pass, butt bp, 2 2000, 60 80, 0, 0);
+DisplayData(filter_low_pass);
+SystemInterval(int1, 100){
+    IIRFilter_RT(orig_signal, history_data 12, relayed_signal, 100, 4, relayed_signal.bdf, 1 3 4, filter_low_pass);
+};
+
+
+
+DataAq(6, 127.0.0.1:8070, 2000 2000 2000 2000 2000 2000 2000 2000, 1 1 1 1 1 1 1 1, 0 1 2 3 4 5 6 7, 100, 4, orig_signal.bdf, orig_signal);
+//NewFileDataBasedOnData(relayed_signal, orig_signal, 100, 4, relayed_signal.bdf, 1 2 3);
+SystemInterval(int1, 100){
+    DirectRelay_RT(orig_signal, orig_signal_positions 2, relayed_signal, 100, 4, relayed_signal.bdf, 1 3 4);
+};
+
+
+
+CreateSine(sin_1, 10000 1000, 1000 100, 106 26 6);
+DisplayData(sin_1);
+CreateSine(sin_2, 1000 10000, 100 1000, 106 26 6);
+DisplayData(sin_2);
+
+
+
+
+DataAq(6, 127.0.0.1:8070, 2000 2000 2000 2000 2000 2000 2000 2000, 1 1 1 1 1 1 1 1, 0 1 2 3 4 5 6 7, 100, 4, orig_signal.bdf, orig_signal);SystemInterval(int1, 100){ DirectRelay_RT(orig_signal, orig_signal_positions 2, relayed_signal, 100, 4, relayed_signal.bdf, 1 3 4); };
+
+
+device display objectprovider
+browserassistant
+
+
+DataAq(6, 127.0.0.1:8070, 2000 2000 2000 2000 2000 2000 2000 2000, 1 1 1 1 1 1 1 1, 0 1 2 3 4 5 6 7, 100, 4, orig_signal.bdf, orig_signal);
+CreateFilter(filter_low_pass, butt bp, 2 2000, 60 80, 0, 0);
+DisplayData(filter_low_pass);
+SystemInterval(int1, 100){
+    DirectRelay_RT(orig_signal, orig_signal_positions 12, relayed_signal, 100, 4, relayed_signal.bdf, 1 3 4);
+};
+
+
+    description
+    char* extensions
+    char* units
+singleton in db
+gui dir
+
+Ez tetszik, árban is jó, teljesítményben is, és van hozzá csere. Gondolja valaki azt, hogy rossz döntés lenne?
+
+25 226 10
+
+
+{ "horizontal_units" : "s", "surface2D_vert_units" : "", "vertical_units" : [ "unscored, respectively", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "", "", "", "%", "" ] }
+{ "horizontal_units" : "s", "surface2D_vert_units" : "", "vertical_units" : [ "unscored, respectively", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "", "", "", "%", "" ] }
+{ "horizontal_units" : "s", "surface2D_vert_units" : "", "vertical_units" : [ "unscored, respectively", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "", "", "", "%", "" ] }
+{ "horizontal_units" : "s", "surface2D_vert_units" : "", "vertical_units" : [                     "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "", "", "", "%", "" ] }
+                                                                                                   uV    uV    uV    uV    uV    uV    uV    uV    uV    uV    uV    uV                              % 
+                                                                                                   
+{ "horizontal_units" : "s", "surface2D_vert_units" : "", "vertical_units" : [ "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "uV", "", "", "", "%", "" ], "labels" : [ "EEG FpzM2", "EEG C3M2", "EEG O1M2", "EEG Fp2M1", "EEG C4M1", "EEG O2M1", "EEG M2M1", "EOG Pos8M1", "EOG Pos18M1", "EMG submental", "EMG linked legs", "EKG", "Resp oro-nasal", "Resp chest", "Resp abdomen", "SaO2","Hypnogram" ], "transducer_type" : [ "AgAgCl electrodes", "AgAgCl electrodes", "AgAgCl electrodes", "AgAgCl electrodes", "AgAgCl electrodes", "AgAgCl electrodes", "AgAgCl electrodes", "AgAgCl electrodes", "AgAgCl electrodes", "AgAgCl electrodes", "AgAgCl electrodes", "AgAgCl electrodes", "Oral/nasal thermistor", "Variable-resistance belt", "Variable-resistance belt", "Nellcor pulse oximeter", "0,1,2,3,4,5,6 and 9 are Wake,1,2,3,4,REM,MT and unscored, respectively" ] }
+
+DataIn(DATASERIES0, datavartr, 1); 
+MeanSpectrum(datavartr, 
+             spectrain, 
+             CopyForAllChannels(datavartr, 4), 
+             CopyForAllChannels(datavartr, 16));
+WriteAscii(spectrain, d:/spectrain.ascii);
+CreateFilter(Filter1, butt bs, 2 2000, 45 55, 0, 0);
+Filter(datavartr, Filter1);
+CreateFilter(Filter2, butt lp, 2 2000, 100, 0, 0);
+Filter(datavartr, Filter2);
+DisplayData(spectrain, fit_width);
+DisplayData(datavartr);
+
+CreateVector(data, 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18);
+CreateVector(data1, 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1);
+integral(data, 0, 4, integral);
+DisplayData(integral, fit_width, value_list);
+DisplayData(data1, fit_width, value_list);
+
+
+
+DataIn(DATASERIES122, datavartr, 1);
+MeanSpectrum(datavartr, 
+             spectrain, 
+             CopyForAllChannels(datavartr, 1), 
+             CopyForAllChannels(datavartr, 1));
+WriteAscii(spectrain, d:/spectrain.ascii);
+CreateFilter(Filter1, butt bs, 2 2000, 45 55, 0, 0);
+Filter(datavartr, Filter1);
+CreateFilter(Filter2, butt lp, 2 2000, 100, 0, 0);
+Filter(datavartr, Filter2);
+integral(spectrain, 2, 10, QRST);
+DisplayData(QRST, fit_width, value_list);
+integral(spectrain, 0, 2, DC);
+DisplayData(DC, fit_width, value_list);
+integral(spectrain, 10, 48, 10_48Hz);
+DisplayData(10_48Hz, fit_width, value_list);
+integral(spectrain, 48, 52, 50Hz);
+DisplayData(50Hz, fit_width, value_list);
+DisplayData(spectrain, fit_width);
+DisplayData(datavartr);
+
+
+
+
+
+
+
+FileOpen(D:/tamas/PSAA/Development/Applications/datas/Recording_01 - Copy.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal); 
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 20);
+Filter(ekgsignal, bandpass_filter);
+FilterReverse(ekgsignal, bandpass_filter);
+CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+Filter(ekgsignal, derivative_filter);
+FilterReverse(ekgsignal, derivative_filter);
+SQR_Inplace(ekgsignal);
+CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+Filter(ekgsignal, integrative_filter);
+FilterReverse(ekgsignal, integrative_filter);
+Copy(ekgsignal_threshold, ekgsignal);
+CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+Filter(ekgsignal_threshold, threshold_filter);
+FilterReverse(ekgsignal_threshold, threshold_filter);
+DetectSpikes(spike_signal, ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, spike_signal);
+DataIn(ekgsignaldata, ekgsignal_orig);
+Cat(ekgsignal, ekgsignal_orig);
+DisplayData(ekgsignal);
+
+
+
+
+FileOpen(D:/tamas/PSAA/Development/Applications/datas/Recording_01 - Copy.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal); 
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 20);
+Filter(ekgsignal, bandpass_filter);
+FilterReverse(ekgsignal, bandpass_filter);
+
+Mean(ekgsignal_orig_mean, ekgsignal);
+Median(ekgsignal_orig_median, ekgsignal);
+STDev(ekgsignal_orig_stdev, ekgsignal, ekgsignal_orig_mean);
+TruncateSTDev(ekgsignal, ekgsignal_orig_median, ekgsignal_orig_stdev, 0.2);
+
+CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+Filter(ekgsignal, derivative_filter);
+FilterReverse(ekgsignal, derivative_filter);
+SQR_Inplace(ekgsignal);
+CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+Filter(ekgsignal, integrative_filter);
+FilterReverse(ekgsignal, integrative_filter);
+Copy(ekgsignal_threshold, ekgsignal);
+CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+Filter(ekgsignal_threshold, threshold_filter);
+FilterReverse(ekgsignal_threshold, threshold_filter);
+DetectSpikes(spike_signal, ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, spike_signal);
+DataIn(ekgsignaldata, ekgsignal_orig);
+Cat(ekgsignal, ekgsignal_orig);
+
+DisplayData(ekgsignal);
+DisplayData(ekgsignal_orig_mean);
+DisplayData(ekgsignal_orig_median);
+DisplayData(ekgsignal_orig_stdev);
+
+
+
+
+
+
+
+DisplaySOM1D(som);
+DisplayData(som);
+
+
+
+
+
+
+
+
+FileOpen(D:/tamas/PSAA/Development/Applications/datas/Recording_01 - Copy.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal); 
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 20);
+Filter(ekgsignal, bandpass_filter);
+FilterReverse(ekgsignal, bandpass_filter);
+
+Mean(ekgsignal_orig_mean, ekgsignal);
+Median(ekgsignal_orig_median, ekgsignal);
+STDev(ekgsignal_orig_stdev, ekgsignal, ekgsignal_orig_mean);
+TruncateSTDev(ekgsignal, ekgsignal_orig_median, ekgsignal_orig_stdev, 0.2);
+
+CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+Filter(ekgsignal, derivative_filter);
+FilterReverse(ekgsignal, derivative_filter);
+SQR_Inplace(ekgsignal);
+CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+Filter(ekgsignal, integrative_filter);
+FilterReverse(ekgsignal, integrative_filter);
+Copy(ekgsignal_threshold, ekgsignal);
+CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+Filter(ekgsignal_threshold, threshold_filter);
+FilterReverse(ekgsignal_threshold, threshold_filter);
+DetectSpikes(spike_signal, ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, spike_signal);
+
+DataIn(ekgsignaldata, ekgsignal_orig);
+CreateFilter(bandpass_filter2, butterworth bp, 2 2000, 1 90);
+Filter(ekgsignal_orig, bandpass_filter2);
+FilterReverse(ekgsignal_orig, bandpass_filter2);
+TruncateSTDev(ekgsignal_orig, ekgsignal_orig_median, ekgsignal_orig_stdev, 0.3);
+
+TrainSOM1DFromPositions(ekgsignal_orig, spike_signal);
+RemoveSOM1DFromPositions(ekgsignal_orig, spike_signal);
+
+DisplaySOM1D(som21);
+DisplayData(som21);
+
+Cat(ekgsignal, ekgsignal_orig);
+
+DisplayData(ekgsignal_orig);
+DisplayData(ekgsignal);
+DisplayData(ekgsignal_orig_mean);
+DisplayData(ekgsignal_orig_median);
+DisplayData(ekgsignal_orig_stdev);
+
+
+
+
+
+
+
+
+
+FileOpen(D:/tamas/PSAA/Development/Applications/datas/Recording_01 - Copy.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal); 
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 20);
+Filter(ekgsignal, bandpass_filter);
+FilterReverse(ekgsignal, bandpass_filter);
+
+Mean(ekgsignal_orig_mean, ekgsignal);
+Median(ekgsignal_orig_median, ekgsignal);
+STDev(ekgsignal_orig_stdev, ekgsignal, ekgsignal_orig_mean);
+TruncateSTDev(ekgsignal, ekgsignal_orig_median, ekgsignal_orig_stdev, 0.2);
+
+CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+Filter(ekgsignal, derivative_filter);
+FilterReverse(ekgsignal, derivative_filter);
+SQR_Inplace(ekgsignal);
+CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+Filter(ekgsignal, integrative_filter);
+FilterReverse(ekgsignal, integrative_filter);
+Copy(ekgsignal_threshold, ekgsignal);
+CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+Filter(ekgsignal_threshold, threshold_filter);
+FilterReverse(ekgsignal_threshold, threshold_filter);
+DetectSpikes(spike_signal, ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, spike_signal);
+
+DataIn(ekgsignaldata, ekgsignal_orig);
+CreateFilter(bandpass_filter2, butterworth bp, 2 2000, 1 90);
+Filter(ekgsignal_orig, bandpass_filter2);
+FilterReverse(ekgsignal_orig, bandpass_filter2);
+TruncateSTDev(ekgsignal_orig, ekgsignal_orig_median, ekgsignal_orig_stdev, 0.3);
+
+
+CleanupSpikes(ekgsignal_orig, spike_signal, 0.3, 10.0);
+CleanupSignal_Spike(ekgsignal_orig, spike_signal, 0.3, 0.5);
+
+Cat(ekgsignal_orig, spike_signal);
+
+DisplayData(ekgsignal);
+DisplayData(spike_signal);
+DisplayData(ekgsignal_orig);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+FileOpen(d:\tamas\PSAA\Development\Test\Data\tasks_038\Bin\SeresJuditINA821_01.bdf, ekgsignaldata);
+FileOpen(D:/tamas/PSAA/Development/Applications/datas/Recording_01 - Copy.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal);
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 20);
+Filter(ekgsignal, bandpass_filter);
+FilterReverse(ekgsignal, bandpass_filter);
+
+Mean(ekgsignal_orig_mean, ekgsignal);
+Median(ekgsignal_orig_median, ekgsignal);
+STDev(ekgsignal_orig_stdev, ekgsignal, ekgsignal_orig_mean);
+TruncateSTDev(ekgsignal, ekgsignal_orig_median, ekgsignal_orig_stdev, 0.2);
+
+CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+Filter(ekgsignal, derivative_filter);
+FilterReverse(ekgsignal, derivative_filter);
+SQR_Inplace(ekgsignal);
+CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+Filter(ekgsignal, integrative_filter);
+FilterReverse(ekgsignal, integrative_filter);
+Copy(ekgsignal_threshold, ekgsignal);
+CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+Filter(ekgsignal_threshold, threshold_filter);
+FilterReverse(ekgsignal_threshold, threshold_filter);
+
+DetectSpikes(spike_signal, ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, spike_signal);
+
+DataIn(ekgsignaldata, ekgsignal_orig);
+CreateFilter(bandpass_filter2, butterworth bp, 2 2000, 5 90);
+Filter(ekgsignal_orig, bandpass_filter2);
+FilterReverse(ekgsignal_orig, bandpass_filter2);
+TruncateSTDev(ekgsignal_orig, ekgsignal_orig_median, ekgsignal_orig_stdev, 0.3);
+
+
+CleanupSpikes(ekgsignal_orig, spike_signal, 0.3, 4.0);
+CleanupSignal_Spike(ekgsignal_orig, spike_signal, 0.3, 0.5);
+Cat(ekgsignal_orig, spike_signal);
+DisplayData(ekgsignal);
+DisplayData(spike_signal);
+DisplayData(ekgsignal_orig);
+
+
+
+
+
+
+
+
+
+
+FileOpen(d:\tamas\PSAA\Development\Test\Data\tasks_038\Bin\SeresJuditINA821_01.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal);
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 20);
+Filter(ekgsignal, bandpass_filter);
+FilterReverse(ekgsignal, bandpass_filter);
+
+CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+Filter(ekgsignal, derivative_filter);
+FilterReverse(ekgsignal, derivative_filter);
+SQR_Inplace(ekgsignal);
+CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+Filter(ekgsignal, integrative_filter);
+FilterReverse(ekgsignal, integrative_filter);
+Copy(ekgsignal_threshold, ekgsignal);
+CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+Filter(ekgsignal_threshold, threshold_filter);
+FilterReverse(ekgsignal_threshold, threshold_filter);
+
+DetectSpikes(spike_signal, ekgsignal, ekgsignal_threshold);
+
+
+
+CleanupSpikes(ekgsignal, spike_signal, 0.3, 4.0);
+//CleanupSignal_Spike(ekgsignal, spike_signal, 0.3, 0.5);
+
+DataIn(ekgsignaldata, ekgsignal_orig);
+CreateFilter(bandpass_filter2, butterworth bp, 2 2000, 3 90);
+Filter(ekgsignal_orig, bandpass_filter2);
+FilterReverse(ekgsignal_orig, bandpass_filter2);
+
+CleanupSignal_Spike(ekgsignal_orig, spike_signal, 0.3, 0.5);
+
+Cat(ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, spike_signal);
+
+DisplayData(ekgsignal);
+DisplayData(spike_signal);
+DisplayData(ekgsignal_orig);
+
+
+
+
+
+
+CreateSine(sinewave, 10000, 1000, 30);
+DisplayData(sinewave);
+for (sine_frequency, 30, 190){
+    AppendSine(sinewave, 1000, Iterator(sine_frequency));
+};
+RefreshDataWindow(sinewave, true);
+DataIn(sinewave, sinewave_, 1); 
+
+FullSpectrum(sinewave_, 
+             fullspectrum, 
+             CopyForAllChannels(sinewave_, 1), 
+             5 200);
+DisplayData(fullspectrum,,2D_map);
+BindScrolling(sinewave, fullspectrum);
+DisplayData(manage_windows, tile_horizontally);
+DisplayData(scale_window, reset_horizontal, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+//DisplayData(manage_windows, maximize, sinewave);
+
+
+
+
+
+
+FileOpen(d:\tamas\PSAA\Development\Test\Data\tasks_038\Bin\SeresJuditINA821_01.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal);
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 20);
+Filter(ekgsignal, bandpass_filter);
+FilterReverse(ekgsignal, bandpass_filter);
+
+CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+Filter(ekgsignal, derivative_filter);
+FilterReverse(ekgsignal, derivative_filter);
+SQR_Inplace(ekgsignal);
+CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+Filter(ekgsignal, integrative_filter);
+FilterReverse(ekgsignal, integrative_filter);
+Copy(ekgsignal_threshold, ekgsignal);
+CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+Filter(ekgsignal_threshold, threshold_filter);
+FilterReverse(ekgsignal_threshold, threshold_filter);
+
+DetectSpikes(spike_signal, ekgsignal, ekgsignal_threshold);
+
+CleanupSpikes(ekgsignal, spike_signal, 0.3, 4.0);
+
+DataIn(ekgsignaldata, ekgsignal_orig);
+CreateFilter(bandpass_filter2, butterworth bp, 2 2000, 5 90);
+Filter(ekgsignal_orig, bandpass_filter2);
+FilterReverse(ekgsignal_orig, bandpass_filter2);
+
+RefineSpikes(ekgsignal_orig, spike_signal, 0.3);
+CleanupSignal_Spike(ekgsignal_orig, spike_signal, 0.5, 0.5);
+
+Cat(ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, spike_signal);
+Cat(ekgsignal_orig, spike_signal);
+
+DisplayData(ekgsignal);
+DisplayData(spike_signal);
+DisplayData(ekgsignal_orig);

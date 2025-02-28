@@ -1,0 +1,22 @@
+CreateModulatedSine(sim1, {"channel_params":[
+{
+    "number_of_samples" : 240000,
+    "unsigned int sampling_rate" : 1000,
+    "amplitude" : 1,
+    "frequency" : 50,
+    "modulation_frequency" : 0.02,
+    "frequency_modulation_depth" : 50
+}]});
+//AddNoise(sim1, 0.02, 50.0);
+//AddNoise(sim1, 0.12);
+//AddBandLimitedNoise(sim1, 0.95, 30, 70);
+//MeanSpectrum(sim1, ECG_spectrum, 235, 512);
+FullSpectrum(sim1, 
+             spectrain, 
+             CopyForAllChannels(sim1, 0.1), 
+             1 170);
+DisplayData(sim1,fit_width,, C, 000);
+DisplayData(spectrain,fit_width,2D_map);
+//DisplayData(ECG_spectrum);
+DisplayData(manage_windows, tile_horizontally);
+BindScrolling(sim1, spectrain);

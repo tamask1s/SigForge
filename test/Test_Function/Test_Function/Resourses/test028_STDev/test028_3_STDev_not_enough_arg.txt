@@ -1,0 +1,4 @@
+SetStopOnFirstError(false);
+STDev(vec_stdev, vec, vec_mean);
+STDev(vec_stdev);
+SystemExit(0);

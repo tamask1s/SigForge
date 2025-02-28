@@ -1,0 +1,2 @@
+ERROR: SaveDataToFile: 11 is not a valid file codec type
+An error occurred, but the execution continue

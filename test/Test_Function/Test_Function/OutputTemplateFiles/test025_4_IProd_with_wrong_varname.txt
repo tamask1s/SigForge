@@ -1,0 +1,2 @@
+ERROR: IProd: can't find 'invalid_vec' in variablelist
+An error occurred, but the execution continue

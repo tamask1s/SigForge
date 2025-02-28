@@ -1,0 +1,7 @@
+CreateVector(vec1, 0 1 2 3 4);
+Cat(vec1, vec1);
+CreateVector(vec2, 4 3 2 1 0);
+Cat(vec2,vec2);
+Append(vec1, vec2);
+WriteAscii(vec1, ../../Test_Function/OutputFiles/test032_2.dbascii);
+SystemExit(0);

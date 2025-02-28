@@ -1,0 +1,5 @@
+CreateVector(vec, -3.1 -2 -1 0 1 2 3.1);
+Cat(vec, vec);
+IAdd(vec, 2);
+WriteAscii(vec, ../../Test_Function/OutputFiles/test041_2.dbascii);
+SystemExit(0);

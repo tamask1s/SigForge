@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+InputFirstData(var_vec);
+SystemExit(0);

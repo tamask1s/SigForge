@@ -1,0 +1,2 @@
+ERROR: SaveDataToFile: while saving 'sinewave' to '../../Test_Function/OutputFiles/test003_6.bdf': can't find data in datalist: 'sinewave'
+An error occurred, but the execution continue

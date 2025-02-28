@@ -1,0 +1,11 @@
+CreateVector(data, 11);
+DisplayData(data,fit_width,value_list);
+SystemInterval(int1, 30)   
+{
+    AlterSignal(data,12);
+    RefreshDataWindow(data,fit_width);
+    SystemInterval(int1);
+    DataIn(data, datavar); 
+    WriteAscii(datavar, ../../Test_Function/OutputFiles/test006.dbascii);
+    SystemExit(0);
+};

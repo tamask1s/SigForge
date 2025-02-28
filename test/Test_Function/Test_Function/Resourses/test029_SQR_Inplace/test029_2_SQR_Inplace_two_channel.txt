@@ -1,0 +1,5 @@
+CreateVector(vec, 1 2 3 4 5 6);
+Cat(vec, vec);
+SQR_Inplace(vec);
+WriteAscii(vec, ../../Test_Function/OutputFiles/test029_2.dbascii);
+SystemExit(0);

@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+CreateVector(copy, CopyForAllChannels(sine, 42));
+SystemExit(0);

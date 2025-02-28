@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+SaveDataToFile(sinewave, ../../Test_Function/OutputFiles/test003_6.bdf, 100);
+SystemExit(0);

@@ -1,0 +1,4 @@
+SetStopOnFirstError(false);
+LoadAscii(src, ../Resourses/test017_GetXVals/test017_GetXVals_data_in.dbascii);
+GetXVals(dst, src, <, 9, 0);
+SystemExit(0);

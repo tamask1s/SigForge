@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+GetXVals(dst, src, >, 9, 0);
+SystemExit(0);

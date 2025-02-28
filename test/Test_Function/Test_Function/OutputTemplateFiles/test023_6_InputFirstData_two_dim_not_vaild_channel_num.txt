@@ -1,0 +1,4 @@
+ERROR: InputFirstData: not a valid channel number: 0
+An error occurred, but the execution continue
+ERROR: InputFirstData: not a valid channel number: 3
+An error occurred, but the execution continue

@@ -1,0 +1,2 @@
+ERROR: UserInput: can't find 'var' in variablelist
+An error occurred, but the execution continue

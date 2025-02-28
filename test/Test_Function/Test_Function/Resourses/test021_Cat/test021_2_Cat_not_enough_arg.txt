@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+Cat(vec1);
+SystemExit(0);

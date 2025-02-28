@@ -1,0 +1,8 @@
+CreateVector(data, 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1);
+Cat(data,data);
+AddMarker(data, 5, 18, "a_label", 0, 100, some_id);
+UserInput(data,fit_width);
+Extract(data, data2, GetMarkerStart(data, 0), GetMarkerLength(data, 0));
+DisplayData(data2,fit_width);
+DisplayData(data,fit_width);
+DisplayData(manage_windows, tile_horizontally);

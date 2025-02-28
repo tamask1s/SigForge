@@ -1,0 +1,3 @@
+LoadAscii(var1, ../Resourses/test009_LoadAscii/test009_LoadAscii_test_in.dbascii);
+WriteAscii(var1, ../../Test_Function/OutputFiles/test009.dbascii);
+SystemExit(0);

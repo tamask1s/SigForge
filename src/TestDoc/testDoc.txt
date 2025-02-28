@@ -1,0 +1,63 @@
+= SigForge test documentation
+:toc:
+:icons:
+
+
+In the repo there is a _test_ folder inside _Development\Applications\SigForge_.
+
+[[FunctionTests]]
+== Function tests
+
+In the _test_ folder there is a _Test_Functions_ folder where you can find the script functions' tests and a small program which executes them. The small program executes the test cases which are in the _Resources_ folder. Each test case has an output which the program put in the _OutputFiles_ folder. Finally the program compares the predefined output (which are in the _OutputTemplateFiles_ folder) with the actual output and print the result to the console.
+
+The _Test_Functions_ folder has four sub-folder:
+
+* _Executor_: here you can find the small program which executes the test files
+* _OutputFiles_: every test case output goes here
+* _OutputTemplateFiles_: every test has a predefined output which goes here
+* _Resourses_: here are the test cases, every script function has its own folder
+
+This program is part of the hole project, which name is *Test_Function* in the *C::B*. After you build this project you can run the test cases.
+
+=== Running Test_Function
+* Open a console/cmd
+* Go to the _Executor_ sub-folder inside the _Test_Function_ folder: `cd repo\Development\Applications\SigForge\test\Test_Function\Executor`
+* Execute the _Test_Functison.exe_: `.\Test_Function.exe`
+
+
+[[ManualTests]]
+== Manual tests
+
+In some cases we can't use the _Test_Function_ auto test method, therefore we need some manual tests as well. In most cases these are frontend related or the implementation of auto tests would take too much time.
+
+Every manual test has two parts:
+
+* _Script_: the script what you need to run in the _SigForge.exe -> File -> New script window_
+* _Expected output_: with which you need to compare the script output visually
+
+// Template for manual tests
+//[[FunctionName]]
+//=== FunctionName
+//
+//==== Script
+//
+//==== Expected output
+
+
+[[UserInput]]
+=== UserInput
+
+==== Script
+
+----
+CreateVector(vec, 0 1 2 3 4 5);
+UserInput(vec);
+----
+
+==== Expected output
+
+* 1. After you run the _Script_ section.
+image:res/UserInput-01.png[UserInput-01]
+
+* 2. After you press the _Su_ button in the top right corner four times
+image:res/UserInput-02.png[UserInput-02]

@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+SQRT_Inplace(vec);
+SystemExit(0);

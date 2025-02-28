@@ -1,0 +1,4 @@
+ERROR: CopyForAllChannels: 'sine': invalid argument: '42 42'
+An error occurred, but the execution continue
+ERROR: CopyForAllChannels: 'sine': invalid argument: 'wrong'
+An error occurred, but the execution continue

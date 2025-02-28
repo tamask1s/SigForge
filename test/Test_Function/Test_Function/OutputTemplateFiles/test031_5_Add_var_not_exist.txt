@@ -1,0 +1,4 @@
+ERROR: Add: variable does not exists.
+An error occurred, but the execution continue
+ERROR: Add: variable does not exists.
+An error occurred, but the execution continue

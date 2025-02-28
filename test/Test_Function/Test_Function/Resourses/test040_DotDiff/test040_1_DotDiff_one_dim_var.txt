@@ -1,0 +1,6 @@
+CreateVector(vec1, 1 2 3 4 5 6);
+CreateVector(vec2, 1 2 3 4 5 6);
+CreateVariable(diff, 1, 6);
+DotDiff(diff, 0, vec1, 0, vec2, 0);
+WriteAscii(diff, ../../Test_Function/OutputFiles/test040_1.dbascii);
+SystemExit(0);

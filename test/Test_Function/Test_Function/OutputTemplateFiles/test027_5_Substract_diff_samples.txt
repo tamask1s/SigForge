@@ -1,0 +1,2 @@
+ERROR: Substract: variable sample numbers should match.
+An error occurred, but the execution continue

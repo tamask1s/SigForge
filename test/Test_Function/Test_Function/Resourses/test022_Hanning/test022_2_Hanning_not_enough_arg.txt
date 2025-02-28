@@ -1,0 +1,5 @@
+SetStopOnFirstError(false);
+Hanning(hann);
+Hanning(hann,);
+Hanning(10);
+SystemExit(0);

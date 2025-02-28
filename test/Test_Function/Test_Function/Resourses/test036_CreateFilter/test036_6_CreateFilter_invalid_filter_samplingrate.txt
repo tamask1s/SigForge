@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+CreateFilter(filter1, butt lp, 2 0, 29 31, 0, 0);
+SystemExit(0);

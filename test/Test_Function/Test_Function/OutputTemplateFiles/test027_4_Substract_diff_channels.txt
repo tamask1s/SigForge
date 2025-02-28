@@ -1,0 +1,2 @@
+ERROR: Substract: variable channel numbers should either match, or the subtrahend's should be 1.
+An error occurred, but the execution continue

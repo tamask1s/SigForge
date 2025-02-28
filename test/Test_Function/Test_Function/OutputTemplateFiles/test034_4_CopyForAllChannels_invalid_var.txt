@@ -1,0 +1,2 @@
+ERROR: CopyForAllChannels: can't find variable in variablelist: 'sine'
+An error occurred, but the execution continue

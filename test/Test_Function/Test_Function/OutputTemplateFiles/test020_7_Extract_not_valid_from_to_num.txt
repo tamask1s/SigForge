@@ -1,0 +1,4 @@
+ERROR: Extract: the from/to argument not a valid number; From: 'a', Len: '10'
+An error occurred, but the execution continue
+ERROR: Extract: the from/to argument not a valid number; From: '1', Len: 'a'
+An error occurred, but the execution continue

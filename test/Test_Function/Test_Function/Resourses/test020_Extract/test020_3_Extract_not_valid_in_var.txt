@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+Extract(var_not_valid, vec2, 1, 7);
+SystemExit(0);

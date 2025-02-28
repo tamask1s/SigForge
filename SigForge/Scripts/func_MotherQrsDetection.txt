@@ -1,0 +1,38 @@
+FileOpen(C:\Users\Panni\Desktop\Data\IT-MEDicine\Matlab\Databases\Big_database\Reference\ref_interpolation_01.bin, ekgsignaldata);
+DataIn(ekgsignaldata, signal);
+
+def DetectMQrs(input_name, output_name)
+{
+	DeleteChannel(input_name, 3);
+	SelectBestChannel(input_name, output_name);
+	ImpArtCanc(output_name);
+	Copy(artf_removal, output_name);
+
+	Centering(output_name);
+
+	CreateFilter(low_pass_filter, butt lp, 3 4000, 12);
+	Filter(output_name, low_pass_filter);
+	FilterReverse(output_name, low_pass_filter);
+	Normalize(output_name);
+
+	CreateFilter(high_pass_filter, butt hp, 3 4000, 5);
+	Filter(output_name, high_pass_filter);
+	FilterReverse(output_name, high_pass_filter);
+	Normalize(output_name);
+
+	DerivativeFilter(output_name);
+	Normalize(output_name);
+	
+	Squaring(output_name);
+
+	MovingAverageFilter(output_name);
+	
+	FindPeaks(output_name);
+
+	CorrectPeaks(artf_removal, output_name);
+};
+
+DetectMQrs(signal, peaks);
+
+CreateOutput(signal, peaks, peaks, output);
+DisplayData(output);

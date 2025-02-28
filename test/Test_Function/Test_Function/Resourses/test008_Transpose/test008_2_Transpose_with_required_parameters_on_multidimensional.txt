@@ -1,0 +1,4 @@
+LoadAscii(src_var, ../Resourses/test008_Transpose/test008_Transpose_test_in_multidimensional.dbascii);
+Transpose(dst_var, src_var);
+WriteAscii(dst_var, ../../Test_Function/OutputFiles/test008_2.dbascii);
+SystemExit(0);

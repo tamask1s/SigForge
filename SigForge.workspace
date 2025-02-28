@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="src/Frontend/Controls/ControlsStaticLib.cbp" />
+		<Project filename="src/DataStructures/DataStructures.cbp" />
+		<Project filename="src/Frontend/VisualComponents/CommonVisualComponents.cbp" />
+		<Project filename="src/Backend/Backend.cbp" />
+		<Project filename="src/Backend_DynamicLib/Backend_DynamicLib.cbp" />
+		<Project filename="src/Frontend/SigForge.cbp">
+			<Depends filename="src/Frontend/Controls/ControlsStaticLib.cbp" />
+			<Depends filename="src/DataStructures/DataStructures.cbp" />
+			<Depends filename="src/Frontend/VisualComponents/CommonVisualComponents.cbp" />
+			<Depends filename="src/Backend/Backend.cbp" />
+			<Depends filename="src/SignalProcessors/ellf/StaticFilt.cbp" />
+			<Depends filename="src/SignalProcessors/SignalProc_SpindleCountAndSW.cbp" />
+			<Depends filename="src/SignalProcessors/SignalProc_BasicA.cbp" />
+			<Depends filename="src/SignalProcessors/SignalProc_BasicB.cbp" />
+			<Depends filename="src/SignalProcessors/SignalProc_BasicC.cbp" />
+			<Depends filename="../../Libs/3rdParty/LIB_CtrlsSLibL/CtrlsSLib.cbp" />
+			<Depends filename="../../Libs/Internal/LIB_Octopus24_TCP_compressable/Octopus24_TCP_compressable.cbp" />
+			<Depends filename="../../Libs/Internal/LIB_Octopus24_Serial_compressable/Octopus24_Serial_compressable.cbp" />
+			<Depends filename="../../Libs/Internal/LIB_DataAq_Octopus24_DataSimulation/DataAq_Octopus24_DataSimulation.cbp" />
+			<Depends filename="../../Libs/Internal/LIB_DataAq_Octopus24_DataClient/DataAq_Octopus24.cbp" />
+			<Depends filename="../../Libs/Internal/LIB_DataAq_Octopus24_serial/DataAq_Octopus24.cbp" />
+			<Depends filename="../../Libs/Internal/LIB_DataAq_Octopus24_serialMDE/DataAq_Octopus24_MDE.cbp" />
+			<Depends filename="../../Libs/Internal/LIB_DataAq_Octopus24_DataSimulationFromFile/DataAq_Octopus24_DataSimulationFromFile.cbp" />
+		</Project>
+		<Project filename="src/Codecs/Codec_DADiSP.cbp" />
+		<Project filename="src/Codecs/Codec_BDF.cbp" />
+		<Project filename="src/Codecs/Codec_EDF.cbp" />
+		<Project filename="src/Codecs/Codec_BrainVision.cbp" />
+		<Project filename="src/Codecs/Codec_BinMx.cbp" />
+		<Project filename="src/Codecs/Codec_TDMS.cbp" />
+		<Project filename="src/Codecs/Codec_MDE.cbp" />
+		<Project filename="src/Codecs/Codec_CHF.cbp" />
+		<Project filename="src/Codecs/Codec_MDE_raw.cbp" />
+		<Project filename="src/SignalProcessors/ellf/StaticFilt.cbp" />
+		<Project filename="src/SignalProcessors/SignalProc_SpindleCountAndSW.cbp" />
+		<Project filename="src/SignalProcessors/SignalProc_BasicA.cbp" />
+		<Project filename="src/SignalProcessors/SignalProc_BasicB.cbp" />
+		<Project filename="src/SignalProcessors/SignalProc_BasicC.cbp" />
+		<Project filename="src/SignalProcessors/SignalProc_BasicD.cbp" />
+		<Project filename="src/SignalProcessors/SignalProc_FetalEKGProcessing.cbp" />
+		<Project filename="../../Libs/3rdParty/LIB_CtrlsSLibL/CtrlsSLib.cbp" />
+		<Project filename="../../Libs/Internal/LIB_Octopus24_TCP_compressable/Octopus24_TCP_compressable.cbp">
+			<Depends filename="src/Frontend/Controls/ControlsStaticLib.cbp" />
+			<Depends filename="../../Libs/3rdParty/LIB_CtrlsSLibL/CtrlsSLib.cbp" />
+			<Depends filename="src/DataStructures/DataStructures.cbp" />
+		</Project>
+		<Project filename="../../Libs/Internal/LIB_Octopus24_Serial_compressable/Octopus24_Serial_compressable.cbp">
+			<Depends filename="src/Frontend/Controls/ControlsStaticLib.cbp" />
+			<Depends filename="../../Libs/3rdParty/LIB_CtrlsSLibL/CtrlsSLib.cbp" />
+			<Depends filename="src/DataStructures/DataStructures.cbp" />
+		</Project>
+		<Project filename="../../Libs/Internal/LIB_DataAq_Octopus24_DataSimulation/DataAq_Octopus24_DataSimulation.cbp" />
+		<Project filename="../../Libs/Internal/LIB_DataAq_Octopus24_DataClient/DataAq_Octopus24.cbp" />
+		<Project filename="../../Libs/Internal/LIB_DataAq_Octopus24_serial/DataAq_Octopus24.cbp" />
+		<Project filename="../../Libs/Internal/LIB_DataAq_Octopus24_serialMDE/DataAq_Octopus24_MDE.cbp" />
+		<Project filename="../../Libs/Internal/LIB_DataAq_Octopus24_DataSimulationFromFile/DataAq_Octopus24_DataSimulationFromFile.cbp" />
+		<Project filename="test/Test_Function/Executor/Test_Function.cbp" />
+		<Project filename="test/Test_Integration/Test_Integration.cbp" />
+		<Project filename="test/Test_System/Test_System.cbp">
+			<Depends filename="src/Backend_DynamicLib/Backend_DynamicLib.cbp" />
+		</Project>
+		<Project filename="test/Test_Unit/Test_Unit.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>

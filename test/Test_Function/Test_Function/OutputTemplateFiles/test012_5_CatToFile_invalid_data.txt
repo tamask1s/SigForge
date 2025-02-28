@@ -1,0 +1,2 @@
+ERROR: CatToFile: can't find data in the variablelist: 'var1'
+An error occurred, but the execution continue

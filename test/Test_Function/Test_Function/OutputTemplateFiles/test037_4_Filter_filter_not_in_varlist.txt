@@ -1,0 +1,2 @@
+ERROR: Filter: Can't find 'filter' in variable list
+An error occurred, but the execution continue

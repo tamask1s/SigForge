@@ -1,0 +1,2 @@
+ERROR: CreateFilter: Unknown filter kind: 'nincs', HINT: Filter kind could be 'butt', 'cheby' or 'ellip'. 
+An error occurred, but the execution continue

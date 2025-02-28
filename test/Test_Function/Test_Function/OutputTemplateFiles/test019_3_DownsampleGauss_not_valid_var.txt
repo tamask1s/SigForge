@@ -1,0 +1,2 @@
+ERROR: DownsampleGauss: can't find data in variablelist: 'not_valid_vec'
+An error occurred, but the execution continue

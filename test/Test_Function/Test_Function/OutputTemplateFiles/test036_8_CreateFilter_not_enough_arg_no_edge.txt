@@ -1,0 +1,2 @@
+ERROR: CreateFilter: Not enough parameters! No edges provided!
+An error occurred, but the execution continue

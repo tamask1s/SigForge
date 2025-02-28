@@ -1,0 +1,56 @@
+FileOpen(C:\tamas\PSAA\Development\Test\Data\tasks_038\Bin\SeresJuditINA821_01.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal);
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 20);
+Filter(ekgsignal, bandpass_filter);
+FilterReverse(ekgsignal, bandpass_filter);
+
+CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+Filter(ekgsignal, derivative_filter);
+FilterReverse(ekgsignal, derivative_filter);
+SQR_Inplace(ekgsignal);
+CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+Filter(ekgsignal, integrative_filter);
+FilterReverse(ekgsignal, integrative_filter);
+Copy(ekgsignal_threshold, ekgsignal);
+CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+Filter(ekgsignal_threshold, threshold_filter);
+FilterReverse(ekgsignal_threshold, threshold_filter);
+
+DetectSpikes(spike_signal, ekgsignal, ekgsignal_threshold);
+
+CleanupSpikes(ekgsignal, spike_signal, 0.3, 4.0);
+
+DataIn(ekgsignaldata, ekgsignal_orig);
+CreateFilter(bandpass_filter2, butterworth bp, 2 2000, 5 90);
+Filter(ekgsignal_orig, bandpass_filter2);
+FilterReverse(ekgsignal_orig, bandpass_filter2);
+
+//RefineSpikes(ekgsignal_orig, spike_signal, 0.3);
+CleanupSignal_Spike(ekgsignal_orig, spike_signal, 0.17, EKGAVG);
+Copy(ekgsignal_fetal, ekgsignal_orig);
+
+
+Filter(ekgsignal_orig, bandpass_filter);
+FilterReverse(ekgsignal_orig, bandpass_filter);
+Filter(ekgsignal_orig, derivative_filter);
+FilterReverse(ekgsignal_orig, derivative_filter);
+SQR_Inplace(ekgsignal_orig);
+Filter(ekgsignal_orig, integrative_filter);
+FilterReverse(ekgsignal_orig, integrative_filter);
+Copy(ekgsignal_threshold, ekgsignal_orig);
+Filter(ekgsignal_threshold, threshold_filter);
+FilterReverse(ekgsignal_threshold, threshold_filter);
+DetectSpikes(spike_signal, ekgsignal_orig, ekgsignal_threshold);
+
+CleanupSignal_Spike(ekgsignal_fetal, spike_signal, 0.17, EKGAVG);
+
+
+
+Cat(ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, ekgsignal_fetal);
+Cat(ekgsignal_orig, spike_signal);
+
+DisplayData(ekgsignal);
+DisplayData(spike_signal);
+DisplayData(ekgsignal_orig);
+DisplayData(EKGAVG);

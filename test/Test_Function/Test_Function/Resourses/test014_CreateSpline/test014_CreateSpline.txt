@@ -1,0 +1,3 @@
+CreateSpline(spline, 10, 0 4 10, 90 95 90);
+WriteAscii(spline, ../../Test_Function/OutputFiles/test014.dbascii);
+SystemExit(0);

@@ -1,0 +1,2 @@
+ERROR: FilterReverse: Can't find 'var' in variable list
+An error occurred, but the execution continue

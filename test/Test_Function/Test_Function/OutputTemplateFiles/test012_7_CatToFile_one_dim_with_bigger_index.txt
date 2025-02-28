@@ -1,0 +1,2 @@
+ERROR: CatToFile: the given index is bigger than the max index in the input variable
+An error occurred, but the execution continue

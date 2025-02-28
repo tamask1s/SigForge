@@ -1,0 +1,410 @@
+FileOpen(C:\Users\ekistam\Downloads\ninfea-non-invasive-multimodal-foetal-ecg-doppler-dataset-for-antenatal-cardiology-research-1.0.0\bin_format_ecg_and_respiration\4.bin, data_1);
+DataIn(data_1, datavartr4, 1 2 8 13 17); 
+
+CreateFilter(Filter1, butt bs, 2 2048, 49 51, 0, 0);
+Filter(datavartr4, Filter1);
+CreateFilter(Filter2, butt bp, 2 2048, 1 45, 0, 0);
+Filter(datavartr4, Filter2);
+
+DisplayData(datavartr4);
+ 
+ 
+ 
+for(i, 1, 10)
+{
+    FileOpen(
+        CatStrings(C:\Users\ekistam\Downloads\ninfea-non-invasive-multimodal-foetal-ecg-doppler-dataset-for-antenatal-cardiology-research-1.0.0\bin_format_ecg_and_respiration\, Iterator(i), .bin), 
+        CatStrings(data_, Iterator(i))
+    );    
+};
+
+FileOpen(C:\Users\ekistam\Downloads\ninfea-non-invasive-multimodal-foetal-ecg-doppler-dataset-for-antenatal-cardiology-research-1.0.0\bin_format_ecg_and_respiration\4.bin, data_1);
+FileOpen(C:\Users\ekistam\Downloads\ninfea-non-invasive-multimodal-foetal-ecg-doppler-dataset-for-antenatal-cardiology-research-1.0.0\bin_format_ecg_and_respiration\5.bin, data_2);
+DataDelete();
+
+
+for (i, 1, 3)
+{
+    FileOpen(CatStrings(C:\ninfea1.0.0\bin_format_ecg_and_respiration\, Iterator(i), .bin), 
+             CatStrings(data_, Iterator(i)));
+    DataIn(CatStrings(data_, Iterator(i)), CatStrings(filtered_, Iterator(i)), 1 2 8 13 17); 
+    DataDelete(CatStrings(data_, Iterator(i)));
+
+    CreateFilter(notch_filter, butt bs, 2 2048, 49.5 50.5, 0, 0);
+    Filter(CatStrings(filtered_, Iterator(i)), notch_filter);
+    FilterReverse(CatStrings(filtered_, Iterator(i)), notch_filter);
+
+    CreateFilter(bandpass_filter, butt bp, 2 2048, 0.5 70, 0, 0);
+    Filter(CatStrings(filtered_, Iterator(i)), bandpass_filter);
+    FilterReverse(CatStrings(filtered_, Iterator(i)), bandpass_filter);
+
+    DisplayData(CatStrings(filtered_, Iterator(i)));
+    SaveDataToFile(CatStrings(filtered_, Iterator(i)), 
+                   CatStrings(C:\ninfea1.0.0\filtered\filtered_, Iterator(i), .bdf),
+                   1000);
+};
+
+
+for (i, 1, 20)
+{
+    FileOpen(
+        CatStrings(C:\ninfea1.0.0\bin_format_ecg_and_respiration\, Iterator(i), .bin), 
+        CatStrings(data_, Iterator(i))
+    );
+    DataIn(CatStrings(data_, Iterator(i)), CatStrings(filtered_, Iterator(i)), 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27);
+    DataDelete(CatStrings(data_, Iterator(i)));
+
+    CreateFilter(notch_filter, butt bs, 2 2048, 49.5 50.5, 0, 0);
+    Filter(CatStrings(filtered_, Iterator(i)), notch_filter);
+    FilterReverse(CatStrings(filtered_, Iterator(i)), notch_filter);
+
+    CreateFilter(bandpass_filter, butt bp, 2 2048, 0.5 70, 0, 0);
+    Filter(CatStrings(filtered_, Iterator(i)), bandpass_filter);
+    FilterReverse(CatStrings(filtered_, Iterator(i)), bandpass_filter);
+
+    DisplayData(CatStrings(filtered_, Iterator(i)));
+    SaveDataToFile(CatStrings(filtered_, Iterator(i)), CatStrings(C:\ninfea1.0.0\filtered\filtered_, Iterator(i), .bdf), 1000);
+};
+
+
+
+
+FileOpen(C:\ninfea1.0.0\bin_format_ecg_and_respiration\4.bin, data_1);
+DataIn(data_1, datavartr4, 1 8);
+DataDelete(data_1);
+
+CreateVariable(diffed2, 1, 2048);
+DotDiff(diffed2, 0, datavartr4, 0, datavartr4, 1);
+
+//DisplayData(datavartr4);
+
+CreateFilter(Filter1, butt bs, 2 2048, 49 51, 0, 0);
+Filter(diffed2, Filter1);
+CreateFilter(Filter2, butt bp, 2 2048, 1 45, 0, 0);
+Filter(diffed2, Filter2);
+
+DisplayData(diffed2);
+
+
+
+
+
+
+
+
+FileOpen(C:\ninfea1.0.0\bin_format_ecg_and_respiration\25.bin, data_1);
+DataIn(data_1, datavartr4, 1 8);
+DataDelete(data_1);
+
+CreateVariable(diffed2, 1, 2048);
+DotDiff(diffed2, 0, datavartr4, 0, datavartr4, 1);
+
+//DisplayData(datavartr4);
+
+//CreateFilter(Filter1, butt bs, 2 2048, 49 51, 0, 0);
+//Filter(diffed2, Filter1);
+CreateFilter(Filter2, butt bp, 2 2048, 1 65, 0, 0);
+Filter(diffed2, Filter2);
+
+FullSpectrum(diffed2, 
+             spectra, 
+             CopyForAllChannels(diffed2, 1),
+             5 60);
+DisplayData(spectra,fit_width,2D_map);
+DisplayData(diffed2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CreateVector(sine_frequency, 300 50);
+DisplayData(sine_frequency, fit_width,value_list);
+CreateSine(sinewave, 10000, 1000, 100 30 10);
+DisplayData(sinewave);
+SystemInterval(int1, 100){
+    AlterSignal(sine_frequency, 3);
+    RefreshDataWindow(sine_frequency, true);
+    DataIn(sine_frequency, sine_frequency_, 1); 
+    AppendSine(sinewave, 1000 1000, 5 GetVal(sine_frequency_, 0, 0) GetVal(sine_frequency_, 0, 1) 1);
+    RefreshDataWindow(sinewave, true);
+    DataIn(sinewave, sine_var);
+
+    FullSpectrum(sine_var, spectra, CopyForAllChannels(sine_var, 1), 0 100); 
+
+    DisplayData(spectra,fit_width,2D_map);
+};
+
+
+
+CreateSine(sinewave, 1000, 1000, 100 30 10);
+DisplayData(sinewave);
+AppendSine(sinewave, 1000, 40 11);
+AppendSine(sinewave, 1000, 50 12);
+AppendSine(sinewave, 1000, 60 13);
+AppendSine(sinewave, 1000, 70 14);
+AppendSine(sinewave, 1000, 80 15);
+AppendSine(sinewave, 1000, 90 16);
+RefreshDataWindow(sinewave, true);
+DataIn(sinewave, sine_var);
+FullSpectrum(sine_var, spectra, CopyForAllChannels(sine_var, 1)); 
+DisplayData(spectra,fit_width,2D_map);
+
+
+
+CreateSine(sinewave1, 10000 10000, 1000 1000, 30);
+CreateSine(sinewave2, 10000 10000, 1000 1000, 3);
+
+CreateVariable(difference, 1 1, 1000 1000);
+DotDiff(difference, 0, sinewave1, 0, sinewave2, 1);
+DotDiff(difference, 1, sinewave2, 0, sinewave1, 1);
+
+DisplayData(sinewave1);
+DisplayData(sinewave2);
+DisplayData(difference);
+
+
+
+89921333
+
+
+
+CreateSine(sinewave, 10000 10000, 1000 1000, 30);
+MeanSpectrum(sinewave,
+             spectrain,
+             CopyForAllChannels(sinewave, .1),
+             CopyForAllChannels(sinewave, 4));
+DisplayData(sinewave, fit_width);
+DisplayData(spectrain, fit_width);
+
+
+CreateSine(sin_1, 10000 10000, 1000 1000, 106 26 6);
+FullSpectrum(sin_1, spec_, CopyForAllChannels(sin_1, 1), 0 150);
+DisplayData(spec_0, ,2D_map);
+DisplayData(spec_1, ,2D_map);
+
+
+
+
+
+
+
+CreateSine(sin_1, 10000, 1000, 106 26 6);
+FullSpectrum(sin_1, spec_1, CopyForAllChannels(sin_1, 1), 0 150);
+DisplayData(spec_1, ,2D_map);
+MeanSpectrum(sin_1, spec_3, CopyForAllChannels(sin_1, 1), CopyForAllChannels(sin_1, 1), dbi);
+DisplayData(spec_3, fit_width);
+CreateSine(sin_2, 10000, 1000, 111 31 11);
+FullSpectrum(sin_2, spec_2, CopyForAllChannels(sin_2, 1), 5 150);
+DisplayData(spec_2, ,2D_map);
+MeanSpectrum(sin_2, spec_4, CopyForAllChannels(sin_2, 1), CopyForAllChannels(sin_2, 1));
+DisplayData(spec_4, fit_width);
+
+
+
+CreateSine(sinewave, 10000 10000, 1000 1000, 30);
+MeanSpectrum(sinewave, amp_normalized,
+             CopyForAllChannels(sinewave, 1),
+             CopyForAllChannels(sinewave, 1), ampn);
+DisplayData(amp_normalized, fit_width);
+MeanSpectrum(sinewave, amp_normalized_highres,
+             CopyForAllChannels(sinewave, .2),
+             CopyForAllChannels(sinewave, 4), ampn);
+DisplayData(amp_normalized_highres, fit_width);
+MeanSpectrum(sinewave, PSD,
+             CopyForAllChannels(sinewave, 1),
+             CopyForAllChannels(sinewave, 1), psd);
+DisplayData(PSD, fit_width);
+MeanSpectrum(sinewave, PSD_normalized_kinda,
+             CopyForAllChannels(sinewave, 1),
+             CopyForAllChannels(sinewave, 1), psdn);
+DisplayData(PSD_normalized_kinda, fit_width);
+MeanSpectrum(sinewave, decibels,
+             CopyForAllChannels(sinewave, 1),
+             CopyForAllChannels(sinewave, 1), dbi);
+DisplayData(decibels, fit_width);
+DisplayData(sinewave, fit_width);
+
+
+
+
+
+CreateSine(sin_1, 10000, 1000, 30.59);
+FullSpectrum(sin_1, spec_1, CopyForAllChannels(sin_1, 1), 0 60);
+DisplayData(spec_1, ,2D_map);
+Spectrogram(sin_1, 0, amp_normalized, 1, 0 60, , ampn);
+DisplayData(amp_normalized, fit_width, 2D_map);
+
+
+
+
+
+
+CreateSine(sinewave, 10000, 1000, 30);
+DisplayData(sinewave);
+for (sine_frequency, 30, 190){
+    AppendSine(sinewave, 1000, Iterator(sine_frequency));
+};
+RefreshDataWindow(sinewave, true);
+DataIn(sinewave, sinewave_, 1);
+Spectrogram(sinewave_, 0, fullspectrum, 1, 5 200, ,ampn);
+DisplayData(fullspectrum,fit_width,2D_map);
+BindScrolling(sinewave, fullspectrum);
+DisplayData(manage_windows, tile_horizontally);
+DisplayData(scale_window, reset_horizontal, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+
+
+
+
+
+CreateSine(sinewave, 10240, 1024, 30 50);
+DisplayData(sinewave);
+AlterSignal(sinewave, 20);
+for (sine_frequency, 30, 190){
+    AppendSine(sinewave, 1024, Iterator(sine_frequency) 50);
+};
+AlterSignal(sinewave, 50);
+RefreshDataWindow(sinewave, true);
+SaveDataToFile(sinewave, C:\ninfea1.0.0\sinewave01.bdf, 1024);
+DataIn(sinewave, sinewave_, 1);
+Spectrogram(sinewave_, 0, fullspectrum, 1, 0 100, ,ampn);
+DisplayData(fullspectrum,fit_width,2D_map);
+SaveDataToFile(fullspectrum, C:\ninfea1.0.0\fullspectrum01.bdf, 1024);
+BindScrolling(sinewave, fullspectrum);
+DisplayData(manage_windows, tile_horizontally);
+DisplayData(scale_window, reset_horizontal, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+
+
+
+
+CreateSine(sinewave, 10000, 1000, 30);
+DisplayData(sinewave);
+for (sine_frequency, 30, 190){
+    AppendSine(sinewave, 1000, Iterator(sine_frequency));
+};
+RefreshDataWindow(sinewave, true);
+DataIn(sinewave, sinewave_, 1);
+Spectrogram(sinewave_, 0, fullspectrum, 1, 5 200, ,ampn);
+DisplayData(fullspectrum,fit_width,2D_map);
+Spectrogram(sinewave_, 0, fullspectrum2, 1, 5 200, 75,ampn);
+DisplayData(fullspectrum2,fit_width,2D_map);
+
+
+
+
+
+
+CreateSine(sinewave, 10000, 1000, 30);
+DisplayData(sinewave);
+for (sine_frequency, 30, 190){
+    AppendSine(sinewave, 1000, Iterator(sine_frequency));
+};
+RefreshDataWindow(sinewave, true);
+DataIn(sinewave, sinewave_, 1);
+FullSpectrum(sinewave_,
+             fullspectrum,
+             CopyForAllChannels(sinewave_, 1),
+             5 200);
+DisplayData(fullspectrum,,2D_map);
+BindScrolling(sinewave, fullspectrum);
+DisplayData(manage_windows, tile_horizontally);
+DisplayData(scale_window, reset_horizontal, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+
+
+
+def OnSineWaveMousedown(a_data_name, a_button, a_val_x, a_val_y, a_data_channel, a_data_val)
+{
+    if (IsEqual(a_button, 1))
+    {
+        DisplayData(manage_windows, tile_horizontally);
+    };
+};
+CreateSine(sinewave, 1000 1000, 1000 1000, 10 3 1);
+DisplayData(sinewave, fit_width,, A1, 000);
+OnDataEvent(sinewave, mousedown, OnSineWaveMousedown);
+
+
+
+def OnSineWaveMousedown(a_data_name, a_button, a_val_x, a_val_y, a_data_channel, a_data_val)
+{
+    if (IsEqual(a_button, 1))
+    {
+        SetValue(a_data_name, a_data_channel, a_val_x, 100);
+        RefreshDataWindow(a_data_name, true);        
+        SaveDataToFile(a_data_name, data_moddd2.dat, 100, 3);
+    };
+    if (IsEqual(a_button, 2))
+    {
+        SetValue(a_data_name, a_data_channel, a_val_x, 0, 0.1);
+        RefreshDataWindow(a_data_name, true);
+        SaveDataToFile(a_data_name, data_moddd2.dat, 100, 3);
+    };
+};
+CreateSine(sinewave, 1000 1000, 1000 1000, 10 3 1);
+DisplayData(sinewave, fit_width,, A1, 000);
+OnDataEvent(sinewave, mousedown, OnSineWaveMousedown);
+
+
+def OnSineWaveMousedown(a_data_name, a_button, a_val_x, a_val_y, a_data_channel, a_data_val)
+{
+    if (IsEqual(a_button, 1))
+    {
+        SetValue(a_data_name, a_data_channel, a_val_x, 100);
+        RefreshDataWindow(a_data_name, true);        
+        SaveDataToFile(a_data_name, data_moddd2.bdf, 100, 4);
+    };
+    if (IsEqual(a_button, 2))
+    {
+        SetValue(a_data_name, a_data_channel, a_val_x, 0, 0.1);
+        RefreshDataWindow(a_data_name, true);
+        SaveDataToFile(a_data_name, data_moddd2.bdf, 100, 4);
+    };
+};
+CreateSine(sinewave, 1000 1000, 1000 1000, 10 3 1);
+DisplayData(sinewave, fit_width,, A1, 000);
+OnDataEvent(sinewave, mousedown, OnSineWaveMousedown);
+
+
+
+def OnDataMousedown(a_data_name, a_button, a_val_x, a_val_y, a_data_channel, a_data_val)
+{
+    if (IsEqual(a_button, 1))
+    {
+        SetValue(a_data_name, a_data_channel, a_val_x, 1);
+        RefreshDataWindow(a_data_name, false);        
+        SaveDataToFile(a_data_name, data_moddd2.bdf, 100, 4);
+    };
+    if (IsEqual(a_button, 16))
+    {
+        SetValue(a_data_name, a_data_channel, a_val_x, 0.5);
+        RefreshDataWindow(a_data_name, false);        
+        SaveDataToFile(a_data_name, data_moddd2.bdf, 100, 4);
+    };
+    if (IsEqual(a_button, 2))
+    {
+        SetValue(a_data_name, a_data_channel, a_val_x, 0, 0.1);
+        RefreshDataWindow(a_data_name, false);
+        SaveDataToFile(a_data_name, data_moddd2.bdf, 100, 4);
+    };
+};
+FileOpen(d:\tamas\PSAA\Development\Test\Data\ReviewedSpikes\spikes03.bdf , data1);
+DataIn(data1, data2);
+DataDelete(data1);
+DisplayData(data2);
+OnDataEvent(data2, mousedown, OnDataMousedown);

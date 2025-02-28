@@ -1,0 +1,7 @@
+CreateVector(data, 1 2 3 4 5);
+DisplayData(data,fit_width,value_list);
+AlterSignal(data,-2.5);
+RefreshDataWindow(data);
+DataIn(data, datavar);
+WriteAscii(datavar, ../../Test_Function/OutputFiles/test005.dbascii);
+SystemExit(0);

@@ -1,0 +1,4 @@
+SetStopOnFirstError(false);
+CreateVector(vec, 0 1 0 -1 0 1 0);
+integral(vec, 0, 10, integral);
+SystemExit(0);

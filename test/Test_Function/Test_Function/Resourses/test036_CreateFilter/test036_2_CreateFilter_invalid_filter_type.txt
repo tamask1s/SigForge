@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+CreateFilter(filter1, butt aa, 2 1000, 29 31, 0, 0);
+SystemExit(0);

@@ -1,0 +1,2 @@
+ERROR: CreateFilter: Invalid sampling rate!
+An error occurred, but the execution continue

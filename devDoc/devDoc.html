@@ -1,0 +1,1535 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.9" />
+<title>SigForge developer guide</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install(2);
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>SigForge developer guide</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>Before reading this document, please read the <a href="../SigForge/Doc/userDoc.html">SigForge user guide</a>.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_is_SigForge">What is SigForge</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>SigForge is a plugin based signal processing library set with a basic frontend, all developed in c and c++11. Some of its modules are using 3rd party libraries like boost.</p></div>
+<div class="paragraph"><p>The signal processing algorithms can be executed by running scripts. During script run, the corresponding c functions are called.</p></div>
+<div class="paragraph"><p>SigForge is developed under Windows, but except the frontend, which uses the Win32API heavily, the code is easily portable.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_SigForge_8217_s_basic_structure">SigForge&#8217;s basic structure</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>SigForge has 2 main blocks: the backend, and the frontend. The application is designed based on the <strong>MVVM</strong> (model-view-view model) user interface design pattern <span class="footnote"><br />[<a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel">https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel</a>]<br /></span>, the backend being the <strong>model</strong>, and the frontend the <strong>view</strong> and the <strong>view model</strong>.</p></div>
+<div class="paragraph"><p>The data flow is initiated by the upper layers (view, view model), using <strong>pull model</strong> <span class="footnote"><br />[<a href="https://ptolemy.berkeley.edu/papers/03/PushPullProcessing/PushAndPull.pdf">https://ptolemy.berkeley.edu/papers/03/PushPullProcessing/PushAndPull.pdf</a>]<br /></span>.</p></div>
+<div class="paragraph"><div class="title">SigForge Block diagram</div><p><span class="image">
+<img src="res/SigForgeBlockdiagram.png" alt="SigForge Block diagram" />
+</span></p></div>
+<div class="paragraph"><p>Due to the MVVM architecture and the usage of pull model, the backend is totally detachable from the user interface, making it useful for automation, standalone data acquisition, or application specific usage by attaching an application specific user interface to it.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_backend_8217_s_basic_structure">Backend&#8217;s basic structure</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The backend is a dynamic library. It serves a dynamically importable c interface for its users (usually frontends).</p></div>
+<div class="paragraph"><p>While the backend serves as the model for the frontend, the philosophy behind the MVVM design pattern is also followed by the backend&#8217;s sub-modules, so the pull model is.</p></div>
+<div class="paragraph"><p>The "onion like" structure of MVVM, and the usage of the pull model on all the interfaces allows an easily traceable data flow.</p></div>
+<div class="ulist"><div class="title">The backend can load 3 types of plugin modules (also dlls):</div><ul>
+<li>
+<p>
+Data acquisition modules
+</p>
+</li>
+<li>
+<p>
+Signal processing modules
+</p>
+</li>
+<li>
+<p>
+Data file input-output modules
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>These modules are located in specific directories, and are loaded at startup. Though, there is a setting possibility to reload the signal processing dlls before every script run, in order to speed up signal processing algorithm development. This setting is switched on by default.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_SigForge_8217_s_plugin_modules">SigForge&#8217;s plugin modules</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_data_acquisition">Data acquisition</h3>
+<div class="paragraph"><p>These modules are connecting to the drivers of data acquisition devices.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_signal_processing">Signal processing</h3>
+<div class="paragraph"><p>These modules contain signal processing algorithms.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_data_file_input_output">Data file input / output</h3>
+<div class="paragraph"><p>These modules can read and write data files.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_SigForge_threading_model">SigForge threading model</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>SigForge backend&#8217;s functions are not synchronized; therefore they should be called by only one thread. If they are called by multiple threads, the synchronization of the backend calls (Interval() calls, script runs, and the call of data getter functions) is the responsability of the caller.</p></div>
+<div class="paragraph"><p>The "IBackend::Interval()" function should be called by the user (frontend) in every 20ms, and the backend should do all its job during these calls.</p></div>
+<div class="paragraph"><p>After all the data is collected and / or processed during an "Interval()", the function returns, and the fronted has the possibility to view the data which relies in the backend, or initiate script runs.</p></div>
+<div class="paragraph"><p>While the backend module itself is not thread safe, in some plug-ins might be a need for multiple threads, especially in data acquisition modules. These modules needs to be thread safe, and should synchronize all the calls arriving from the backend.</p></div>
+<div class="ulist"><div class="title">There are a few callbacks the backend could interact with:</div><ul>
+<li>
+<p>
+RefreshDataWindow
+</p>
+</li>
+<li>
+<p>
+DisplayData
+</p>
+</li>
+<li>
+<p>
+SystemExit
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>These calls are always arriving from the thread which initiated the script run or are calling the backend&#8217;s Interval() function.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_classes_and_interactions">Classes and interactions</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>SigForge has an ISignalCodec interface for its data representations. This interface has block setter and getter functions.</p></div>
+<div class="paragraph"><p>There is a CGenericVar class inherited from ISignalCodec, which also allows direct data access for its buffers (having 2 dimensionally addressable data relying in a continuous memory space in order to minimize the number of cache faults).</p></div>
+<div class="paragraph"><p>ISignalCodec can be parent of all types of data, including file codecs and data acquisition classes, while CGenericVar&#8217;s data is directly addressable, which restricts its usage.</p></div>
+<div class="paragraph"><p>In short: ISignalCodec is more generic, while CGenericVar is faster.</p></div>
+<div class="paragraph"><p>The backend has 2 data lists, one for generic ISignalCodec objects, and one for CGenericVar objects.</p></div>
+<div class="paragraph"><p>A CGenericVar object can anytime be <strong>moved</strong> into the list of ISignalCodec objects, while an ISignalCodec object can only be <strong>copied</strong> into a new CGenericVar object, in order to add the newly created object into the list of CGenericVar objects.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/SigForgeUML.png" alt="SigForge Block diagram" />
+</span></p></div>
+<div class="paragraph"><p>This UML diagram is obsolate. TODO: update it.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_SigForge_scripting">SigForge scripting</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_syntax">Syntax</h3>
+<div class="paragraph"><p>&#8230;</p></div>
+</div>
+<div class="sect2">
+<h3 id="_basic_functionalities">Basic functionalities</h3>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 1. Backend&#8217;s built-in functions</caption>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">FUNCTION NAME</p></td>
+<td align="left" valign="top"><p class="table">FUNCTION PARAMETERS</p></td>
+<td align="left" valign="top"><p class="table">DESCRIPTION</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">DataAq</p></td>
+<td align="left" valign="top"><p class="table">&lt;module index&gt;, &lt;module specific setting&gt;, &lt;sampling rates&gt;, &lt;gains&gt;</p></td>
+<td align="left" valign="top"><p class="table">Starts data acquisition</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">DisplayData</p></td>
+<td align="left" valign="top"><p class="table">&lt;variable name to display&gt;</p></td>
+<td align="left" valign="top"><p class="table">initiates a view for the specified variable, and moves it from the variable list to the data list.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">FileOpen</p></td>
+<td align="left" valign="top"><p class="table">&lt;file name&gt;, &lt;data name the data to be stored&gt;</p></td>
+<td align="left" valign="top"><p class="table">opens a file for reading, keeps it open, and makes its content reachable via a data object with the name specified by the second parameter</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">NewFileDataBasedOnData</p></td>
+<td align="left" valign="top"><p class="table">&lt;new data name&gt;, &lt;template data name&gt;, &lt;data chunk size in miliseconds&gt;, &lt;codec_type&gt;, &lt;filename&gt;, &lt;active channels&gt;</p></td>
+<td align="left" valign="top"><p class="table">see user guide.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">NewMemoryData</p></td>
+<td align="left" valign="top"><p class="table">see user guide.</p></td>
+<td align="left" valign="top"><p class="table">see user guide.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>OnDataChange</em></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">RefreshDataWindow</p></td>
+<td align="left" valign="top"><p class="table">&lt;data (window) name to refresh&gt;</p></td>
+<td align="left" valign="top"><p class="table">refreshes the window specified</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">SaveDataToFile</p></td>
+<td align="left" valign="top"><p class="table">&lt;data name&gt;, &lt;file name&gt;, &lt;data chunk size in miliseconds&gt;, &lt;codec type&gt;</p></td>
+<td align="left" valign="top"><p class="table">saves a data to a file, and closes the file. The data remains untached, and will have no connection to the saved file.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>SetStopOnFirstError</em></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><em>SystemExit</em></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">SystemInterval</p></td>
+<td align="left" valign="top"><p class="table">see user guide.</p></td>
+<td align="left" valign="top"><p class="table">see user guide.</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">TriggerDataChanged</p></td>
+<td align="left" valign="top"><p class="table">see user guide.</p></td>
+<td align="left" valign="top"><p class="table">see user guide.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_environment_and_development">Environment and development</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>SigForge is built using Code::Blocks IDE (C::B) <span class="footnote"><br />[<a href="https://codeblocks.org">https://codeblocks.org</a>]<br /></span>. The whole project consist in 23 projects currently, including the plugins and test projects.</p></div>
+<div class="ulist" id="developer_package"><div class="title">In order to develop:</div><ul>
+<li>
+<p>
+You should have access to the SVN repository
+</p>
+</li>
+<li>
+<p>
+Please extract the developer package file from repo: <em>"\ToolsBinaries\IDE\ITMedDev_Program Files.7z"</em> into <em>"c:/Program Files"</em>
+</p>
+</li>
+<li>
+<p>
+Alternatively, you can install Code::Blocks IDE from <a href="http://www.codeblocks.org/">http://www.codeblocks.org/</a>, and use a real 32 bit MinGW gcc compiler (SigForge and the dll projects need a 32bit compiler).
+</p>
+</li>
+<li>
+<p>
+Start C::B, and open the workspace "SigForge.workspace"
+</p>
+</li>
+<li>
+<p>
+Activate the project "SigForge" by double-clicking it.
+</p>
+</li>
+<li>
+<p>
+Right click on "Workspace" &#8594; "Rebuild workspace".
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Workspace "SigForge.workspace" should clearly compile with the GCC/mingw version included in the package above (GCC 5.1).</p></div>
+<div class="paragraph"><p>Please follow the developing guidelines and coding conventions <a href="#coding_conventions">coding conventions</a>.</p></div>
+<div class="sect2">
+<h3 id="_c_b_setup">C::B setup</h3>
+<div class="paragraph"><p>Please use C::B&#8217;s source code formatter plugin: "Menu"&#8594;"Plugins"&#8594;"Source code formatter" while coding.</p></div>
+<div class="paragraph"><p>Please set up C::B&#8217;s source code formatter in "Menu"&#8594;"Settings"&#8594;"Editor"&#8594;"Source code formatter"&#8594;"Padding" as follows:</p></div>
+<div class="paragraph"><p>Check the "Insert space padding around operators" and the "Insert space padding after commas" boxes. Leave others unchecked.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_c_b_useful_keyboard_shortcuts">C::B useful keyboard shortcuts</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+switch active editor tab between the current and the latest activated file(s): LEFT ALT + LEFT ARROW
+</p>
+</li>
+<li>
+<p>
+switch active editor tab between the current and the firstly activated file(s): LEFT ALT + RIGHT ARROW
+</p>
+</li>
+<li>
+<p>
+block uncomment: CTRL + SHIFT + X
+</p>
+</li>
+<li>
+<p>
+block comment: CTRL + SHIFT + C
+</p>
+</li>
+<li>
+<p>
+block uncomment: CTRL + SHIFT + X
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="coding_conventions">Coding conventions</h3>
+<div class="paragraph"><p>A typical class example looks like this:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>class CClass
+{
+    int m_member_variable;
+    void MemberFunction()
+    {
+        ...
+    }
+};</code></pre>
+</div></div>
+<div class="ulist"><div class="title">Class types and class prefixes</div><ul>
+<li>
+<p>
+"I" classes: Use "I" prefix for classes having at least one pure virtual function (ie for non-instantiable classes, possibly interfaces).
+</p>
+</li>
+<li>
+<p>
+"T" classes: Use "T" prefix for instantiable classes having only deep-copyable members, and valid copy constructors. Structs typically, where you can use "=" safely, and cheap.
+</p>
+</li>
+<li>
+<p>
+If a "T" class have an expensive copy constructor, it is more likely to name it a "C" class even if it has deep copy implemented.
+</p>
+</li>
+<li>
+<p>
+"C" classes (most common): Use "C" prefix for instantiable classes having copy constructors performing shallow copy only (ie have at least one pointer member pointing to a data whose lifetime is controlled by the actual or some other object.).
+</p>
+</li>
+<li>
+<p>
+Templates are just templates for classes. Prefix them like the other classes. (likely "C", but not exclusively)
+</p>
+</li>
+<li>
+<p>
+Enumerations: prefix enumerations with "E"
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Public / private. Please note the precedence of these in the <a href="#class_examples">class examples</a> after this section.</p></div>
+<div class="paragraph"><div class="title">Variables and variable prefixes</div><p>Please don&#8217;t use prefixes to specify a member or function argument <strong><em>type</em></strong>. however, please use prefixes to indicate the <strong><em>scope</em></strong> of those.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Use "m_" prefix for members,
+</p>
+</li>
+<li>
+<p>
+Use "a_" prefix for function arguments.
+</p>
+</li>
+<li>
+<p>
+(You may also use "l_" for locals, or anything else than m_ or a_ can just be local.)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Please <strong>use virtual destructor</strong>, and know how it works. Also know how virtual functions work. Please check docs for overriding (and overloading) if you don’t know what these are.</p></div>
+<div class="paragraph"><p><strong>Don&#8217;t use globals</strong>, neither variables, nor functions. If it&#8217;s really needed, use a singleton pattern, and feel free to use static member functions in classes instead of functions in global scope.</p></div>
+<div class="paragraph"><p>In case your member function is not using any member variable, make your function static. Tend to use static member functions.</p></div>
+<div class="paragraph"><p>Lower case members, function arguments, and local variables.</p></div>
+<div class="paragraph"><p>Note the way of indentation. Please indent code as you can see in the <a href="#class_examples">examples</a> after this section.</p></div>
+<div class="paragraph"><p>Note the way how the <strong>bracelets</strong>, <strong>brackets</strong>, spaces etc. are used in the functions bellow. Use them likewise in your code.</p></div>
+<div class="paragraph"><p><strong>Don&#8217;t afraid of too long code lines</strong>, especially if they are comments. We have large monitors. And also a right button on our mouse, or our touch pad - try it out in a C::B editor.</p></div>
+<div class="paragraph"><p>Don&#8217;t use multi line function calls. If you don&#8217;t use them, a new line will always inform you about that something new is going to happen.</p></div>
+<div class="paragraph"><p>If you are commenting, use DoxyBlocks comments in the format bellow.</p></div>
+<div class="paragraph"><p><strong>Use comments mostly for interfaces</strong>, and avoid unnecessary commenting.</p></div>
+<div class="paragraph"><p>A Doxy comment like "The output data of the function" for an argument named "a_output_data" is valid, but has no added value. Still, consumes space and developer time to read.</p></div>
+<div class="paragraph"><p>Use [in] and [out] for arguments if it&#8217;s appropriate, though. It might be informative, and it is displayed on a potentially generated doxy HTML differently.</p></div>
+<div class="paragraph"><p>Don&#8217;t create directories or files in repo containing the word "obj" or "svn", as it hardens cleaning up the repo.</p></div>
+<div class="paragraph"><p>Please use DrMemory to check for unaddressable or uninitialized accesses and leaks. Search for a binary release starting from here: drmemory.org</p></div>
+<div class="paragraph"><p>Please run the tests before every commit (<a href="../testDoc/testDoc.html">SigForge test documentation</a>). Do not commit your change if any of the tests are failing.</p></div>
+<div class="paragraph"><p>If you are developing a feature, also write a test for it.</p></div>
+<div class="paragraph"><p>Ask for code review if appropriate.</p></div>
+<div class="paragraph"><p>Feel free to adapt old code to align these conventions.</p></div>
+<div class="sect3">
+<h4 id="class_examples">Code examples</h4>
+<div class="listingblock">
+<div class="content">
+<pre><code>struct TClass
+{
+    int m_integer_member;
+    int m_some_data_that_is_owned[10];
+
+    void PublicMemberFunction()
+    {
+        ...
+    }
+};
+
+class CClass
+{
+    int m_integer_member;
+    int* m_pointer_to_some_data_that_is_owned;
+
+    void PrivateMemberFunction()
+    {
+        ...
+    }
+
+public:
+    CClass()
+        : m_integer_member(0)
+    {
+        m_pointer_to_some_data = new int[10];
+    }
+
+    virtual ~CClass()
+    {
+        delete[] m_pointer_to_some_data;
+    }
+
+    void PublicMemberFunction()
+    {
+        ...
+    }
+};
+
+struct TMarker
+{
+    enum ESnapMode
+    {
+        ESnapMode_None,
+        ESnapMode_ToGrid,
+        ESnapMode_ToOthers,
+        ESnapMode_ToLinesOnly
+    };
+
+    double m_start_sample;
+    double m_length;
+
+    TMarker();
+};
+
+/** \brief Some interface description here.
+ * \brief Some more description lines here.
+ */
+class ISignalCodec
+{
+public:
+    virtual bool GetDataBlock(double** a_buffer, unsigned int* a_start, unsigned int* a_nrelements, int* a_enable) = 0;
+    virtual bool WriteDataBlock(double** a_buffer, unsigned int* a_start, unsigned int* a_nrelements, int* a_actchans = 0) = 0;
+};
+
+class CVariable: public ISignalCodec
+{
+public:
+    /** Use "virtual" and / or "override" specifiers for an overriding virtual function.
+     * If you want your class to be final, write private constructors and factory functions, or use "final" specifier, or both. */
+    virtual bool GetDataBlock(double** a_buffer, unsigned int* a_start, unsigned int* a_nrelements, int* a_enable)
+    {
+    }
+
+    virtual bool WriteDataBlock(double** a_buffer, unsigned int* a_start, unsigned int* a_nrelements, int* a_actchans)
+    {
+    }
+};
+
+typedef void (EObject::*On_Changes) (CControl_Base* a_sender, int a_chan_indx);
+class CSetupChannels: public CControl_Base
+{
+    unsigned int    m_checkboxes_id;
+    CBitButton*     m_button_select_none;
+    TVisualization* m_visualization;
+
+public:
+    CSetupChannels(const char* a_caption, int a_posx, int a_posy, int a_width, int a_height, ISignalCodec* a_signalcodec = 0);
+    virtual ~CSetupChannels();
+
+    /** \brief Some function description here. A function like this does not require any comments.
+     * \param[in] a_src Some parameter description here. Use comments only if needed.
+     * \param[out] a_dst Some parameter description here. Use [in] and [out] if it's appropriate though. It might be informative.
+     * \param a_size Some parameter description here.
+     * \return void Some return value description here.
+     */
+    static void Square(const int* a_src, int* a_dst, unsigned int a_size)
+    {
+        for (unsigned int i = 0; i &lt; a_size; ++i)
+        {
+            a_dst[i] = a_src[i] * a_src[i];
+            if (a_dst[i] == 1234)
+                break;
+        }
+    }
+
+    /** Use "static", if the function has no need for class members. */
+    static int SomeOtherStaticFunction(const int* a_src, int* a_dst, unsigned int a_size)
+    {
+        int result_value = 0;
+        for (unsigned int i = 0; i &lt; a_size; ++i)
+        {
+            a_dst[i] = a_src[i] * a_src[i];
+            if (a_dst[i] == 1234)
+            {
+                result_value = 1;
+                break; /** You can use break in your code wherever you want, but don't return in the middle of a function. */
+            }
+        }
+        return result_value; /** Always return here, on the end of the function. */
+    }
+
+    const unsigned int getID() /** Use "const" where it applies: for functions, and also for arguments. */
+    {
+        return m_checkboxes_id;
+    }
+};</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dr_memory_error_checking">Dr. Memory error checking</h3>
+<div class="paragraph"><p>Please download drMemory 2.2: <a href="https://github.com/DynamoRIO/drmemory/wiki/Downloads">https://github.com/DynamoRIO/drmemory/wiki/Downloads</a> (The actual release is 2.3, but it always crashes)</p></div>
+<div class="paragraph"><p>Start drmemory from command line by giving the application path as an argument (optionally navigate to the directory of drmemory):</p></div>
+<div class="paragraph"><p><em>.drmemory.exe repo path\Development\Applications\SigForge\SigForge\App\SigForge.exe</em></p></div>
+<div class="paragraph"><p>Perform the actions with SigForge you want to check, then exit the application (not the drmemory.exe console window, but SigForge).</p></div>
+<div class="paragraph"><p>After exit, a notepad window with a text will popup, possibly containing a lot of errors.</p></div>
+<div class="ulist"><div class="title">The following types of errors must always be 0:</div><ul>
+<li>
+<p>
+total unaddressable access(es)
+</p>
+</li>
+<li>
+<p>
+total uninitialized access(es)
+</p>
+</li>
+<li>
+<p>
+total invalid heap argument(s)
+</p>
+</li>
+<li>
+<p>
+total GDI usage error(s)
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Also try to reduce leaks and handle leaks:</div><ul>
+<li>
+<p>
+Leaks in periodically called functions should also be 0.
+</p>
+</li>
+<li>
+<p>
+Leaks in functions called just once are acceptable, but try to avoid these leaks also if possible mostly in order to reduce the "noise" in the log file.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_cppcheck_static_code_analyzer">CppCheck static code analyzer</h3>
+<div class="ulist"><ul>
+<li>
+<p>
+Download CppCheck 2.1 from here: <a href="http://cppcheck.net/">http://cppcheck.net/</a> and install.
+</p>
+</li>
+<li>
+<p>
+Add CppCheck to the PATH
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+In the Windows search bar type <em>system variables</em> and choose <em>Edit the system environment variables</em>
+</p>
+</li>
+<li>
+<p>
+In the pop-up window (System properties) choose <em>Environment Variables&#8230;</em> near in the bottom right corner
+</p>
+</li>
+<li>
+<p>
+In the pop-up window (System Variables) select <em>Path</em> from the <em>System variables</em> and click <em>Edit</em>
+</p>
+</li>
+<li>
+<p>
+In the pop-up window (Edit enviromnent variables) click <em>New</em> and set the folder where CppCheck is install, the default install directory is <em>C:\Program Files\Cppcheck</em> or copy this if you installed with defaults
+</p>
+</li>
+<li>
+<p>
+Click <em>OK</em> in <em>Edit enviromnent variables</em> and <em>System Variables</em> and <em>System properties</em> windows
+</p>
+</li>
+<li>
+<p>
+Restart the Windows
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Set CppCheck in C::B
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Open C::B &#8594; Settings &#8594; Environment
+</p>
+</li>
+<li>
+<p>
+In the left pane find <em>CppChecp/Vera++</em>
+</p>
+</li>
+<li>
+<p>
+In <em>CppCheck application</em> copy this: <em>cppcheck.exe</em>
+</p>
+</li>
+<li>
+<p>
+In <em>CppCheck arguments</em> copy this: <em>--verbose --enable=warning,performance,portability --language=c++ --xml</em>
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+You can run CppCheck from the <em>Plugins &#8594; CppCeck</em> menu
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_asciidoc_document_generation">Asciidoc document generation</h3>
+<div class="ulist"><div class="title">AsciiDoc generates HTML documentation from a given text file.</div><ul>
+<li>
+<p>
+This file is generated by AsciiDoc. The source text file is located here: <em>repo path\Development\Applications\SigForge\src\DevDoc\devDoc.txt</em>
+</p>
+</li>
+<li>
+<p>
+AsciiDoc is implemented in Python 2.x, which means a Python interpreter (version 2.4 or later) must be installed to execute AsciiDoc. (Python 3.x is not appropriate for AsciiDoc.)
+</p>
+</li>
+<li>
+<p>
+If you extracted the <a href="#developer_package">developer package</a>, then you have
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+python located here: <em>c:\Program Files\CodeBlocks\MinGW_64\opt\bin\python.exe</em>
+</p>
+</li>
+<li>
+<p>
+and Asciidoc in <em>c:\Program Files\asciidoc</em>.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Alternatively you can download the
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Python 2.7 installer package (*.msi) from <a href="http://www.python.org">http://www.python.org</a> and install the product to another folder.
+</p>
+</li>
+<li>
+<p>
+And download the AsciiDoc *.zip file from <a href="http://sourceforge.net/projects/asciidoc/">http://sourceforge.net/projects/asciidoc/</a> and unpack it into a folder such as <em>C:\Program Files\asciidoc</em>.
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Setup AsciiDoc in Total Commander <strong>Start</strong> menu:</div><ul>
+<li>
+<p>
+Open <strong>Total Commander</strong>, click the menu <strong>Start</strong>, then click the menu item <strong>Change start menu…</strong>.
+</p>
+</li>
+<li>
+<p>
+Click the button <strong>Add item…</strong> and type <em>AsciiDoc</em>.
+</p>
+</li>
+<li>
+<p>
+Into the field Command, type: <em>c:\Python27\python.exe</em>
+</p>
+</li>
+<li>
+<p>
+Into the field Parameters, type: <em>"c:\Program Files\asciidoc\asciidoc.py" -o "%t%o.html" "%p%n"</em>, then click <strong>Ok</strong>.
+</p>
+</li>
+<li>
+<p>
+When using AsciiDoc in Total Commander, select <strong>Start/AsciiDoc</strong> from the menu. For the command to work you should select a source *.txt file in one panel of Total Commander and have the destination folder in the other panel.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>(while editing a doc, you may keep open a Total Commander and a browser tab, then after an edit, just press LEFT ALT + S, then ENTER, and refresh the browser tab to view your changes.)</p></div>
+<div class="ulist"><div class="title">AsciiDoc user guides:</div><ul>
+<li>
+<p>
+<a href="http://www.methods.co.nz/asciidoc/userguide.html">http://www.methods.co.nz/asciidoc/userguide.html</a>.
+</p>
+</li>
+<li>
+<p>
+<a href="http://powerman.name/doc/asciidoc">http://powerman.name/doc/asciidoc</a>.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_sourcetrail_optional">Sourcetrail (Optional)</h3>
+<div class="paragraph"><p>Sourctrail can parse C/C++ (and others) project source files and can generate different views of the structure of the code.</p></div>
+<div class="ulist"><div class="title">Install</div><ul>
+<li>
+<p>
+Download it from <a href="https://github.com/CoatiSoftware/Sourcetrail/releases">here!</a> (tested version is 2020.2.43)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Project setup</div><p>Sourcetrail can use Code::Block project files (.cbp).</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Open Sorcetrail
+</p>
+</li>
+<li>
+<p>
+Click <em>Porject &#8594; New Porject&#8230;</em> or use <em>Ctrl + N</em>
+</p>
+</li>
+<li>
+<p>
+Add a name for the project and set the location where you want to save
+</p>
+</li>
+<li>
+<p>
+Click <em>Add Source Group</em> in the bottom. (A <em>Source Group</em> is like a <em>Code::Blocks</em> project. It means you have to make as many <em>Source Group</em> as many <em>Code::Blocks</em> project you want to include.)
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+In the left choose <em>C++</em>, then <em>C/C++ from Code::Blocks</em>, then click <em>Next</em>
+</p>
+</li>
+<li>
+<p>
+Set a name for the <em>Source Group</em>. Set the same as the <em>Code::Blocks</em> project name.
+</p>
+</li>
+<li>
+<p>
+Set <em>C+\+ Standard</em> to <em>C++11</em> and <em>C Standard</em> to <em>C11</em>.
+</p>
+</li>
+<li>
+<p>
+Set <em>Code::Blocks</em> project file
+</p>
+</li>
+<li>
+<p>
+In the <em>Header Files &amp; Directories to Index</em> click <em>Select from Code::Blocks Project</em>
+</p>
+</li>
+<li>
+<p>
+Click <em>Check All</em> and then <em>Save</em>
+</p>
+</li>
+<li>
+<p>
+Click <em>Create</em> in the bottom.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Repeat the 4. point with every <em>Code::Blocks</em> projects you want to add
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>And the result will look like this:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="res/Sourcetrail_project_setting.png" alt="Sourcetrail project setting" />
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2021-01-06 09:46:15 Central Europe Standard Time
+</div>
+</div>
+</body>
+</html>

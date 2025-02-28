@@ -1,0 +1,5 @@
+LoadAscii(datavar, d:\\tamas\\PSAA\\Docs\\measure01.csv);
+Transpose(datavartr, datavar);
+
+
+DisplayData(datavartr);

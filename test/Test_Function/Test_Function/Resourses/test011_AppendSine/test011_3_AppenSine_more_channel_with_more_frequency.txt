@@ -1,0 +1,6 @@
+CreateSine(sine1, 10 10, 10000 10000, 10);
+DisplayData(sine1);
+AppendSine(sine1, 10, 20 100);
+DataIn(sine1, var2);
+WriteAscii(var2, ../../Test_Function/OutputFiles/test011_3.dbascii);
+SystemExit(0);

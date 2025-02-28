@@ -1,0 +1,4 @@
+SetStopOnFirstError(false);
+CreateVariable(var);
+CreateVariable(var, 10);
+SystemExit(0);

@@ -1,0 +1,5 @@
+SetStopOnFirstError(false);
+Extract(vec1);
+Extract(vec1, vec2);
+Extract(vec1, vec2, 1);
+SystemExit(0);

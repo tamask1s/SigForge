@@ -1,0 +1,2 @@
+ERROR: Cat: can't find data in variablelist: 'vec1' or 'vec2'
+An error occurred, but the execution continue

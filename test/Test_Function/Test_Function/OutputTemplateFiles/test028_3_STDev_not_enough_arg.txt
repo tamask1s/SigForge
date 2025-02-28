@@ -1,0 +1,4 @@
+ERROR: NResultPerRow vec not found.
+An error occurred, but the execution continue
+ERROR: NResultPerRow: not enough arguments.
+An error occurred, but the execution continue

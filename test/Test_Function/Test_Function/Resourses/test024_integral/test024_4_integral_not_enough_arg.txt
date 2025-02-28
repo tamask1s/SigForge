@@ -1,0 +1,6 @@
+SetStopOnFirstError(false);
+CreateVector(var, 0 1 0 -1 0 1 0);
+integral(var);
+integral(var, 0);
+integral(var, 0, 4);
+SystemExit(0);

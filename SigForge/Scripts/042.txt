@@ -1,0 +1,109 @@
+#define FILE triangle_pulse_dc
+#define PATH c:\Tamas\mdedata\_extracted\
+#define FILENAME CatStrings(PATH, FILE, .raw)
+#define SAMPLING_RATE 500
+
+FileOpen(FILENAME, opened_data);
+DataIn(opened_data, FILE, 1);
+DataDelete(opened_data);
+Copy(data, FILE);
+DisplayData(FILE, fit_width,, A2, 001);
+
+//CreateFilter(filter, butterworth bs, 1 SAMPLING_RATE, 49 52);
+//CreateFilter(filter_hp, butterworth hp, 2 SAMPLING_RATE, 0.03);
+LoadAscii(filter, c:\Tamas\butterworth_bs_1_1000_49_52.ascii);
+LoadAscii(filter_hp, c:\Tamas\butterworth_hp_2_1000_0.05.ascii);
+
+LoadAscii(datavartr, c:\Tamas\butterworth_bs_FIR_1000_49_52.ascii);
+Transpose(fir_filter, datavartr);
+
+//WriteAscii(filter, c:/tamas/butterworth_bs_1_1000_49_52.ascii);
+//WriteAscii(filter_hp, c:/tamas/butterworth_hp_2_1000_0.052.ascii);
+
+Filter(data, filter_hp);
+//Filter(data, filter);
+//FIRFilter(data, fir_filter);
+DisplayData(data, fit_width,, A2, 001);
+BindScrolling(FILE, data);
+
+DisplayData(filter_hp);
+
+
+//LoadAscii(datavartr, c:\Tamas\butterworth_hp_2_1000_0.05.ascii );
+//DisplayData(datavartr);
+
+
+
+
+
+
+
+
+
+#----------------------------------IIR
+import codecs, json
+from scipy.signal import butter, iirnotch
+
+# High-pass szűrő tervezése
+hp_cutoff = 0.035  # vágási frekvencia Hz-ben
+fs = 1000  # mintavételi frekvencia Hz-ben
+hp_order = 2  # szűrő rendje
+b_hp, a_hp = butter(hp_order, hp_cutoff / (fs / 2), btype='high', analog=False)
+
+print(json.dumps(a_hp.tolist()))
+print(json.dumps(b_hp.tolist()))
+
+# Notch szűrő tervezése
+notch_freq = 50  # notch frekvencia Hz-ben
+quality_factor = 30  # minőség tényező
+b_notch, a_notch = iirnotch(notch_freq, quality_factor, fs)
+
+print(json.dumps(a_notch.tolist()))
+print(json.dumps(b_notch.tolist()))
+
+# Notch szűrő tervezése
+notch_freq = 60  # notch frekvencia Hz-ben
+quality_factor = 30  # minőség tényező
+b_notch, a_notch = iirnotch(notch_freq, quality_factor, fs)
+
+print(json.dumps(a_notch.tolist()))
+print(json.dumps(b_notch.tolist()))
+
+
+
+#----------------------------------FIR
+
+import numpy as np
+from scipy.signal import firwin, freqz
+import matplotlib.pyplot as plt
+
+# Paraméterek
+fs = 1000  # mintavételi frekvencia (Hz)
+notch_freq = 50  # notch frekvencia (Hz)
+filter_order = 401  # FIR szűrő rendje (páratlan szám)
+
+# Normalizált frekvencia (Nyquist-frekvencia alapú)
+notch_width = 2  # notch szélessége (Hz)
+low_cutoff = (notch_freq - notch_width / 2) / (fs / 2)
+high_cutoff = (notch_freq + notch_width / 2) / (fs / 2)
+
+# FIR szűrő koefficiensek tervezése
+b_fir = firwin(filter_order, [low_cutoff, high_cutoff], pass_zero='bandstop')
+
+# Frekvenciaválasz vizualizálása
+w, h = freqz(b_fir, worN=8000, fs=fs)
+
+# Plot
+plt.figure(figsize=(10, 6))
+plt.plot(w, 20 * np.log10(abs(h)), 'b')
+plt.title('FIR 50Hz Notch Filter Frequency Response')
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Gain (dB)')
+plt.grid()
+plt.axvline(notch_freq, color='red', linestyle='--', label='Notch Frequency')
+plt.legend()
+plt.show()
+
+# A koefficiensek
+print("FIR szűrő koefficiensek:")
+print(json.dumps(b_fir.tolist(), indent=4))

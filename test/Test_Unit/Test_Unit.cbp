@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Test_Unit" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="Test_Unit" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="Test_Unit" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add option="-std=gnu++0x" />
+			<Add directory="../../../../Libs/3rdParty/LIB_GTest/googletest-release-1.10.0/googletest/include" />
+		</Compiler>
+		<Linker>
+			<Add library="../../../../Libs/Internal/LIB_GTest/bin/libgtest.a" />
+		</Linker>
+		<Unit filename="../../../../Libs/3rdParty/LIB_GTest/googletest-release-1.10.0/googletest/samples/sample1.cc" />
+		<Unit filename="../../../../Libs/3rdParty/LIB_GTest/googletest-release-1.10.0/googletest/samples/sample1.h" />
+		<Unit filename="../../../../Libs/3rdParty/LIB_GTest/googletest-release-1.10.0/googletest/samples/sample1_unittest.cc" />
+		<Unit filename="../../../../Libs/3rdParty/LIB_GTest/googletest-release-1.10.0/googletest/src/gtest_main.cc" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

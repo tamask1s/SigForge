@@ -1,0 +1,6 @@
+ERROR: NewMemoryData: not enough arguments
+An error occurred, but the execution continue
+ERROR: NewMemoryData: not enough arguments
+An error occurred, but the execution continue
+ERROR: NewMemoryData: not enough arguments
+An error occurred, but the execution continue

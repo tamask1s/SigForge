@@ -1,0 +1,4 @@
+ERROR: Substract: variable does not exists.
+An error occurred, but the execution continue
+ERROR: Substract: variable does not exists.
+An error occurred, but the execution continue

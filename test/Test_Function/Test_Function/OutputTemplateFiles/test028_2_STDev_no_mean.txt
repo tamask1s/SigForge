@@ -1,0 +1,4 @@
+ERROR: STDev: mean variable not given.  vec_mean not found.
+An error occurred, but the execution continue
+ERROR: STDev: mean variable not given.   not found.
+An error occurred, but the execution continue

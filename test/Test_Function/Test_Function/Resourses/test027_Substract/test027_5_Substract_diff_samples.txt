@@ -1,0 +1,5 @@
+SetStopOnFirstError(false);
+CreateSine(sine1, 1000, 100, 10);
+CreateSine(sine2, 10000, 100, 50);
+Substract(sine1, sine2);
+SystemExit(0);

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Test_Integration" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="Bin/Test_Integration" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="Bin" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="Bin/Test_Integration" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="Bin" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+			<Add option="-fexceptions" />
+			<Add directory="../../src/Backend" />
+			<Add directory="../../src/DataStructures" />
+		</Compiler>
+		<Linker>
+			<Add library="../../src/Backend/libBackend.a" />
+			<Add library="../../src/DataStructures/libDataStructures.a" />
+		</Linker>
+		<ExtraCommands>
+			<Add before="cmd /c xcopy ..\..\SigForge\SignalProcessors\*.dll .\SignalProcessors /sy" />
+			<Add before="cmd /c xcopy ..\..\SigForge\Codecs\*.dll .\Codecs /sy" />
+            <Add before="cmd /c copy ..\..\..\..\Libs\3rdParty\LIB_FFTW\libfftw3-3.dll ..\..\SigForge\App" />
+			<Add before="cmd /c copy ..\..\..\..\Libs\Internal\LIB_DataAq_Octopus24_DataSimulation\DataAq_Octopus24_DataSimulation.dll .\InputModules" />
+			<Add before="cmd /c copy ..\..\..\..\Libs\Internal\LIB_DataAq_Octopus24_DataSimulationFromFile\DataAq_Octopus24_DataSimulationFromFile.dll .\InputModules" />
+			<Add before="cmd /c copy ..\..\..\..\Libs\Internal\LIB_DataAq_Octopus24_DataClient\DataAq_Octopus24.dll .\InputModules" />
+			<Add before="cmd /c copy ..\..\..\..\Libs\Internal\LIB_DataAq_Octopus24_serial\DataAq_Octopus24SC.dll .\InputModules" />
+		</ExtraCommands>
+		<Unit filename="main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

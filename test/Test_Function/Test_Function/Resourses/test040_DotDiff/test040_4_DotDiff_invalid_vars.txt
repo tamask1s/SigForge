@@ -1,0 +1,8 @@
+SetStopOnFirstError(false);
+CreateVector(vec1, 1 1 1 1 1 1);
+CreateVector(vec2, 2 2 2 2 2 2);
+CreateVariable(diff, 1, 6);
+DotDiff(invalid_diff, 0, vec1, 0, vec2, 0);
+DotDiff(diff, 0, invalid_vec1, 0, vec2, 0);
+DotDiff(diff, 0, vec1, 0, invalid_vec2, 0);
+SystemExit(0);

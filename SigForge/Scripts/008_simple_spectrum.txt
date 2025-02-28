@@ -1,0 +1,84 @@
+CreateSine(sinewave, 10000 10000, 1000 1000, 30);
+MeanSpectrum(sinewave, amp_normalized,
+             CopyForAllChannels(sinewave, 1),
+             CopyForAllChannels(sinewave, 1), ampn);
+DisplayData(amp_normalized, fit_width,,B);
+
+
+DisplayData(sinewave);
+SaveDataToFile(sinewave, 2sines.bdf, 100);
+DataDelete(sinewave);
+
+FileOpen(c:\ninfea1.0.0\bin_format_ecg_and_respiration\8.bin, Data0);
+FileOpen(c:\ninfea1.0.0\drive-download-20210128T203532Z-001\OAL_01.bdf, Data1);
+
+CreateSine(sinewave2, 10000 10000, 1000 1000, 30);
+DisplayData(sinewave2);
+
+CreateSine(sinewave, 10000 10000, 1000 1000, 30);
+DisplayData(sinewave);
+
+
+FileOpen(c:\ninfea1.0.0\bin_format_ecg_and_respiration\8.bin, Data0);
+DataIn(Data0, Var0, 8);
+FullSpectrum(Var0,
+             fullspectrum,
+             CopyForAllChannels(Var0, 1),
+             5 200);
+DisplayData(fullspectrum,,2D_map);
+BindScrolling(Var0, fullspectrum);
+DisplayData(manage_windows, tile_horizontally);
+DisplayData(scale_window, reset_horizontal, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+
+
+
+
+FileOpen(c:\ninfea1.0.0\bin_format_ecg_and_respiration\8.bin, Data0);
+DataIn(Data0, Var0, 4);
+DataDelete(Data0);
+FullSpectrum(Var0,
+             fullspectrum,
+             CopyForAllChannels(Var0, 0.5),
+             4 60);
+DisplayData(Var0);
+DisplayData(fullspectrum,,2D_map);
+BindScrolling(Var0, fullspectrum);
+DisplayData(manage_windows, tile_horizontally);
+DisplayData(scale_window, reset_horizontal, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+
+
+
+//CreateSine(sin_1, 10000, 1000, 6);
+//Cat(sin_1,sin_1);
+//DisplayData(sin_1);
+
+//CreateVector(data, 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1);
+//Cat(data,data);
+//Cat(data,data);
+//AddMarker(data, 5, 1, "a_label", 0, 100, some_id);
+//AddMarker(data, 8, 1, "a_label", 0, 100200, some_id);
+//UserInput(data);
+//Extract(data, data2, GetMarkerStart(data, 0), GetMarkerLength(data, 0));
+//DisplayData(data,fit_width);
+//DisplayData(data2,fit_width);
+//
+//
+//DataIn(DATASERIES2, data);
+//AddMarker(data, 8, 1);
+//UserInput(data);
+//Extract(data, data2, GetMarkerStart(data, 0), GetMarkerLength(data, 0));
+//DisplayData(data2,fit_width);
+//
+//
+//CreateVector(data, 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1);
+//Cat(data,data);
+//AddMarker(data, 5, 18, "a_label", 0, 100, some_id);
+//UserInput(data,fit_width);
+//Extract(data, data2, GetMarkerStart(data, 0), GetMarkerLength(data, 0));
+//DisplayData(data2,fit_width);
+//DisplayData(data,fit_width);
+//DisplayData(manage_windows, tile_horizontally);

@@ -1,0 +1,5 @@
+
+LoadAscii(Espcountandswrel, C:\\_Outputs\\Sp2Group.dbascii);
+DisplayData(Espcountandswrel);
+
+ 

@@ -1,0 +1,6 @@
+CreateVariable(var1, 10, 10000);
+DisplayData(var1);
+AppendSine(var1, 10, 20);
+DataIn(var1, var2);
+WriteAscii(var2, ../../Test_Function/OutputFiles/test011_1.dbascii);
+SystemExit(0);

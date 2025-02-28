@@ -1,0 +1,4 @@
+CreateSine(sine, 100 100, 1000 1000, 100 10);
+CreateVector(copy, CopyForAllChannels(sine, 42));
+WriteAscii(copy, ../../Test_Function/OutputFiles/test034_1.dbascii);
+SystemExit(0);

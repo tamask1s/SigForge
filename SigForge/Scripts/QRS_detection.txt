@@ -1,0 +1,96 @@
+#define INDIR C:\Data\IT-MEDicine\Matlab\Databases\cpp_implement\Data\
+#define OUTDIR C:\Data\IT-MEDicine\Matlab\Databases\cpp_implement\Output\
+
+def DetectMQrs(input_name, output_name)
+{
+	DeleteChannel(input_name, 3);
+	SelectBestChannel(input_name, output_name);
+	ImpArtCanc(output_name);
+	Copy(artf_removal, output_name);
+
+	Centering(output_name);
+
+	CreateFilter(low_pass_filter, butt lp, 3 4000, 12);
+	Filter(output_name, low_pass_filter);
+	FilterReverse(output_name, low_pass_filter);
+	Normalize(output_name);
+
+	CreateFilter(high_pass_filter, butt hp, 3 4000, 5);
+	Filter(output_name, high_pass_filter);
+	FilterReverse(output_name, high_pass_filter);
+	Normalize(output_name);
+
+	DerivativeFilter(output_name);
+	Normalize(output_name);
+	
+	Squaring(output_name);
+
+	MovingAverageFilter(output_name);
+	
+	FindPeaks(output_name);
+
+	CorrectPeaks(artf_removal, output_name);
+};
+
+def DetectPeaksFullAlgo(input_name, output_name)
+{
+	TimeElapsed(timer);
+
+	DeleteChannel(input_name, 3);
+
+	ImpArtCanc(input_name);
+
+	CreateRandomVec(rand_vec, 9, -0.5, 0.5);
+
+	Copy(m_detection_signal, input_name);
+	ICA(m_detection_signal, m_indComps, rand_vec);
+
+	Interpolation(m_indComps, m_double_indComps, 2);
+
+	DetectMQrs(m_double_indComps, m_peaks);
+
+	Copy(baseline, input_name);
+	CreateFilter(baseline_filter, butt lp, 1 2000, 5);
+	Filter(baseline, baseline_filter);
+	FilterReverse(baseline, baseline_filter);
+
+	Substract(input_name, baseline);	
+
+	ICA(input_name, indComps, rand_vec);
+
+	Interpolation(indComps, double_indComps, 2);
+
+	Copy(fetal_signal, double_indComps);
+	CreateMotherSignal(double_indComps, m_peaks, mother_signal);
+	Substract(fetal_signal, mother_signal);
+
+	Centering(fetal_signal);
+	ICA(fetal_signal, fetal_indComps, rand_vec);
+
+	Centering(fetal_indComps);
+
+	QrsFDetection(fetal_indComps, m_peaks, f_peaks_all);
+
+	Copy(output_name, f_peaks_all);
+	SelectBestFChannel(f_peaks_all, m_peaks, f_peaks);
+
+	DownsamplePeaks(double_indComps, signal, m_peaks);
+
+	DownsamplePeaks(fetal_indComps, signal, f_peaks);
+
+	CreateOutput(input_name, m_peaks, f_peaks, output_name);
+};
+
+def RunFullAlgo(input_filename, output_filename)
+{
+	FileOpen(input_filename, signaldata);
+	DataIn(signaldata, signal);
+    
+	DetectPeaksFullAlgo(signal, output);
+	DisplayData(output);
+
+	SaveDataToFile(output, output_filename, 100, 8);
+};
+
+RunFullAlgo(INDIR\recording_01.bin, OUTDIR\output_cpp_long_01_new_svd_02.bin);
+

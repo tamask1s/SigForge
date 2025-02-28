@@ -1,0 +1,6 @@
+SetStopOnFirstError(false);
+CreateFilter(filter, butt lp, 3 10000, 20);
+CreateSine(sine, 1000, 10000, 100 20);
+FilterReverse(sine);
+FilterReverse(filter);
+SystemExit(0);

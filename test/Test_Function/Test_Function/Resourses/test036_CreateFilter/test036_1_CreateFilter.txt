@@ -1,0 +1,17 @@
+CreateFilter(filter1, butt lp, 2 1000, 29 31, 0, 0);
+WriteAscii(filter1, ../../Test_Function/OutputFiles/test036_1_butt-lp.dbascii);
+CreateFilter(filter2, butt bp, 2 1000, 29 31, 0, 0);
+WriteAscii(filter2, ../../Test_Function/OutputFiles/test036_1_butt-bp.dbascii);
+CreateFilter(filter3, butt hp, 2 1000, 29 31, 0, 0);
+WriteAscii(filter3, ../../Test_Function/OutputFiles/test036_1_butt-hp.dbascii);
+CreateFilter(filter4, butt bs, 2 1000, 29 31, 0, 0);
+WriteAscii(filter4, ../../Test_Function/OutputFiles/test036_1_butt-bs.dbascii);
+CreateFilter(filter5, cheby lp, 2 1000, 29 31);
+WriteAscii(filter5, ../../Test_Function/OutputFiles/test036_1_cheby-lp.dbascii);
+CreateFilter(filter2, cheby bp, 2 1000, 29 31);
+WriteAscii(filter2, ../../Test_Function/OutputFiles/test036_1_cheby-bp.dbascii);
+CreateFilter(filter3, cheby hp, 2 1000, 29 31);
+WriteAscii(filter3, ../../Test_Function/OutputFiles/test036_1_cheby-hp.dbascii);
+CreateFilter(filter4, cheby bs, 2 1000, 29 31);
+WriteAscii(filter4, ../../Test_Function/OutputFiles/test036_1_cheby-bs.dbascii);
+SystemExit(0);

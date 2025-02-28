@@ -1,0 +1,4 @@
+ERROR: CatToFile: Not enough arguments
+An error occurred, but the execution continue
+ERROR: CatToFile: Not enough arguments
+An error occurred, but the execution continue

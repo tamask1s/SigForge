@@ -1,0 +1,2 @@
+ERROR: DataDisplay: can't find variable: 'vec1'
+An error occurred, but the execution continue

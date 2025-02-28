@@ -1,0 +1,5 @@
+SetStopOnFirstError(false);
+NewMemoryData(new_data);
+NewMemoryData(new_data, 2);
+NewMemoryData(new_data, 2, 2);
+SystemExit(0);

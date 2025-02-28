@@ -1,0 +1,6 @@
+ERROR: DotDiff: a viariable does not exists
+An error occurred, but the execution continue
+ERROR: DotDiff: a viariable does not exists
+An error occurred, but the execution continue
+ERROR: DotDiff: a viariable does not exists
+An error occurred, but the execution continue

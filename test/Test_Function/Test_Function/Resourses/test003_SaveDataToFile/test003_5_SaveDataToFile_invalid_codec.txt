@@ -1,0 +1,5 @@
+SetStopOnFirstError(false);
+CreateSine(sinewave, 1000 1000, 100 100, 10 3 1);
+DisplayData(sinewave);
+SaveDataToFile(sinewave, ../../Test_Function/OutputFiles/test003_5.aaa, 100, 11);
+SystemExit(0);

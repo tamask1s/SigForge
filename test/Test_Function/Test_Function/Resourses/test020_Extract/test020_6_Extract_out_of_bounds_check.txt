@@ -1,0 +1,4 @@
+SetStopOnFirstError(false);
+CreateVector(vec1, 10 20 30 40 50 60 70 80 90 100);
+Extract(vec1, vec2, 1, 10);
+SystemExit(0);

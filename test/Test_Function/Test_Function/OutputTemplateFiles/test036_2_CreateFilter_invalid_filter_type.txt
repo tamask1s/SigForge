@@ -1,0 +1,2 @@
+ERROR: CreateFilter: Unknown filter type: 'aa', HINT: filter type could be ('lowpass', 'bandpass', 'highpass' or 'bandstop'). 
+An error occurred, but the execution continue

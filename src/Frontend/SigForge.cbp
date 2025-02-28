@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="SigForge" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../../SigForge/App/SigForge" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../SigForge/App/" />
+				<Option external_deps="VisualComponents/libCommonVisualComponents.a;Controls/libControlsStaticLib.a;../DataStructures/libDataStructures.a;../Backend/libBackend.a;" />
+				<Option additional_output="../../SigForge/App/SigForge.exe;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-pg" />
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-pg -lgmon" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="../../SigForge/App/SigForge" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../../SigForge/App/" />
+				<Option external_deps="VisualComponents/libCommonVisualComponents.a;Controls/libControlsStaticLib.a;../DataStructures/libDataStructures.a;../Backend/libBackend.a;" />
+				<Option additional_output="../../SigForge/App/SigForge.exe;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add directory="Controls" />
+			<Add directory="../DataStructures" />
+			<Add directory="VisualComponents" />
+			<Add directory="." />
+			<Add directory="../Backend" />
+			<Add directory="../../../../Libs/3rdParty/LIB_ZAX_JSON" />
+		</Compiler>
+		<Linker>
+			<Add option="..\Backend\libBackend.a" />
+			<Add option="Controls/libControlsStaticLib.a" />
+			<Add option="../DataStructures/libDataStructures.a" />
+			<Add option="VisualComponents/libCommonVisualComponents.a" />
+			<Add library="msimg32" />
+			<Add library="gdi32" />
+			<Add library="Comdlg32" />
+			<Add library="gdiplus" />
+		</Linker>
+		<ExtraCommands>
+			<Add after="cmd /c copy ..\..\..\..\Libs\3rdParty\LIB_FFTW\libfftw3-3.dll ..\..\SigForge\App\" />
+			<Add after="cmd /c copy ..\..\..\..\Libs\Internal\LIB_DataAq_Octopus24_DataSimulation\DataAq_Octopus24_DataSimulation.dll ..\..\SigForge\InputModules\" />
+			<Add after="cmd /c copy ..\..\..\..\Libs\Internal\LIB_DataAq_Octopus24_DataSimulationFromFile\DataAq_Octopus24_DataSimulationFromFile.dll ..\..\SigForge\InputModules\" />
+			<Add after="cmd /c copy ..\..\..\..\Libs\Internal\LIB_DataAq_Octopus24_DataClient\DataAq_Octopus24.dll ..\..\SigForge\InputModules\" />
+			<Add after="cmd /c copy ..\..\..\..\Libs\Internal\LIB_DataAq_Octopus24_serial\DataAq_Octopus24SC.dll ..\..\SigForge\InputModules\" />
+			<Add after="cmd /c copy ..\..\..\..\Libs\Internal\LIB_DataAq_Octopus24_serialMDE\DataAq_Octopus24_MDE.dll ..\..\SigForge\InputModules\" />
+			<Mode after="always" />
+		</ExtraCommands>
+		<Unit filename="../Backend/Backend.h" />
+		<Unit filename="Constants.h" />
+		<Unit filename="SigForge.cpp" />
+		<Unit filename="SigForge.rc">
+			<Option compilerVar="CPP" />
+		</Unit>
+		<Unit filename="ScriptEditor.cpp" />
+		<Unit filename="ScriptEditor.h" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

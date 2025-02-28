@@ -1,0 +1,2 @@
+ERROR: CatToFile: negative index is not applicable
+An error occurred, but the execution continue

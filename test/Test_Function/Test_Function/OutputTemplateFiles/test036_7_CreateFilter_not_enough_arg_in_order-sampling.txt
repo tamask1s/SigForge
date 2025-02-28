@@ -1,0 +1,2 @@
+ERROR: CreateFilter: Not enough parameters! Filter order and/or sampling rate not provided!
+An error occurred, but the execution continue

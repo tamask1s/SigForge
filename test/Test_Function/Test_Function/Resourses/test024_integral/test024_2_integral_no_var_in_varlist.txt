@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+integral(var, 0, 4, integral);
+SystemExit(0);

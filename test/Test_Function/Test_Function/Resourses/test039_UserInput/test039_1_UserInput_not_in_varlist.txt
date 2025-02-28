@@ -1,0 +1,3 @@
+SetStopOnFirstError(false);
+UserInput(var);
+SystemExit(0);

@@ -1,0 +1,36 @@
+// GENERATE MODULATED SINES AND FILTER THEM, GET SPECTRUMS
+
+#define SAMPLING_RATE 500
+
+DataDelete();
+
+CreateModulatedSine(sim1, {"channel_params":[
+{
+    "number_of_samples" : 240000,
+    "sampling_rate" : SAMPLING_RATE,
+    "amplitude" : 1,
+    "frequency" : 50,
+    "modulation_frequency" : 0.02,
+    "frequency_modulation_depth" : 50
+}]});
+FullSpectrum(sim1, spectrain, CopyForAllChannels(sim1, 0.1), 1 170);
+Copy(sim2, sim1);
+CreateFilter(filter, butterworth bs, 1 SAMPLING_RATE, 49 52);
+LoadAscii(filter, c:\Tamas\butterworth_bs_1_1000_49_52.ascii);
+
+CreateFilter(filter_hp, butterworth hp, 2 SAMPLING_RATE, 0.1);
+//LoadAscii(datavartr, c:\Tamas\butterworth_bs_FIR_1000_49_52.ascii);
+//Transpose(fir_filter, datavartr);
+//WriteAscii(filter, c:/tamas/butterworth_bs_1_1000_49_52.ascii);
+Filter(sim2, filter);
+//FIRFilter(sim2, fir_filter);
+Filter(sim2, filter_hp);
+FullSpectrum(sim2, spectra_out, CopyForAllChannels(sim2, 0.1), 1 170);
+DisplayData(sim1,fit_width,, C, 000);
+DisplayData(sim2,fit_width,, C, 000);
+DisplayData(spectrain,fit_width,2D_map);
+DisplayData(spectra_out,fit_width,2D_map);
+DisplayData(manage_windows, tile_horizontally);
+BindScrolling(sim2, sim1);
+BindScrolling(sim2, spectrain);
+BindScrolling(sim2, spectra_out);

@@ -1,0 +1,5 @@
+SetStopOnFirstError(false);
+CreateVector(vec1, -3.1 -2 -1 0 1 2 3.1);
+CreateVector(vec2, 1 1 1 1 1 1 1);
+Substract(vec1);
+SystemExit(0);
