@@ -1,0 +1,5415 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.9" />
+<title>SigForge user guide</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+pre {
+  white-space: pre-wrap;
+}
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; vertical-align: text-bottom; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install(4);
+/*]]>*/
+</script>
+</head>
+<body class="article">
+<div id="header">
+<h1>SigForge user guide</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>After you read this document, you may want to check <a href="../../devDoc/devDoc.html">SigForge&#8217;s developer guide</a>.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_is_SigForge">What is SigForge</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>SigForge is scriptable data viewing, data acquisition, and digital signal processing application, running under Windows OS.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/SigForge2.png" alt="SigForge" />
+</span></p></div>
+<div class="paragraph"><p>The data representations are 2 dimensional data sets, typical to multichannel biological data.</p></div>
+<div class="paragraph"><p>The signal processing algorithms can be executed by running Data Browser scripts.</p></div>
+<div class="paragraph"><p>SigForge is extendible with customized data processing algorithms, and data acquisition modules. This is achieved by SigForge&#8217;s plugin-based architecture. In order to use new plugins, those needs to be copied in the proper plugin directories. For more information on developing plugins, please check <a href="../../devDoc/devDoc.html">SigForge&#8217;s developer guide</a>.</p></div>
+<div class="paragraph"><p>SigForge&#8217;s data engine is also a plugin, which can be used for automation, or can be included into customized applications, allowing one to use the scripts developed in SigForge to run in a specially tailored environment. For more information on this topic, please check SigForge&#8217;s developer guide.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_SigForge_8217_s_menu">SigForge&#8217;s menu</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>File, Edit, Window, Options, Tools, Help</p></div>
+<div class="sect2">
+<h3 id="_file_menu">File Menu</h3>
+<div class="ulist"><div class="title">Fhe Following are implemented:</div><ul>
+<li>
+<p>
+"Open data file": opens a data file. Supported formats are:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+EDF (Europian data format)
+</p>
+</li>
+<li>
+<p>
+BDF (Biosemi data format)
+</p>
+</li>
+<li>
+<p>
+DAT (DADiSP data format)
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+"New script window": opens a new <a href="#script_window">script editor window</a>
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_edit_menu">Edit Menu</h3>
+<div class="paragraph"><p>Not implemented.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_window_menu">Window Menu</h3>
+<div class="ulist"><div class="title">Works as a classical Windows OS MDI (Multi document interface) menu, letting the user to</div><ul>
+<li>
+<p>
+switch between wopened windows,
+</p>
+</li>
+<li>
+<p>
+tile them horizontally,
+</p>
+</li>
+<li>
+<p>
+tile vertically,
+</p>
+</li>
+<li>
+<p>
+cascade them.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_options_tools_help_menus">Options, Tools, Help Menus</h3>
+<div class="paragraph"><p>Not implemented.</p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="DataTypes">SigForge data providers</h2>
+<div class="sectionbody">
+<div class="ulist"><div class="title">SigForge can have its data from its data providers. These can be:</div><ul>
+<li>
+<p>
+Data File codecs, supporting the following file types: EDF, BDF or DADiSP dat files. This type of provider opens the file, and makes its whole content available at once.
+</p>
+</li>
+</ul></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">DATA FILE CODEC</p></td>
+<td align="left" valign="top"><p class="table">EXTENSION</p></td>
+<td align="left" valign="top"><p class="table">USE IN SCRIPTS</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">EDF</p></td>
+<td align="left" valign="top"><p class="table">.edf; .edfp</p></td>
+<td align="left" valign="top"><p class="table">1</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">BDF</p></td>
+<td align="left" valign="top"><p class="table">.bdf</p></td>
+<td align="left" valign="top"><p class="table">4</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">DADiSP</p></td>
+<td align="left" valign="top"><p class="table">.dat</p></td>
+<td align="left" valign="top"><p class="table">3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+Data Acquisition devices. In this case, the data is streaming, it is arriving continuously, and the resulting data is growing in size as the time passes.
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_SigForge_scripting">SigForge scripting</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>SigForge has a basic scripting language working with SigForge&#8217;s data representations.</p></div>
+<div class="paragraph"><p>The scripting supports function calls only, operators are not supported.</p></div>
+<div class="sect2">
+<h3 id="_data_representation">Data representation</h3>
+<div class="ulist"><div class="title">SigForge has 2 types of data</div><ul>
+<li>
+<p>
+data opened and visualized by display windows are persistent: they survive script runs. They are called <em>data</em>.
+</p>
+</li>
+<li>
+<p>
+while running a script, data imported in a script running context are ephemeral: they lives only during script runs. They are called <em>variable</em>.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>All <em>data</em> objects are stored in a data list, while all <em>variables</em> are stored in a variable list, and are accessable only from scripts. These lists are global objects. All data in the data list is displayed in SigForge&#8217;s windows, and all variables in the variable list are living only during a script call, then the variable list is cleared.</p></div>
+<div class="paragraph"><p><em>Variables</em> from the variable list can be <strong>moved</strong> into the data list by displaying them (calling the <a href="#DisplayData">DisplayData</a> function).</p></div>
+<div class="paragraph"><p><em>Data</em> objects can be imported, <strong>copied</strong> into the variable list during a script run by calling the <a href="#DataIn">DataIn</a> function.</p></div>
+<div class="paragraph"><p>The script may change that variable, and it may display it. If it is displayed, it means that it is moved back to the data list. In this case it overwrites the data with the same name relyig in the specific display window.</p></div>
+<div class="paragraph"><p>If a variable was not displayed, it will be deleted as the script ends.</p></div>
+<div class="paragraph"><p>As a result all persistent data can be seen in windows, and no invisble memory leak can be produced in this level.</p></div>
+<div class="ulist"><div class="title">Data and variable both have the following properties:</div><ul>
+<li>
+<p>
+name
+</p>
+</li>
+<li>
+<p>
+number of channels
+</p>
+</li>
+<li>
+<p>
+horizontal units (usually sec(s))
+</p>
+</li>
+<li>
+<p>
+vertical units (a value for each channel, example mV, 1/s(Hz), etc.)
+</p>
+</li>
+<li>
+<p>
+number of samples (a value for each channel)
+</p>
+</li>
+<li>
+<p>
+sampling rates (a value for each channel)
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_script_types">Script types</h3>
+<div class="ulist"><div class="title">Once we press the "Run" button on the <a href="#script_window">script editor window</a>, SigForge will run the script in that window. The script may</div><ul>
+<li>
+<p>
+finish completely after its last function returns
+</p>
+</li>
+<li>
+<p>
+or it may trigger an interval, which will re-run a portion of the script periodically. See Interval() function. The variables living in a script running context will not outlive the interval&#8217;s execution end, therefore any information needed to be available for re-entering intervals, needs to be persisted in a <em>data</em>, usually called as <strong>history</strong> <em>data</em>.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_function_types">Function types</h3>
+<div class="ulist"><div class="title">Functions may work with</div><ul>
+<li>
+<p>
+<em>data</em>
+</p>
+</li>
+<li>
+<p>
+<em>variable</em>
+</p>
+</li>
+<li>
+<p>
+both <em>data</em> and <em>variable</em>
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Functions may be <em>simple</em>, or <em>real-time</em>.</div><ul>
+<li>
+<p>
+Simple functions are working on whole or specified parts of a <em>data</em> or <em>variable</em>
+</p>
+</li>
+<li>
+<p>
+Real time (RT) functions are working with <em>data</em> provided by data acquisition devices, which are continuously growing in size. They are intended to process only the newly arrived data chunks. In order to do this, they need a <strong>history</strong> <em>data</em> as a parameter, in order to persist the information needed for the signal processing (at least the last position of the processing, but possibly more). They are working usually with <em>data</em> parameters, but not necessarily. RT functions are marked with the <em>_RT</em> characters.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>While RT functions are just simple functions with a <strong>history</strong> <em>data</em> parameter, in any other aspect they are the same, and they are distinguished by their intended usage only, this categorization is important because only RT functions can process effectively streamed data.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_syntax">Syntax</h3>
+<div class="paragraph"><p>Basic function call:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>function1(param1, param2, ...);</code></pre>
+</div></div>
+<div class="paragraph"><p>Most functions are working with variables or data <em>parameters</em>, without a return value, but some functions may return plain text results.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>function1(function2(param1, ...), param2, ...);</code></pre>
+</div></div>
+<div class="paragraph"><p>Some functions may have a body:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>function1(...)
+{
+    function2(...)
+};
+
+This may be useful if a block needs to be executed multiple times (loop), or after a timeout, or periodically (interval).
+Note that in the basic case the script is not reaching its end, therefore all the variables created till the execution of the block will be available, while in case of a timeout or an interval the variable list will be cleaned before the execution reaches the block.
+As a result, all timeouts and intervals are starting with a clean context (empty variable list).</code></pre>
+</div></div>
+<div class="paragraph"><p>All the parameters are plain text strings, only the actual function decides how to interpret them.</p></div>
+<div class="paragraph"><p>The parameters are separated by commas.</p></div>
+<div class="paragraph"><p>There is a maximum number of 8 parameters. Therefore some functions may interpret one single parameter as 2 real parameters, like param2 and param3 in the example bellow:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>function1(param1, param2 param3, param4, ...);</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="script_window">Script editor window</h3>
+<div class="paragraph"><p>SigForges’s script editor is a text editor with a basic syntax highlight.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/scripting_window.gif" alt="Scripting window" />
+</span></p></div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_strong_scripting_functions_delivered_with_SigForge_and_its_basic_signal_processing_plugins_strong"><strong>Scripting functions delivered with SigForge and its basic signal processing plugins</strong></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>SigForge comes with a basic set of digital signal processing and helper functions:</p></div>
+<div class="sect2">
+<h3 id="DisplayData">DisplayData</h3>
+<div class="paragraph"><p>Works with <em>variable</em> and <em>data</em>. Moves the specified variable from the variable list into the data list, and displays its content in a display window jus as a data file would be opened.</p></div>
+<div class="paragraph"><p>Syntax: <em>DisplayData([var_name], [fit_width], [display_type], [offset_setting], [other_setting])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the variable name what we want to display in a display window.
+</p>
+</li>
+<li>
+<p>
+<em>fit_width</em>: optional. Defaulted to false. Set to "true" or "fit_width" will fit all the data into the window.
+</p>
+</li>
+<li>
+<p>
+<em>display_type</em>: optional. Defaulted to basic multiline display ("multiline"). It can have the following other values:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>multiline</em>: data is displayed as multiple series of lines
+</p>
+</li>
+<li>
+<p>
+<em>2D_map</em>: data is displayed as a heatmap
+</p>
+</li>
+<li>
+<p>
+<em>2D_map_surface</em>: data is displayed as a heatmap with map contour lines
+</p>
+</li>
+<li>
+<p>
+<em>value_list</em>: data is displayed in a table of values
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+<em>offset_setting</em>: optional. Defaulted to ("A1"). It can have the following other values:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>N</em>: no extra offsets are set, only fixed offsets to all channels proportional to their channel index.
+</p>
+</li>
+<li>
+<p>
+<em>A1</em>: offsets are approximated for all channels with algorithm 1 to fit into screen one channel after another.
+</p>
+</li>
+<li>
+<p>
+<em>A2</em>: offsets are approximated for all channels with algorithm 2 to fit into screen one channel after another.
+</p>
+</li>
+<li>
+<p>
+<em>B</em>: the zero coordinate is set to be at the bottom of the <em>y</em> axis for all the channels. Useful for spectrums.
+</p>
+</li>
+<li>
+<p>
+<em>C</em>: the zero coordinate is set to the middle of the <em>y</em> axis.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+<em>other_setting</em>: optional. Defaulted to display without grids, using antialiased lines with width 1. It is a 4 digit setting, the first digit standing for the horizontal, whilest the second for the vertical grid behaviour. The third stands for line drawing style, and the fourth for the line width.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+first 2 digits:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>0</em> no grid are displayed
+</p>
+</li>
+<li>
+<p>
+<em>1</em> major grids are displayed only
+</p>
+</li>
+<li>
+<p>
+<em>2</em> both major and minor grids are displayed
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+3rd digit:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>0</em> antialiased (default)
+</p>
+</li>
+<li>
+<p>
+<em>1</em> normal line
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+4th digit: line width in pixels
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>Note: Horizontal grids can only be displayed in the cases when all the channels have a common <em>y</em> axis. This may be the case if only one channel is displayed, or either the <em>B</em> or <em>C</em> offset settings are used.</p></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph" id="example_009"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateSine(sinewave, 10000 10000, 1000 1000, 250);
+MeanSpectrum(sinewave, amp_normalized,
+             CopyForAllChannels(sinewave, 1),
+             CopyForAllChannels(sinewave, 1), ampn);
+DisplayData(amp_normalized, fit_width,, B, 21);</code></pre>
+</div></div>
+<div class="sect3">
+<h4 id="_data_display_8217_s_features">Data display&#8217;s features</h4>
+<div class="paragraph"><p><span class="image">
+<img src="res/DisplayData01.png" alt="Displaying spectrum" />
+</span></p></div>
+<div class="paragraph"><p>Note: heatmap views are working slowly if the data has thousands of channels (rows).</p></div>
+</div>
+<div class="sect3">
+<h4 id="_data_display_8217_s_em_settings_em_window">Data display&#8217;s <em>Settings</em> window</h4>
+<div class="paragraph"><p>Visible channels can be set up by using the <em>Settings</em> window of the display window. Additional information is also accessible here:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+channel labels
+</p>
+</li>
+<li>
+<p>
+horizontal units
+</p>
+</li>
+<li>
+<p>
+vertical units
+</p>
+</li>
+<li>
+<p>
+data length
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/SettingsWindow.gif" alt="Settings window" />
+</span></p></div>
+<div class="paragraph"><p>In the abouve settings window the visible channels of a data with 2 channels can be set. The data has no labels. Vertical units are in <em>mV</em>, the sampling rate is <em>1000 Samples per second</em>, and the data length is <em>10 seconds</em>.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_data_display_8217_s_relative_scaling_of_em_y_em_axis">Data display&#8217;s relative scaling of <em>y</em> axis</h4>
+<div class="paragraph"><p><span class="image">
+<img src="res/RelativeScaling.png" alt="Settings window" />
+</span></p></div>
+<div class="paragraph"><p>By clicking the bar on the left of the display window, a panel with sliders can be shown. By adjusting the sliders, a relative scaling of the <em>y</em> axis of the corresponding channel can be achieved.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_displaydata_8217_s_window_management_functions">DisplayData&#8217;s window management functions</h4>
+<div class="paragraph"><p>Syntax: <em>DisplayData(manage_windows, [managing_action], [target_window])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>managing_action</em>: can have the following values:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+tile_horizontally
+</p>
+</li>
+<li>
+<p>
+tile_vertically
+</p>
+</li>
+<li>
+<p>
+cascade
+</p>
+</li>
+<li>
+<p>
+maximize
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+<em>target_window</em>: optional. In case of <em>maximize</em>, the window which needs to be maximized
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="_displaydata_8217_s_scaling_functions">DisplayData&#8217;s scaling functions</h4>
+<div class="paragraph"><p>Syntax: <em>DisplayData(scale_window, [scaling_action], [target_window])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>scaling_action</em>: can have the following values:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+horzontally_in: scales the <em>x</em> axis in
+</p>
+</li>
+<li>
+<p>
+horzontally_out: scales the <em>x</em> axis out
+</p>
+</li>
+<li>
+<p>
+reset_horzontal: resets the scaling to default for x axis.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+<em>target_window</em>: the window which going to be scaled
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Note: scaling actions are cumulating. If you keep a window opened, then running a script multiple times will scale your window more and more. You need to reset the scaling if you want to avoid the cumulative effect.</p></div>
+<div class="paragraph" id="example_010"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateSine(sinewave, 10000, 1000, 30);
+DisplayData(sinewave);
+for (sine_frequency, 30, 190){
+    AppendSine(sinewave, 1000, Iterator(sine_frequency));
+};
+RefreshDataWindow(sinewave, true);
+DataIn(sinewave, sinewave_, 1);
+
+FullSpectrum(sinewave_,
+             fullspectrum,
+             CopyForAllChannels(sinewave_, 1),
+             5 200);
+DisplayData(fullspectrum,,2D_map);
+BindScrolling(sinewave, fullspectrum);
+DisplayData(manage_windows, tile_horizontally);
+DisplayData(scale_window, reset_horizontal, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);
+DisplayData(scale_window, horzontally_out, fullspectrum);</code></pre>
+</div></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateSine(sin_1, 10000, 1000, 26 6);
+CreateSine(sin_2, 10000, 1000, 31 11);
+DisplayData(sin_1);
+DisplayData(sin_2);
+BindScrolling(sin_1, sin_2);
+DisplayData(manage_windows, tile_horizontally);</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="Add">Add</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Adds the second variable to the first variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>Add([var_name_1], [var_name_2])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name_1</em>: the first variable name to which we add the second variable
+</p>
+</li>
+<li>
+<p>
+<em>var_name_2</em>: the second variable what we add to the first variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="AlterSignal">AlterSignal</h3>
+<div class="paragraph"><p>Works with <em>data</em>. It alters a data&#8217;s values by a single value by adding it to every value.</p></div>
+<div class="paragraph"><p>Syntax: <em>AlterSignal([data_name], [value])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>data_name</em>: the name of the data in the data list
+</p>
+</li>
+<li>
+<p>
+<em>value</em>: the value we want to add to the data&#8217;s values
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Append">Append</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Appends the source variable to the end of the destination variable. As a result, the number of channels will not change, while the number of samples in affected channels will be the sum of the input variable&#8217;s number of samples.</p></div>
+<div class="paragraph"><p>Syntax: <em>Append([dst_var_name], [src_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>dst_var_name</em>: the destination variable name to which we append the source variable
+</p>
+</li>
+<li>
+<p>
+<em>src_var_name</em>: the source variable name what we append to the destination variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="AppendSine">AppendSine</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Works with <em>data</em>. Appends sine wave(s) to the end of the data given with the data&#8217;s sampling rate.</p></div>
+<div class="paragraph"><p>Syntax: AppendSine([data_name], [number_of_samples], [frequencies])'</p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>data_name</em>: the data name which we want to add sine wave(s).
+</p>
+</li>
+<li>
+<p>
+<em>number_of_samples</em>: the number of samples what we want to add.
+</p>
+</li>
+<li>
+<p>
+<em>frequencies</em>: the list of the frequencies of the sine waves to be added. It could be one or more frequency.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Ascii">Ascii</h3>
+<div class="sect3">
+<h4 id="LoadAscii">LoadAscii</h4>
+<div class="paragraph"><p>Works with <em>variable</em>. Loads a tab (\t) and new line (\n) delimited ASCII file, and stores it in a variable.</p></div>
+<div class="paragraph"><p>Note: the speed is ~50 kBytes / sec. While loading a file, SigForge is unresponsive.</p></div>
+<div class="paragraph"><p>Syntax: <em>LoadAscii([var_name], [ascii_file_path], [is_fast])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the name of the variable where we load the data from the ASCII file
+</p>
+</li>
+<li>
+<p>
+<em>ascii_file_path</em>: the full path of the ascii file with it&#8217;s name and extension
+</p>
+</li>
+<li>
+<p>
+<em>is_fast</em>: if set to "true" or "fast", the function will perform faster (~4 MBytes / sec), but it might loose some of its precision.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>LoadAscii(vec1, c:/vec1.ascii);
+DisplayData(vec1);</code></pre>
+</div></div>
+<div class="paragraph"><p>Note: surface views are working slowly if the data has thousands of channels (rows).</p></div>
+</div>
+<div class="sect3">
+<h4 id="WriteAscii">WriteAscii</h4>
+<div class="paragraph"><p>Works with <em>variable</em>. Writes a variable into a tab (\t) and new line (\n) delimited ASCII file.</p></div>
+<div class="paragraph"><p>Syntax: <em>WriteAscii([var_name], [ascii_file_path])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the variable name what we want to write to the ASCII file
+</p>
+</li>
+<li>
+<p>
+<em>ascii_file_path</em>: the name of file with the path. We can use relative (relative from the binary of the program) or absolute file path.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph" id="example_002"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>FileOpen(c:\data_with_2_channels_and_6_samples_each_channel.bdf, data1);
+DataIn(data1, vec1);
+WriteAscii(vec1, c:/vec1.ascii);</code></pre>
+</div></div>
+<div class="paragraph"><p>The content of the file will be like:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>-0.9360910      -0.9343029      -0.9289384      -0.9295345      -0.9337068      -0.9384752
+-0.8884073      -0.8812547      -0.8776784      -0.8764864      -0.8741022      -0.8741022</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="BindScrolling">BindScrolling</h3>
+<div class="paragraph"><p>Binds the scrollbars of a data window with anther data window&#8217;s scrollbar.</p></div>
+<div class="paragraph"><p>Syntax: <em>BindScrolling([src_data_name], [target_data_name], [binding_action])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_data_name</em>: the source window&#8217;s data name
+</p>
+</li>
+<li>
+<p>
+<em>target_data_name</em>: the target window&#8217;s data name. The target window will be scrolled every time the source window is scrolled.
+</p>
+</li>
+<li>
+<p>
+<em>binding_action</em>: optional. If set to <em>false</em>, the binding will be removed. Otherwise, or left unset, the binding will be performed if it&#8217;s possible.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Note: If circular redundancy is detected, the function throws an error.</p></div>
+<div class="paragraph"><p><a href="#example_010"><strong>Example</strong></a></p></div>
+</div>
+<div class="sect2">
+<h3 id="Cat">Cat</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Concatenates a variable with another variable&#8217;s rows by extending the original variable with the rows of the other, resulting the new number of rows to be equal with: original rows + added rows.</p></div>
+<div class="paragraph"><p>Syntax: <em>Cat([variable_name], [variable_name_tocat])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>variable_name</em>: specifies the name of the variable which is going to be extended with new rows
+</p>
+</li>
+<li>
+<p>
+<em>variable_name_tocat</em>: the name of the variable which&#8217;s rows are going to be concatenated to the variable specified by the <em>variable_name</em> parameter.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><a href="#example_004"><strong>Example</strong></a></p></div>
+</div>
+<div class="sect2">
+<h3 id="CatStrings">CatStrings</h3>
+<div class="paragraph"><p><em>In progress - Final</em> - Checked_</p></div>
+<div class="paragraph"><p>Cats all parameters into one string up to a maximum of 8 strings.</p></div>
+<div class="paragraph"><p>Syntax:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CatStrings([str_1], [str_2], [str_3], [str_4], [str_5], [str_6], [str_7], [str_8]);</code></pre>
+</div></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>str_1</em>: not optional
+</p>
+</li>
+<li>
+<p>
+<em>str_2</em>: not optional
+</p>
+</li>
+<li>
+<p>
+<em>str_3, str_4, str_5, str_6, str_7, str_8</em>: optional
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+conacatenated string
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><a href="#example_007"><strong>Example</strong></a></p></div>
+</div>
+<div class="sect2">
+<h3 id="CatToFile">CatToFile</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. It takes out a sample of data with the specified index from each channel from the input variable. The function will put the extracted sample data to the output file. If the input has more than one channel it converts the extracted data to one channel and the channel will have as much sample data as there are channels of the input variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>CatToFile ([in_var_name], [sample_index], [file_name], [name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the name of the input variable
+</p>
+</li>
+<li>
+<p>
+<em>sample_index</em>: the sample index of the <em>extracted</em> data. The index starts from 0.
+</p>
+</li>
+<li>
+<p>
+<em>file_name</em>: the name of the file where we want to save the data.
+</p>
+</li>
+<li>
+<p>
+<em>name</em>: Optional. You can name the data in the file.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CleanupCodec">CleanupCodec</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Works with <em>data</em>. Frees up the data&#8217;s memory. If you use big data and you don&#8217;t need it any more then you can free the memory what the data use.</p></div>
+<div class="paragraph"><p>Syntax: <em>CleanupCodec([data_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>data_name</em>: the name of the data in the data list.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CleanupFirstCodec">CleanupFirstCodec</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Works with <em>data</em>. Frees up the first data&#8217;s memory from the data list.
+See <a href="#CleanupCodec">[CleanupCodec]</a>.</p></div>
+<div class="paragraph"><p>Syntax: <em>CleanupFirstCodec([dummy])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>dummy</em>: a dummy string for example <em>0</em>.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CleanupSignal_Spike">CleanupSignal_Spike</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>.</p></div>
+<div class="paragraph"><p>Syntax: <em>CleanupSignal_Spike([var_name], [spike_var_name], [spike_radius], [a_2])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the name of the variable on which we want to run the function
+</p>
+</li>
+<li>
+<p>
+<em>spike_var_name</em>: the name of the spike variable
+</p>
+</li>
+<li>
+<p>
+<em>spike_radius</em>: the radius of the spike
+</p>
+</li>
+<li>
+<p>
+<em>a_2</em>: not in use
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CleanupSpikes">CleanupSpikes</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>.</p></div>
+<div class="paragraph"><p>Syntax: <em>CleanupSpikes([var_name], [spike_var_name], [spike_radius], [density_threshold])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the name of the variable on which we want to run the function
+</p>
+</li>
+<li>
+<p>
+<em>spike_var_name</em>: the name of the spike variable
+</p>
+</li>
+<li>
+<p>
+<em>spike_radius</em>: the radius of the spike
+</p>
+</li>
+<li>
+<p>
+<em>density_threshold</em>:
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Copy">Copy</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Copies a source variable into a newly created destination variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>Copy([dst_var_name], [src_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>dst_var_name</em>: destination variable name what we create to copy the source data.
+</p>
+</li>
+<li>
+<p>
+<em>src_var_name</em>: source variable name where we want to copy data to destination.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CopyForAllChannels">CopyForAllChannels</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Multiplicates the text passed as second parameter, times the number of channels of the variable passed as first parameter.</p></div>
+<div class="paragraph"><p>Syntax: <em>CopyForAllChannels([var_name], [text])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the variable name where we count the channels
+</p>
+</li>
+<li>
+<p>
+<em>text</em>: the text which is going to be multiplicated
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+A text containing the [text] parameter, concatenated multiple times, separated by space(s).
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CopyForAllChannels(variable_with_4_channels_and_1000_samples_each, 9);</code></pre>
+</div></div>
+<div class="paragraph"><p>Results in the following text: "9 9 9 9"</p></div>
+</div>
+<div class="sect2">
+<h3 id="Cover1">Cover1</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p><strong>Obsolate</strong> Works with <em>variable</em>. Creates an envelope curve of the input signal, and replaces the signal with the enevelope.</p></div>
+<div class="paragraph"><p>Syntax: <em>Cover1([var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the variable name
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CreateVariable">CreateVariable</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Creates a variable with a given number of samples and given sampling rates.</p></div>
+<div class="paragraph"><p>Syntax: <em>CreateVariable([var_name], [nr_samples], [sampling_rates])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the name of the signal
+</p>
+</li>
+<li>
+<p>
+<em>nr_samples</em>: a list containing the numbers of samples for each channel of the signal
+</p>
+</li>
+<li>
+<p>
+<em>sampling_rates</em>: a list containing the the sampling rates
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Note: the size of the <em>nr_samples</em> and <em>sampling_rates</em> lists must match, and will determine the number of channels in the output variable.</p></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CreateSine">CreateSine</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Creates a sine wave with a number of samples in a given sampling rate and frequency in the variable list with the given name.
+In the <em>number_of_samples_list</em> and <em>sample_rate_list</em> you may provide a single number, or a list of numbers separated by spaces. The size of this two lists must be equal, and the size of the lists determine the number of channels.
+In the <em>frequency_list</em> you may also provide a single floating point number, or a list of numbers separated by spaces. Each frequency provided will appear in the output variable as a frequency component, resulting a signal containing a combination of sine waves of different frequencies.</p></div>
+<div class="paragraph"><p>Syntax: <em>CreateSine([var_name], [number_of_samples_list], [sample_rate_list], [frequency_list])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the variable name where we store the sine wave
+</p>
+</li>
+<li>
+<p>
+<em>number_of_samples_list</em>: a list containing the number of samples for each channel
+</p>
+</li>
+<li>
+<p>
+<em>sample_rate_list</em>: a list containing the sampling rates of the sine waves
+</p>
+</li>
+<li>
+<p>
+<em>frequency_list</em>: a list of numbers determining the frequency components of the output variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Examples</strong></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Regular sine curve
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateSine(s1, 10000, 1000, 10);
+DisplayData(s1);</code></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Sine curve with 2 channels and multiple frequency
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateSine(s1, 10000 10000, 1000 1000, 10 5);
+DisplayData(s1);</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="CreateSpline">CreateSpline</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Creates an approximate curve from the given data (x and y coordinates) with spline interpolation method. The created variable will have the given number of samples, and the sampling rate of the data will be 1. As a result, x coordinates will correspond the data indexes.</p></div>
+<div class="paragraph"><p>Syntax: <em>CreateSpline([var_name], [samples], [x_coord_values], [y_coord_values])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the variable name where we store the created spline
+</p>
+</li>
+<li>
+<p>
+<em>samples</em>: the number of samples in each channel
+</p>
+</li>
+<li>
+<p>
+<em>x_coord_values</em>: the list of x coordinates
+</p>
+</li>
+<li>
+<p>
+<em>y_coord_values</em>: the list of the given data values
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateSpline(spline, 100, 0 7 29 50 99, 15 0 10 5 10);
+DisplayData(spline, fit_width);</code></pre>
+</div></div>
+<div class="paragraph"><p>The result will be a variable with one channel and the channel has 100 samples. The <em>0 7 29 50 99</em> are the x coordinates of the given data and the <em>15 0 10 5 10</em> are the values (y coordinates) of the data. The function will calculate the intermediate datas with spline interpolation.</p></div>
+</div>
+<div class="sect2">
+<h3 id="CreateVector">CreateVector</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Creates a vector (a variable with a dimension of N x 1).</p></div>
+<div class="paragraph"><p>Syntax: <em>CreateVector([var_name], [element1 element2 &#8230;])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the output variable name
+</p>
+</li>
+<li>
+<p>
+<em>element1 element2 &#8230;</em>: elements separated with spaces
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><a href="#example_001"><strong>Example</strong></a></p></div>
+</div>
+<div class="sect2">
+<h3 id="DataAq">DataAq</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Works with data acquisition devices and save data to the data list and the given file type.</p></div>
+<div class="paragraph"><p>Syntax: <em>DataAq([dataAq_device_type], [dataAq_params], [sampling_rates], [gain], [physical_mapping], [milliSeconds_to_read], [fileCodec_type], [file_name], [signal_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>dataAq_device_type</em>: the data acquisition device type
+</p>
+</li>
+<li>
+<p>
+<em>dataAq_params</em>: the  data acquisition device parameters
+</p>
+</li>
+<li>
+<p>
+<em>sampling_rates</em>: set the sampling rates per channel (<em>2000 2000</em> if you have 2 channels)
+</p>
+</li>
+<li>
+<p>
+<em>gain</em>: set the gain per channel (<em>1 1</em> if you have 2 channels)
+</p>
+</li>
+<li>
+<p>
+<em>physical_mapping</em>: map the physical channels with the channels in the data
+</p>
+</li>
+<li>
+<p>
+<em>milliSeconds_to_read</em>: set how many milliseconds to read from the given device
+</p>
+</li>
+<li>
+<p>
+<em>fileCodec_type</em>: set the file codec type (4: bdf). See <a href="#DataTypes">[DataTypes]</a>.
+</p>
+</li>
+<li>
+<p>
+<em>file_name</em>: the name of the file where the data will be stored
+</p>
+</li>
+<li>
+<p>
+<em>signal_name</em>: the name of the data name. This is optional, but if you don&#8217;t set you can&#8217;t refer to the data in the future.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/DataAq.png" alt="DataAq" />
+</span></p></div>
+</div>
+<div class="sect2">
+<h3 id="DataIn">DataIn</h3>
+<div class="paragraph"><p>Works with <em>data</em> &#8594; <em>variable</em>. Copies the content of a data object into a newly created variable, and adds the new variable to the variable list.</p></div>
+<div class="paragraph"><p>Syntax: <em>DataIn([data_name], [variable_name], [active_channel_list])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>data_name</em>: data object name
+</p>
+</li>
+<li>
+<p>
+<em>variable_name</em>: variable name where we store data
+</p>
+</li>
+<li>
+<p>
+<em>active_channel_list</em> (optional): if you don&#8217;t use by default copy all active channels. If you use this might be a list of channel indexes counted from <em>1</em> marking the active channels needs to be copied into the new variable. It will copy the same order the channels as in the source no matter what is the order you add.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><a href="#example_002"><strong>Example</strong></a></p></div>
+</div>
+<div class="sect2">
+<h3 id="DateAndTime">DateAndTime</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Makes a string from the actual date and time in the <em>YYYY-MM-DD_HH-MM-SS</em> format. You can add prefix and/or suffix to the string <em>(prefix)YYYY-MM-DD_HH-MM-SS(suffix)</em>.</p></div>
+<div class="paragraph"><p>Syntax: <em>DateAndTime([prefix], [suffix])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>prefix</em> (optional): a string what you want to add before the actual date and time format
+</p>
+</li>
+<li>
+<p>
+<em>suffix</em> (optional): a string what you want to add after the actual date and time format.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+Returns with a string with the actual date and time optionally with prefix and/or suffix.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Examples:</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>DateAndTime();                --&gt;       2020-10-14_13-01-12
+DateAndTime(prefix)           --&gt; prefix2020-10-14_13-01-12
+DateAndTime(, suffix)         --&gt;       2020-10-14_13-01-12suffix
+DateAndTime(prefix, suffix)   --&gt; prefix2020-10-14_13-01-12suffix</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="DeleteData">DeleteData</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Deletes a variable from the variable list.</p></div>
+<div class="paragraph"><p>Syntax: <em>DeleteData([in_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the name of the variable to be deleted
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="DataDelete">DataDelete</h3>
+<div class="paragraph"><p><em>In progress - Final - Checked</em></p></div>
+<div class="paragraph"><p>Works with <em>data</em>. Deletes a data from the data list, and also closes its display window. If no parameter is given, all data windows will close.</p></div>
+<div class="paragraph"><p>Syntax: <em>DataDelete([data_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: optional. The name of the data to be deleted
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Deriv">Deriv</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. The function calculates the signal slope at each point, and replaces the values in the variable datas.</p></div>
+<div class="paragraph"><p>Syntax: <em>Deriv([in_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the name of the variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="DerivReal">DerivReal</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. The function calculates the input variable signal slope at each point, and add a new variable to the variable list with the given name.</p></div>
+<div class="paragraph"><p>Syntax: <em>DerivReal([out_var_name], [in_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>out_var_name</em>: the name of the output variable
+</p>
+</li>
+<li>
+<p>
+<em>in_var_name</em>: the name of the input variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="DetectSpikes">DetectSpikes</h3>
+<div class="paragraph"><p>Works with <em>variable</em>  inputs and outputs. Detects spikes in a signal, based on a threshold signal, and outputting a newly created signal filled with <strong>zeros</strong> by default, and <strong>marker values</strong> where spikes were detected.</p></div>
+<div class="paragraph"><p>Syntax: <em>DetectSpikes([dst_name], [spike_signal], [threshold_signal], [marker_value], [refractory_period], [previous_spike_reference_ratio], [previous_spike_reference_attenuation])</em></p></div>
+<div class="paragraph" id="example_003"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>FileOpen(Recording_01.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal);
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 20);
+Filter(ekgsignal, bandpass_filter);
+FilterReverse(ekgsignal, bandpass_filter);
+
+CreateFilter(derivative_filter, butterworth hp, 2 2000, 10);
+Filter(ekgsignal, derivative_filter);
+FilterReverse(ekgsignal, derivative_filter);
+
+SQR_Inplace(ekgsignal);
+
+CreateFilter(integrative_filter, butterworth lp, 2 2000, 8);
+Filter(ekgsignal, integrative_filter);
+FilterReverse(ekgsignal, integrative_filter);
+
+Copy(ekgsignal_threshold, ekgsignal);
+
+CreateFilter(threshold_filter, butterworth lp, 2 2000, 1.5);
+Filter(ekgsignal_threshold, threshold_filter);
+FilterReverse(ekgsignal_threshold, threshold_filter);
+
+DetectSpikes(spike_signal, ekgsignal, ekgsignal_threshold);
+
+Cat(ekgsignal, ekgsignal_threshold);
+Cat(ekgsignal, spike_signal);
+
+DisplayData(ekgsignal);</code></pre>
+</div></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/DetectSpikes.png" alt="Spike detection" />
+</span></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>dst_name</em>: the name of the output signal the detected spikes will be marked in
+</p>
+</li>
+<li>
+<p>
+<em>spike_signal</em>: the name of the original signal with spikes to be detected
+</p>
+</li>
+<li>
+<p>
+<em>threshold_signal</em>: a signal which serves as a threshold for spike detection
+</p>
+</li>
+<li>
+<p>
+<em>marker_value</em>:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+The spike locations will be marked by this value in the output variable
+</p>
+</li>
+<li>
+<p>
+Optional. Default value is <em>1</em>.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+<em>refractory_period</em>:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+After a spike was detected, within this period no new spike should be detected. The refractory_period is measured in the spike_signal&#8217;s horizontal units (likely milliseconds).
+</p>
+</li>
+<li>
+<p>
+Optional. Default value is <em>200</em>.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+<em>previous_spike_reference_ratio</em>:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+The new spike, in order to be detected, should be greater than the previous spike multiplied by this ratio
+</p>
+</li>
+<li>
+<p>
+Optional. Default value is <em>0.5</em>.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+<em>previous_spike_reference_attenuation</em>:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+If there was no spike detected due to a high previous spike amplitude value, then the memorized spike amplitude value is attenuated (lowered) on every evaluation of a new sample by the following equation: <strong>previous_spike_amplitude /= 1.0 + <em>previous_spike_reference_attenuation</em> / sampling_rate</strong>.
+</p>
+</li>
+<li>
+<p>
+Optional. Default value is <em>30</em>.
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="DirectRelay_RT">DirectRelay_RT</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Works with <em>data</em>. Relays a changing source data (src) to a destination data (dst), potentially passing the actual increment through a processing unit.</p></div>
+<div class="paragraph"><p>Syntax: <em>DirectRelay_RT([src_data_name], [history_data_name], [dst_data_name], [window_milliseconds], [codec_type], [filename], [channels_to_relay], [processor])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_data_name</em>: the name of the source data.
+</p>
+</li>
+<li>
+<p>
+<em>history_data_name</em>: he name of the data where the history of processing is stored. The history data contains at least one row (channel). The size of each row in the history data is equal to the number of channels in the source data. Relaying history is stored in the 0th channel. Every value stored is the sample index where the processing/relaying was left (the last sample index in the source data which was already relayed). Further channels in history data if present, are used by IRuntimeProcessor objects.
+</p>
+</li>
+<li>
+<p>
+<em>dst_data_name</em>: the name of the destination data
+</p>
+</li>
+<li>
+<p>
+<em>window_milliseconds</em>: the output file timewindow
+</p>
+</li>
+<li>
+<p>
+<em>codec_type</em>: the description of the parameter
+</p>
+</li>
+<li>
+<p>
+<em>filename</em>: the description of the parameter&#8230;
+</p>
+</li>
+<li>
+<p>
+<em>channels_to_relay</em>: Optional. The channel indexes to relay from src to dst.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Downsample">Downsample</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. The function reduce the sampling in a given variable with the given ratio.</p></div>
+<div class="paragraph"><p>Syntax: <em>Downsample([in_var_name], [output_var_name], [ratio])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the name of the input variable
+</p>
+</li>
+<li>
+<p>
+<em>output_var_name</em>: the name of the output variable
+</p>
+</li>
+<li>
+<p>
+<em>ratio</em>: the down sample ratio. The ratio must be bigger than 1.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateVector(vec, 1 2 3 4 5 6 7 8 9 10);
+Downsample(vec, vec_down, 2);
+DisplayData(vec, fit_width, value_list);
+DisplayData(vec_down, fit_width, value_list);</code></pre>
+</div></div>
+<div class="paragraph"><p>The output: <em>1 3 5 7 9</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="DotDiff">DotDiff</h3>
+<div class="paragraph"><p><em>In progress - Final</em> - Checked_</p></div>
+<div class="paragraph"><p>Performs a dot difference of 2 dataseries.</p></div>
+<div class="paragraph"><p>Syntax:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>DotDiff([a_outvar], [a_out_ch], [a_lhs], [a_lhs_ch], [a_rhs], [a_rhs_ch])</code></pre>
+</div></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>a_outvar</em>: destination variable
+</p>
+</li>
+<li>
+<p>
+<em>a_out_ch</em>: channel index counted from 0 of the dataseries in destination variable
+</p>
+</li>
+<li>
+<p>
+<em>a_lhs</em>: left hand side variable name
+</p>
+</li>
+<li>
+<p>
+<em>a_lhs_ch</em>: channel index of the dataseries in left hand side variable to be substracted from
+</p>
+</li>
+<li>
+<p>
+<em>a_rhs</em>: right hand side variable name
+</p>
+</li>
+<li>
+<p>
+<em>a_rhs_ch</em>: channel index of the dataseries in right hand side variable to be substracted
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph" id="example_008"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateSine(sinewave1, 10000 10000, 1000 1000, 30);
+CreateSine(sinewave2, 10000 10000, 1000 1000, 3);
+
+CreateVariable(difference, 1 1, 1000 1000);
+DotDiff(difference, 0, sinewave1, 0, sinewave2, 1);
+DotDiff(difference, 1, sinewave2, 0, sinewave1, 1);
+
+DisplayData(sinewave1);
+DisplayData(sinewave2);
+DisplayData(difference);</code></pre>
+</div></div>
+<div class="paragraph"><p>Note: destination variable must be created preamble with proper number of channels.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/DotDiff.jpg" alt="Spike detection" />
+</span></p></div>
+</div>
+<div class="sect2">
+<h3 id="DownsampleGauss">DownsampleGauss</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. The function reduce the sampling in a given variable with the given ratio using a Gaussian curve.</p></div>
+<div class="paragraph"><p>Syntax: <em>DownsampleGauss([in_var_name], [output_var_name], [ratio])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the name of the input variable
+</p>
+</li>
+<li>
+<p>
+<em>output_var_name</em>: the name of the output variable
+</p>
+</li>
+<li>
+<p>
+<em>ratio</em>: the down sample ratio. The ratio must be bigger than 1.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateVector(vec, 1 2 3 4 5 6 7 8 9 10);
+DownsampleGauss(vec, vec_down, 2);
+DisplayData(vec, fit_width, value_list);
+DisplayData(vec_down, fit_width, value_list);</code></pre>
+</div></div>
+<div class="paragraph"><p>The output: <em>1.537738 3.040112 5.000000 6.994827 8.821049</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="Extract">Extract</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Extracts a portion of a source variable into a destination variable. The start and length needs to be specified in horiyontal units.</p></div>
+<div class="paragraph"><p>Syntax: <em>Extract([src_name], [dst_name], [units_start], [nr_units])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_name</em>: the name of the source variable
+</p>
+</li>
+<li>
+<p>
+<em>dst_name</em>: the name of the destination variable
+</p>
+</li>
+<li>
+<p>
+<em>units_start</em>: the start sample index from where the extraction should be started
+</p>
+</li>
+<li>
+<p>
+<em>nr_units</em>: the number of samples to be extracted
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph" id="example_004"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateVector(vec1, 10 20 30 40 50 60 50 40 30 20 10);
+Cat(vec1, vec1);
+
+Extract(vec1, vec2, 1, 7);
+
+DisplayData(vec1, fit_width);
+DisplayData(vec2, fit_width);</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="FileOpen">FileOpen</h3>
+<div class="paragraph"><p>Opens a file for reading resulting a <em>data</em>, and displays it in a display window. The data is added to the data list.</p></div>
+<div class="paragraph"><p>Syntax: <em>FileOpen([file_name], [data_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>file_name</em>: name of the file
+</p>
+</li>
+<li>
+<p>
+<em>data_name</em>: specifies the name of the data. The file content will be available by using this name when calling the appropriate functions.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Filters">Filters</h3>
+<div class="paragraph"><p>Filter related script functions.</p></div>
+<div class="sect3">
+<h4 id="CreateFilter">CreateFilter</h4>
+<div class="paragraph"><p>Works with <em>variable</em>. Creates IIR filter coefficients, and stores them in a variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>CreateFilter([variable_name], [shape_kind], [order_sampling_rate], [edges], [ripple], [ellipstopbandedge])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>variable_name</em>: the name of the created filter in the variable list
+</p>
+</li>
+<li>
+<p>
+<em>shape_kind</em>: filter type (Butterworth, Chebyshev, Elliptic) and kind (hp, lp, bp, bs) separated by space(s)
+</p>
+</li>
+<li>
+<p>
+<em>order_sampling_rate</em>: filter order (1, 2, 3) and sampling rate (integer) separated by space(s)
+</p>
+</li>
+<li>
+<p>
+<em>edges</em>: 1 or 2 edge frequencies (double), separated by space(s)
+</p>
+</li>
+<li>
+<p>
+<em>ripple</em>: in case of elliptic filters (double)
+</p>
+</li>
+<li>
+<p>
+<em>ellipstopbandedge</em>: in case of elliptic filters (double)
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="Filter">Filter</h4>
+<div class="paragraph"><p>Works with <em>variable</em>. Filters a variable with the specified IIR filter created by the <a href="#CreateFilter">CreateFilter</a> function.</p></div>
+<div class="paragraph"><p>As it is an IIR filter, it induces frequency dependent phase shifts in the signal. These can be shifted back by using a <a href="#ReverseFilter">ReverseFilter</a> with the same filter coefficients. Note that by using a ReverseFilter, the frequency attenuations will be summarized.</p></div>
+<div class="paragraph"><p>Syntax: <em>Filter([variable_name], [filter_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>variable_name</em>: the variable name what we want to filter
+</p>
+</li>
+<li>
+<p>
+<em>filter_name</em>: the name of the filter what we created before and want to use
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><a href="#example_003"><strong>Example</strong></a></p></div>
+</div>
+<div class="sect3">
+<h4 id="FilterReverse">FilterReverse</h4>
+<div class="paragraph"><p>Filters a variable with the specified filter created by the <a href="#CreateFilter">CreateFilter</a> function.</p></div>
+<div class="paragraph"><p>The filtering process is started from the end of the variable, and ends on the start of it, resulting in phase shifts introduced by a previous <a href="#Filter">Filter()</a> call to be eliminated.</p></div>
+<div class="paragraph"><p>Syntax: <em>FilterReverse([variable_name], [filter_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>variable_name</em>: the variable name what we want to filter
+</p>
+</li>
+<li>
+<p>
+<em>filter_name</em>: the name of the filter what is in the variable list
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><a href="#example_003"><strong>Example</strong></a></p></div>
+</div>
+<div class="sect3">
+<h4 id="Filterx">Filterx</h4>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p><strong>Obsolate</strong></p></div>
+</div>
+<div class="sect3">
+<h4 id="MovingWindowFilter">MovingWindowFilter</h4>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Under implementation.</p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Moves a window (kernel) over the variable data, sample by sample from the half of the window size until the window last element doesn&#8217;t reach the variable last sample and filters the variable with the kernel.</p></div>
+<div class="paragraph"><p>Syntax: <em>MovingWindowFilter([dst_var_name], [src_var_name], [kernel_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>dst_var_name</em>: the name of the destination variable
+</p>
+</li>
+<li>
+<p>
+<em>src_var_name</em>: the name of the source variable
+</p>
+</li>
+<li>
+<p>
+<em>kernel_name</em>: the name of the filtering kernel. The kernel size must be odd.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="ABSBandpassButterbase6thOrderZerophaseC">ABSBandpassButterbase6thOrderZerophaseC</h4>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Description of the script</p></div>
+<div class="paragraph"><p>Syntax: <em>ABSBandpassButterbase6thOrderZerophaseC(invarname,varnametostore, lbound, hbound)</em></p></div>
+</div>
+<div class="sect3">
+<h4 id="HighpassButterbase6thOrderZerophase">HighpassButterbase6thOrderZerophase</h4>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Syntax: <em>HighpassButterbase6thOrderZerophase(invarname, lbound)</em></p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="BandpassButterbase6thOrderZerophase">BandpassButterbase6thOrderZerophase</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Description of the given script</p></div>
+<div class="paragraph"><p>Syntax: <em>BandpassButterbase6thOrderZerophase(invarname, lbound, hbound)</em></p></div>
+<div class="sect3">
+<h4 id="BandpassButterbase6thOrderZerophaseC">BandpassButterbase6thOrderZerophaseC</h4>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Syntax: <em>BandpassButterbase6thOrderZerophaseC(invarname, varnametostore, lbound, hbound)</em></p></div>
+</div>
+<div class="sect3">
+<h4 id="SQRBandpassButterbase6thOrderZerophaseC">SQRBandpassButterbase6thOrderZerophaseC</h4>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="for">for statement</h3>
+<div class="paragraph"><p><em>In progress - Final</em> - Checked_</p></div>
+<div class="paragraph"><p>For loop.</p></div>
+<div class="paragraph"><p>Syntax:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>for([iterator_var_name], [from], [to], [step])
+{
+    [body]
+};</code></pre>
+</div></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>iterator_var_name</em>: a variable name used as iterator
+</p>
+</li>
+<li>
+<p>
+<em>from</em>: iterator init value
+</p>
+</li>
+<li>
+<p>
+<em>to</em>: iterator stop value, inclusive
+</p>
+</li>
+<li>
+<p>
+<em>step</em>: increment step
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph" id="example_007"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>for (i, 1, 20)
+{
+    FileOpen(
+        CatStrings(C:\ninfea1.0.0\bin_format_ecg_and_respiration\, Iterator(i), .bin),
+        CatStrings(data_, Iterator(i))
+    );
+    DataIn(CatStrings(data_, Iterator(i)), CatStrings(filtered_, Iterator(i)), 1 2 3);
+    DataDelete(CatStrings(data_, Iterator(i)));
+
+    CreateFilter(notch_filter, butt bs, 2 2048, 49.5 50.5, 0, 0);
+    Filter(CatStrings(filtered_, Iterator(i)), notch_filter);
+    FilterReverse(CatStrings(filtered_, Iterator(i)), notch_filter);
+
+    CreateFilter(bandpass_filter, butt bp, 2 2048, 0.5 70, 0, 0);
+    Filter(CatStrings(filtered_, Iterator(i)), bandpass_filter);
+    FilterReverse(CatStrings(filtered_, Iterator(i)), bandpass_filter);
+
+    DisplayData(CatStrings(filtered_, Iterator(i)));
+    SaveDataToFile(CatStrings(filtered_, Iterator(i)), CatStrings(C:\ninfea1.0.0\filtered\filtered_, Iterator(i), .bdf), 1000);
+};</code></pre>
+</div></div>
+<div class="paragraph"><p>This script will perform batch filtering on a set of data located in the folder <em>C:\ninfea1.0.0\bin_format_ecg_and_respiration\</em>. The filenames are numbers, with an extension of <em>.bin</em>.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+In order for this funtion to work you will need
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+files like:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>C:\ninfea1.0.0\bin_format_ecg_and_respiration\1.bin</em>,
+</p>
+</li>
+<li>
+<p>
+<em>C:\ninfea1.0.0\bin_format_ecg_and_respiration\2.bin</em> etc.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+a folder <em>C:\ninfea1.0.0\filtered\</em>
+</p>
+</li>
+</ul></div>
+</li>
+</ol></div>
+</div>
+<div class="sect2">
+<h3 id="GenerateModulatedECG">GenerateModulatedECG</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Creates an ECG signal with a number of samples in a given sampling rate and frequency, and stores into the variable list with the given name.
+In the <em>number_of_samples_list</em> and <em>sample_rate_list</em> you may provide a single number, or a list of numbers separated by spaces. The size of this two lists must be equal, and the size of the lists determine the number of channels.</p></div>
+<div class="paragraph"><p>Syntax: <em>GenerateModulatedECG([out_data_name], [number_of_samples_list], [sample_rate_list], [simulation_params], [qrs_params])</em>
+.<em>Parameters</em></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>out_data_name</em>: the variable name where we store the sine wave
+</p>
+</li>
+<li>
+<p>
+<em>number_of_samples_list</em>: a list containing the number of samples for each channel
+</p>
+</li>
+<li>
+<p>
+<em>sample_rate_list</em>: a list containing the sampling rates of the sine waves
+</p>
+</li>
+<li>
+<p>
+<em>simulation_params</em> and <em>qrs_params</em>:
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/GenerateModulatedECG.png" alt="Generation parameters" />
+</span></p></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Examples</strong></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Regular ECG signal
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>GenerateModulatedECG(s1, 240000, 1000,
+{
+    "heartbeat_frequency" : 1.0,
+    "alteration_frequency_for_DC_component" : 0.0,
+    "alteration_amplitude_for_DC_component" : 0.0,
+    "alteration_phase_for_DC_component_in_radians": 0,
+    "frequency_HF" : 0.0,
+    "frequency_LF" : 0.0,
+    "amplitude_modulation_depth_for_QRS_by_HF" : 0.0,
+    "frequency_modulation_depth_HF" : 0.0,
+    "frequency_modulation_depth_LF" : 0.0,
+    "phase_HF_radians" : 0,
+    "phase_LF_radians" : 0,
+    "extrasys_frequency" : 0.0,
+    "extrasys_shift_after_last_QRS" : 0.0,
+    "skip_one_QRS_at_every" : 0,
+    "QRS_interval_standard_deviation" : 0.0
+},
+{
+    "amplitude_p" : 0.1,
+    "amplitude_q" : -0.1,
+    "amplitude_r" : 1.0,
+    "amplitude_s" : -0.2,
+    "amplitude_t" : 0.2,
+    "len_p" : 0.08,
+    "len_pq" : 0.08,
+    "len_q" : 0.007,
+    "len_r" : 0.1,
+    "len_s" : 0.007,
+    "len_st" : 0.1,
+    "len_t" : 0.16
+});
+DisplayData(s1);</code></pre>
+</div></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/ecg_1ch.png" alt="Generated ECG" />
+</span></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Sine curve with 2 channels and multiple modulations
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>GenerateModulatedECG(s1, 240000 240000, 1000 1000,
+{
+    "heartbeat_frequency" : 1.0,
+    "alteration_frequency_for_DC_component" : 0.01,
+    "alteration_amplitude_for_DC_component" : 0.2,
+    "alteration_phase_for_DC_component_in_radians": 0,
+    "frequency_HF" : 0.2,
+    "frequency_LF" : 0.1,
+    "amplitude_modulation_depth_for_QRS_by_HF" : 0.2,
+    "frequency_modulation_depth_HF" : 0.3,
+    "frequency_modulation_depth_LF" : 0.3,
+    "phase_HF_radians" : 0,
+    "phase_LF_radians" : 0,
+    "extrasys_frequency" : 0.0,
+    "extrasys_shift_after_last_QRS" : 0.5,
+    "QRS_interval_standard_deviation" : 0.0,
+    "skip_one_QRS_at_every" : 0
+},
+{
+    "amplitude_p" : 0.1,
+    "amplitude_q" : -0.1,
+    "amplitude_r" : 1.0,
+    "amplitude_s" : -0.2,
+    "amplitude_t" : 0.2,
+    "len_p" : 0.08,
+    "len_pq" : 0.08,
+    "len_q" : 0.007,
+    "len_r" : 0.1,
+    "len_s" : 0.007,
+    "len_st" : 0.1,
+    "len_t" : 0.16
+});
+DisplayData(s1);</code></pre>
+</div></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/ecg.png" alt="Generated ECG" />
+</span></p></div>
+</div>
+<div class="sect2">
+<h3 id="GetDataName">GetDataName</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p><strong>Obsolate</strong>. Works with <em>data</em>. This function always returns with the <em>DATASERIES0</em> string.</p></div>
+<div class="paragraph"><p>Syntax: <em>GetDataName([data_index])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>data_index</em>: the index of the data you are looking for in the data list.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+Returns with the <em>DATASERIES0</em> string.
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="GetVal">GetVal</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. This function gets the sample data in the specified position (x and y coordinates) from the variable and it returns as a string. The x and y coordinates start from 0.</p></div>
+<div class="paragraph"><p>QUESTION: There are no bounds checks in the x and y coordinates. Implement it?</p></div>
+<div class="paragraph"><p>Syntax: <em>GetVal([src_var_name], [x_coord], [y_coord])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the variable from which we want to extract the given data
+</p>
+</li>
+<li>
+<p>
+<em>x_coord</em>: the x coordinate of the given data, this is the channel index. The indexing starts from 0.
+</p>
+</li>
+<li>
+<p>
+<em>y_coord</em>: the y coordinate of the given data, this is the sample index of the data. The indexing start from 0.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+It returns with the specified data as a string (3.1415926).
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="GetVarName">GetVarName</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. The function returns the given variable name as a string.</p></div>
+<div class="paragraph"><p>Syntax: <em>GetVarName([src_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+Returns the variable name as a string (<em>DATA15</em>).
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="GetXVals">GetXVals</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. This function returns with the indexes from the source variable’s first channel which are greater than the specified value.</p></div>
+<div class="paragraph"><p>QUESTION1: only the <em>&gt;</em> condition is implemented. Implement other conditions as well (<em>&lt;</em>, <em>=</em>, <em>&gt;=</em>, <em>&#8656;</em>, <em>!=</em>)?
+QUESTION2: the second value is not in use. Implement to use as an upper limit in the condition?</p></div>
+<div class="paragraph"><p>Syntax: <em>GetXVals([dst_var_name], [src_var_name], [condition], [value1], [value2])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+dst_var_name'': the name of the destination variable
+</p>
+</li>
+<li>
+<p>
+<em>src_var_name</em>: the name of the source variable
+</p>
+</li>
+<li>
+<p>
+<em>condition</em>: must be <em>&gt;</em>
+</p>
+</li>
+<li>
+<p>
+<em>value1</em>: the minimum value, we are looking for values greater than this in the first channel of the source variable. The minimum value is exclusive.
+</p>
+</li>
+<li>
+<p>
+<em>value2</em>: not used
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+Here is the return value
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Hanning">Hanning</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Makes a Hann window with the given samples number.</p></div>
+<div class="paragraph"><p>Syntax: <em>Hanning([output_var_name], [samples])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>output_var_name</em>: the name of the output variable
+</p>
+</li>
+<li>
+<p>
+<em>samples</em>: the number of the samples in the output variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="if">if statement</h3>
+<div class="paragraph"><p><em>In progress - Final</em> - Checked_</p></div>
+<div class="paragraph"><p>We could make a branching with the <em>if()</em> script function. It has a <em>condition</em> and a <em>body</em>. If the <em>condition</em> is true it evaluates the <em>body</em> of the <em>if()</em> script function.
+Don&#8217;t forget the <em>;</em> from the end of the <em>body</em> part.</p></div>
+<div class="paragraph"><p>Syntax:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>if([condition])
+{
+    [body]
+};</code></pre>
+</div></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>condition</em>: this is a condition
+</p>
+</li>
+<li>
+<p>
+<em>body</em>: evaluate this if the condition is true
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph" id="example_006"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateVector(data_1, 10);
+CreateVector(data_2, 10);
+if(1)
+{
+    DisplayData(data_1);
+};
+if(0)
+{
+    DisplayData(data_2);
+};</code></pre>
+</div></div>
+<div class="paragraph"><p>This will only display the <em>data_1</em>, because the <em>if</em> condition is true.</p></div>
+</div>
+<div class="sect2">
+<h3 id="IIRFilter_RT">IIRFilter_RT</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="InputFirstData">InputFirstData</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>data &#8594; variable</em>. Moves the first data from the datalist to the variablelist. Optionally you can set which channel you want to move, by default it moves every channel to the output variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>InputFirstData([output_var_name], [active_channels])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>output_var_name</em>: the name of the output variable
+</p>
+</li>
+<li>
+<p>
+<em>active_channels</em> (optional): by default moves every channel. The channel numbering starts from 1.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="integral">integral</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. The function calculates the integral of a signal from a start index to a stop index. It means it calculates the area under the signal. If the signal is above the x axis it counts the area as plus, and if the signal is under the x axis it counts the area as negative.</p></div>
+<div class="paragraph"><p>Syntax: <em>integral([in_var_name], [unit_start], [unit_stop], [output_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the name of the input variable name
+</p>
+</li>
+<li>
+<p>
+<em>unit_start</em>: the start index of the signal sample. It starts from 0.
+</p>
+</li>
+<li>
+<p>
+<em>unit_stop</em>: the stop index of the signal sample.
+</p>
+</li>
+<li>
+<p>
+<em>output_var_name</em>: the name of the output variable name
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="IntegTrapezoid">IntegTrapezoid</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>.</p></div>
+<div class="paragraph"><p>Syntax: <em>IntegTrapezoid([in_var_name], [output_var_name], [spectrum])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the name of the input variable
+</p>
+</li>
+<li>
+<p>
+<em>output_var_name</em>: the name of the output variable
+</p>
+</li>
+<li>
+<p>
+<em>spectrum</em>: the spectrum name
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Intersect">Intersect</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p><strong>Obsolate</strong> Works with <em>variable</em>. The function calculates the indexes where the given variable intersects the x-axis. In the output variable we get the intersections indexes.</p></div>
+<div class="paragraph"><p>Syntax: <em>Intersect([in_var_name], [output_var_name], [value])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the name of the input variable
+</p>
+</li>
+<li>
+<p>
+<em>output_var_name</em>: the name of the output variable
+</p>
+</li>
+<li>
+<p>
+<em>value</em>: not in use
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="IAdd">IAdd</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. The function adds the given value to each element of the given variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>IAdd([var_name], [value])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the name of the variable
+</p>
+</li>
+<li>
+<p>
+<em>value</em>: the value we want to add
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="IProd">IProd</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. The function multiplies each element of the given variable by the given value.</p></div>
+<div class="paragraph"><p>Syntax: <em>IProd([var_name], [value])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the name of the variable which elements we want to multiply
+</p>
+</li>
+<li>
+<p>
+<em>value</em>: the value we want to multiply
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="IsEqual">IsEqual</h3>
+<div class="paragraph"><p><em>In progress - Final</em> - Checked_</p></div>
+<div class="paragraph"><p>Works with <em>data</em>. Checks if the given datas are equal or not. We could use this function in another function&#8217;s parameter, for example in the <em>if()</em> function.</p></div>
+<div class="paragraph"><p>Syntax: <em>IsEqual([first_data_name], [second_data_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>first_data_name</em>: the name of the first data name we want to compare
+</p>
+</li>
+<li>
+<p>
+<em>second_data_name</em>: the name of the second data name we want to compare
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+returns a text <em>1</em> if the two data is equal and <em>0</em> if not.
+</p>
+</li>
+</ul></div>
+<div class="paragraph" id="example_007"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateVector(vector_1, 10);
+CreateVector(vector_2, 10);
+DisplayData(vector_1);
+DisplayData(vector_2);
+CreateSine(sinewave, 10000, 1000, 10);
+if(IsEqual(vector_1, vector_2))
+{
+    DisplayData(sinewave);
+};</code></pre>
+</div></div>
+<div class="paragraph"><p>In this example will display the sine wave, because the two data is equal.</p></div>
+</div>
+<div class="sect2">
+<h3 id="LoadKrit">LoadKrit</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Syntax: <em>LoadKrit(outdataname, critfilename)</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="mean">Mean</h3>
+<div class="paragraph"><p>Calculates the mean of a variable. The mean is calculated for all the channels, outputting a new variable containing number of channels mean values.</p></div>
+<div class="paragraph"><p>Syntax: <em>Mean([mean_var_name], [src_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>mean_var_name</em>: the output variable name
+</p>
+</li>
+<li>
+<p>
+<em>src_var_name</em>: the source variable name
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="_markers">Markers</h3>
+<div class="sect3">
+<h4 id="AddMarker">AddMarker</h4>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Adds a single marker to a variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>AddMarker([in_var_name], [a_start], [a_length], [a_label], [a_channel_index], [a_color], [a_id])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the name of the input variable
+</p>
+</li>
+<li>
+<p>
+<em>a_start</em>: the start value of the marker in horiyontal units.
+</p>
+</li>
+<li>
+<p>
+<em>a_length</em>: length of the marker in horiyontal units.
+</p>
+</li>
+<li>
+<p>
+<em>a_label</em>: optional
+</p>
+</li>
+<li>
+<p>
+<em>a_channel_index</em>: optional
+</p>
+</li>
+<li>
+<p>
+<em>a_color</em>: optional
+</p>
+</li>
+<li>
+<p>
+<em>a_id</em>: optional
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="GetMarkerStart">GetMarkerStart</h4>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Adds a single marker to a variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>GetMarkerStart([var_name], [marker_index])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the name of the input variable
+</p>
+</li>
+<li>
+<p>
+<em>marker_index</em>: index of marker in the marker list.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+start value in horizontal units
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="GetMarkerLength">GetMarkerLength</h4>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Adds a single marker to a variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>GetMarkerLength([var_name], [marker_index])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the name of the input variable
+</p>
+</li>
+<li>
+<p>
+<em>marker_index</em>: index of marker in the marker list.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+length of the marker in horizontal units
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="GetMarkerChannel">GetMarkerChannel</h4>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Adds a single marker to a variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>GetMarkerChannel([var_name], [marker_index])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the name of the input variable
+</p>
+</li>
+<li>
+<p>
+<em>marker_index</em>: index of marker in the marker list.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+channel index of marker
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect3">
+<h4 id="PutTMarkersOnValues">PutTMarkersOnValues</h4>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. In the given input variable put vertical markers on the given values.</p></div>
+<div class="paragraph"><p>Syntax: <em>PutTMarkersOnValues([in_var_name], [values])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the name of the input variable
+</p>
+</li>
+<li>
+<p>
+<em>values</em>: the list of the values where you want to add markers. The list must be a space separated list.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph" id="example_011"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateVector(data, 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1);
+Cat(data,data);
+AddMarker(data, 5, 18, "a_label", 0, 100, some_id);
+UserInput(data,fit_width);
+Extract(data, data2, GetMarkerStart(data, 0), GetMarkerLength(data, 0));
+DisplayData(data2,fit_width);
+DisplayData(data,fit_width);
+DisplayData(manage_windows, tile_horizontally);</code></pre>
+</div></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="MeanSpectrum">MeanSpectrum</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Creates a spectrum of the variable for each channel channel using the Fast Fourier transformation.</p></div>
+<div class="paragraph"><p>The spectrum will have its size half of the input size +1, the first element being the DC component, whilst the last element the Nyquist component.</p></div>
+<div class="paragraph"><p>Syntax: <em>MeanSpectrum([src_var_name], [dst_var_name], [number_of_horizontal_units], [number_of_fft_horizontal_units], [spectrum_presentation])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the input variable name what we want to analyze
+</p>
+</li>
+<li>
+<p>
+<em>dst_var_name</em>: the output variable name where we store the analyzed values
+</p>
+</li>
+<li>
+<p>
+<em>number_of_horizontal_units</em>: a list with numbers of horizontal units. The input data will be sliced to lengths corresponding to this value.
+</p>
+</li>
+<li>
+<p>
+<em>number_of_fft_horizontal_units</em>: a list with numbers the fast Fourier transformation will really be performed on, in horizontal units. It may be equal to the previous parameter, or higher. Providing a higher value will increase the resolution of the spectrum).
+</p>
+</li>
+<li>
+<p>
+<em>spectrum_presentation</em>: the way the spectrum will be presented.
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Spectrum presentation settings:
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+<em>ampn</em> Normalized amplitude. The units will match the units of the fft&#8217;s input. The output is the normalized square of the power spectrum density.
+</p>
+</li>
+<li>
+<p>
+<em>amp</em> Amplitude without normalization. The units will match the units of the fft&#8217;s input. The output is the square of the power spectrum density.
+</p>
+</li>
+<li>
+<p>
+<em>psd</em> Power spectrum density. Units will be <em>fft_input_vertical_units ^ 2 * fft_input_horizontal_units</em>
+</p>
+</li>
+<li>
+<p>
+<em>psdn</em> Power spectrum density normalized. Units will be <em>fft_input_vertical_units ^ 2 * fft_input_horizontal_units</em>
+</p>
+</li>
+<li>
+<p>
+<em>dbi</em> Decibels 20.0 * log10(amp). Units will be decibels: log10(fft_input_vertical_units).
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Processing steps:</div><ul>
+<li>
+<p>
+the input data will be sliced into pieces of <em>number_of_horizontal_units</em>
+</p>
+</li>
+<li>
+<p>
+a hanning windowing will be performed on all the slices, having the input windowed in a nearest power of 2 sized memory space corresponding to <em>number_of_fft_horizontal_units</em>
+</p>
+</li>
+<li>
+<p>
+* an FFT transformation will be performed on all the slices
+</p>
+</li>
+<li>
+<p>
+power spectrum density and normalization
+</p>
+</li>
+<li>
+<p>
+averaging of slices
+</p>
+</li>
+</ul></div>
+<div class="paragraph" id="example_005"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateSine(sinewave, 10000 10000, 1000 1000, 100 30 10);
+MeanSpectrum(sinewave,
+             spectrain,
+             CopyForAllChannels(sinewave, 1),
+             CopyForAllChannels(sinewave, 1));
+DisplayData(sinewave, fit_width);
+DisplayData(spectrain, fit_width);</code></pre>
+</div></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/MeanSpectrum_01.png" alt="Mean Spectrum" />
+</span></p></div>
+</div>
+<div class="sect2">
+<h3 id="median">Median</h3>
+<div class="paragraph"><p>Calculates the median of a variable. The median is calculated for all the channels, outputting a new variable containing number of channels median values.</p></div>
+<div class="paragraph"><p>Syntax: <em>Median([median_var_name], [src_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>median_var_name</em>: the output variable name
+</p>
+</li>
+<li>
+<p>
+<em>src_var_name</em>: the source variable name
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="mfilter_rev_bp">mfilter_rev_bp</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Syntax: <em>mfilter_rev_bp(indataname&#8217;the input data</em>)'</p></div>
+</div>
+<div class="sect2">
+<h3 id="mutato">mutato</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Syntax: <em>mutato(spavgpos1, spavgneg1, spavgpos2, spavgneg2, spcountandswrel)</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="Mutato2">Mutato2</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Syntax: <em>Mutato2(spavgpos1, spavgneg1, spavgpos2, spavgneg2, spcountandswrel)</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="NewFileDataBasedOnData">NewFileDataBasedOnData</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>data</em>. Creates a new file based on the given template data and will be displayed on the GUI.</p></div>
+<div class="paragraph"><p>Syntax: <em>NewFileDataBasedOnData([dst_data_name], [template_data_name], [window_milliseconds], [fileCodec_type], [filename], [channels])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>dst_data_name</em>: the name of the output data
+</p>
+</li>
+<li>
+<p>
+<em>template_data_name</em>: the name of the input template data
+</p>
+</li>
+<li>
+<p>
+<em>window_milliseconds</em>: the window size in milliseconds
+</p>
+</li>
+<li>
+<p>
+<em>fileCodec_type</em>: set the file codec type (4: bdf). See <a href="#DataTypes">[DataTypes]</a>.
+</p>
+</li>
+<li>
+<p>
+<em>filename</em>: the name of the output file with the file extension corresponding to the specified codec type.
+</p>
+</li>
+<li>
+<p>
+<em>channels</em>: optional, by default is every channel in the input template data
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="NewMemoryData">NewMemoryData</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>data</em>. Creates a data with the given parameters in the memory. You have to set the number of channel, the sample rates per channel and the horizontal unit. After it creates the data will be displayed on the GUI.</p></div>
+<div class="paragraph"><p>Syntax: <em>NewMemoryData([dst_data_name], [nr_channels], [sample_rates], [nr_horizontal_units])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>dst_data_name</em>: the name of the created data
+</p>
+</li>
+<li>
+<p>
+<em>nr_channels</em>: the number of channels in the created data
+</p>
+</li>
+<li>
+<p>
+<em>sample_rates</em>: the sample rates per channel. If you have more than 1 channel you have to set the sample rates for every channel. You can use space separated list
+</p>
+</li>
+<li>
+<p>
+<em>nr_horizontal_units</em>: the number of horizontal units in each channel
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="OnDataChange">OnDataChange</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>data</em>. The program handles a map (key-value list). The program checks this list every 50ms and if the program find any data in this list it will be triggered. This function puts the given data as the key and puts it&#8217;s <em>body</em> as the value to this list.</p></div>
+<div class="paragraph"><p>Syntax:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>OnDataChange([data_name])
+{
+[body]
+};</code></pre>
+</div></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>data_name</em>: the name of the data what you want to add to the list as a key
+</p>
+</li>
+<li>
+<p>
+<em>body</em>: function(s) what you want to run on the given data
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>DataAq(6, COM5, 3360, 1 , 0 , 200, 4, FileName04.bdf, dataname);
+OnDataChange(dataname)
+{
+    Spectrum_RT(dataname, 1, actual_spectrum);
+    DisplayData(actual_spectrum, fit_width);
+};</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="orsocounter">orsocounter</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>.</p></div>
+<div class="paragraph"><p>Syntax: <em>orsocounter([in_var_name], [spswkrits] , [spindx], [spcountandswrel])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the description of the parameter
+</p>
+</li>
+<li>
+<p>
+<em>spswkrits</em>: the description of the parameter&#8230;
+</p>
+</li>
+<li>
+<p>
+<em>spindx</em>: the description of the parameter&#8230;
+</p>
+</li>
+<li>
+<p>
+<em>spcountandswrel</em>: the description of the parameter&#8230;
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Orsocounter2">Orsocounter2</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="oszamlesf">oszamlesf</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="Oversample">Oversample</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="PutTwoSpindleTMarkers">PutTwoSpindleTMarkers</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p><strong>Obsolate</strong> Works with <em>variable</em>.</p></div>
+<div class="paragraph"><p>Syntax: <em>PutTwoSpindleTMarkers([in_var_name], [RMDSGExtracted], [intersections])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>in_var_name</em>: the name of the input varialbe
+</p>
+</li>
+<li>
+<p>
+<em>RMDSGExtracted</em>: the name of the&#8230;
+</p>
+</li>
+<li>
+<p>
+<em>intersections</em>: the list of&#8230;
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="RefineSpikes">RefineSpikes</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="RefreshDataWindow">RefreshDataWindow</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>data</em>. Refreshes the data on the display window.</p></div>
+<div class="paragraph"><p>Syntax: <em>RefreshDataWindow([data_name], [full_change])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>data_name</em>: the data what we want to refresh in a window
+</p>
+</li>
+<li>
+<p>
+<em>full_change</em>: optional, the default is false. If true, the magnifier is approximated, and the scrollbar values are reset. If the dimensions (either horizontal or vertical) of the data are changed, it needs to be set to <em>true</em> at least once in order for the data to display correctly. If only the values are changed, a value of <em>false</em> should do.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="RowMean">RowMean</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="RowMeanE">RowMeanE</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="SaveDataToFile">SaveDataToFile</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>data</em>. Saves a given data to a file in a given window in milliseconds. The file type could be <em>.edf</em>, <em>.bdf</em> and <em>.dat</em>, depends on the chosen file codec type. The default file codec type is <em>BDF</em>. If you specify another <em>file_codec_type</em>, the corresponding file extension must be specified in the <em>file_name</em>. See <a href="#DataTypes">[DataTypes]</a>.</p></div>
+<div class="paragraph"><p>Syntax: <em>SaveDataToFile([var_name], [file_name], [window_milliseconds], [file_codec_type])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the variable name what we want to save to file
+</p>
+</li>
+<li>
+<p>
+<em>file_name</em>: the file name where we want to save the
+</p>
+</li>
+<li>
+<p>
+<em>window_milliseconds</em>: the time window what we want to save to the file in milliseconds
+</p>
+</li>
+<li>
+<p>
+<em>file_codec_type</em>: Optional, the default file codec type is 4 which is the <em>BDF</em>. set the file codec type (1: EDF). See <a href="#DataTypes">[DataTypes]</a>.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="SetStopOnFirstError">SetStopOnFirstError</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>By default the script runner stops when the first error occurs. With this function we can modify this behavior to not stop running when the first error occurs.</p></div>
+<div class="paragraph"><p>Syntax: <em>SetStopOnFirstError([bool])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>bool</em> (true/false): the default is <em>true</em>. If you call this function with <em>false</em> the script continues to run the script even after the first error. The valid parameter can only be true or false.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Spectrums">Spectrums</h3>
+<div class="sect3">
+<h4 id="FullSpectrum">FullSpectrum</h4>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Creates a spectrum of the variable, resulting in a new 2D heatmap data per channel.</p></div>
+<div class="paragraph"><p>Every spectrum will have its size half of the input size +1, the first element being the DC component, whilst the last element the Nyquist component.</p></div>
+<div class="paragraph"><p>The resulting data will have a size corresponding to the length of the input divided by the number of units the data will be sliced into.</p></div>
+<div class="paragraph"><p>The horizontal units will match the horizontal units of the input data, the vertical units will be the frequency, having each channel in the output data represent a frequency component.</p></div>
+<div class="paragraph"><p>Syntax: <em>FullSpectrum([src_var_name], [dst_var_name], [number_of_horizontal_units], [frequency_list], [spectrum_presentation])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the input variable name what we want to analyze
+</p>
+</li>
+<li>
+<p>
+<em>dst_var_name</em>: the output variable name, or a prefix to it, where we store the analyzed values. The whole name of the output variables are the <em>dst_var_name</em> suffixed with the index of the channel, counted from 0. If the name is <em>dst_name</em> and the input variable has 2 channels, the output variables will be <em>dst_name0</em> and <em>dst_name1</em>. If the input has one channel only, no suffix will be added.
+</p>
+</li>
+<li>
+<p>
+<em>number_of_horizontal_units</em>: a list with numbers of horizontal units. The input data will be sliced to lengths corresponding to this value. No overlapping is supported currently.
+</p>
+</li>
+<li>
+<p>
+<em>frequency_list</em>: the start and the stop frequencies. Between these frequencies the result will be presented, and frequency components outside of this range will be dropped.
+</p>
+</li>
+<li>
+<p>
+<em>spectrum_presentation</em>: the way the spectrum will be presented.
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Spectrum presentation settings:
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+<em>ampn</em> Normalized amplitude. The units will match the units of the fft&#8217;s input. The output is the normalized square of the power spectrum density.
+</p>
+</li>
+<li>
+<p>
+<em>amp</em> Amplitude without normalization. The units will match the units of the fft&#8217;s input. The output is the square of the power spectrum density.
+</p>
+</li>
+<li>
+<p>
+<em>psd</em> Power spectrum density. Units will be <em>fft_input_vertical_units ^ 2 * fft_input_horizontal_units</em>
+</p>
+</li>
+<li>
+<p>
+<em>psdn</em> Power spectrum density normalized. Units will be <em>fft_input_vertical_units ^ 2 * fft_input_horizontal_units</em>
+</p>
+</li>
+<li>
+<p>
+<em>dbi</em> Decibels 20.0 * log10(amp). Units will be decibels: log10(fft_input_vertical_units).
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The output is normalized such as an 1mV amplitude sine wave in the input will result in an 1mV peak in the output.</p></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Processing steps:</div><ul>
+<li>
+<p>
+the input data will be sliced into pieces of <em>number_of_horizontal_units</em>
+</p>
+</li>
+<li>
+<p>
+a hanning windowing will be performed on all the slices, having the input windowed in a nearest power of 2 sized memory space corresponding to <em>number_of_fft_horizontal_units</em>
+</p>
+</li>
+<li>
+<p>
+* an FFT transformation will be performed on all the slices
+</p>
+</li>
+<li>
+<p>
+power spectrum density and normalization
+</p>
+</li>
+<li>
+<p>
+every spectrum resulted corresponding to a slice, will be inserted into the output data
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Example with one single channel data</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateSine(sin, 10000, 1000, 106 26 6);
+FullSpectrum(sin, spec, CopyForAllChannels(sin, 1), 0 150);
+DisplayData(spec, ,2D_map);</code></pre>
+</div></div>
+<div class="paragraph"><p><strong>Example with multiple channel data</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateSine(sin, 10000 10000, 1000 1000, 106 26 6);
+FullSpectrum(sin, spec_, CopyForAllChannels(sin, 1), 0 150);
+DisplayData(spec_0, ,2D_map);
+DisplayData(spec_1, ,2D_map);</code></pre>
+</div></div>
+<div class="paragraph"><p>Note: In case of multiple channels, there will be no data named exactly as given in the parameter. Multpile output data objects will be created, with indexed names.</p></div>
+</div>
+<div class="sect3">
+<h4 id="Spectrogram">Spectrogram</h4>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Creates a spectrogram of the variable, resulting in a new 2D heatmap data per channel.</p></div>
+<div class="paragraph"><p>The resulting data will have a size of the input divided by the length of the block_size the data will be sliced into.</p></div>
+<div class="paragraph"><p>Every spectrum will have its size half of the block_size +1, the first element being the DC component, whilst the last element the Nyquist component.</p></div>
+<div class="paragraph"><p>The horizontal units will match the horizontal units of the input data, the vertical units will be the frequency, having each channel in the output data represent a frequency component.</p></div>
+<div class="paragraph"><p>Syntax: <em>Spectrogram([src_var_name], [src_channel], [dst_var_name], [a_block_len], [spectrum_bounds], [overlapping], [spectrum_presentation])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the input variable name what we want to analyze
+</p>
+</li>
+<li>
+<p>
+<em>src_channel</em>: the input channel index to analyze
+</p>
+</li>
+<li>
+<p>
+<em>dst_var_name</em>: the output variable name, or a prefix to it, where we store the analyzed values. The whole name of the output variables are the <em>dst_var_name</em> suffixed with the index of the channel, counted from 0. If the name is <em>dst_name</em> and the input variable has 2 channels, the output variables will be <em>dst_name0</em> and <em>dst_name1</em>. If the input has one channel only, no suffix will be added.
+</p>
+</li>
+<li>
+<p>
+<em>a_block_len</em>: a numbers in horizontal units. The input data will be sliced to lengths corresponding to this value.
+</p>
+</li>
+<li>
+<p>
+<em>overlapping</em>: Percentage value setting the percentage the slices will overlap (example 25, 50, 75, 87.5).
+</p>
+</li>
+<li>
+<p>
+<em>frequency_list</em>: the start and the stop frequencies. Between these frequencies the result will be presented, and frequency components outside of this range will be dropped.
+</p>
+</li>
+<li>
+<p>
+<em>spectrum_presentation</em>: the way the spectrum will be presented.
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Spectrum presentation settings:
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+<em>ampn</em> Normalized amplitude. The units will match the units of the fft&#8217;s input. The output is the normalized square of the power spectrum density.
+</p>
+</li>
+<li>
+<p>
+<em>amp</em> Amplitude without normalization. The units will match the units of the fft&#8217;s input. The output is the square of the power spectrum density.
+</p>
+</li>
+<li>
+<p>
+<em>psd</em> Power spectrum density. Units will be <em>fft_input_vertical_units ^ 2 * fft_input_horizontal_units</em>
+</p>
+</li>
+<li>
+<p>
+<em>psdn</em> Power spectrum density normalized. Units will be <em>fft_input_vertical_units ^ 2 * fft_input_horizontal_units</em>
+</p>
+</li>
+<li>
+<p>
+<em>dbi</em> Decibels 20.0 * log10(amp). Units will be decibels: log10(fft_input_vertical_units).
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The output is normalized such as an 1mV amplitude sine wave in the input will result in an 1mV peak in the output.</p></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Processing steps:</div><ul>
+<li>
+<p>
+the input data will be sliced into pieces of <em>a_block_len</em>
+</p>
+</li>
+<li>
+<p>
+a hanning windowing will be performed on all the slices, having the input windowed in a nearest power of 2 sized memory space corresponding to <em>number_of_fft_horizontal_units</em>
+</p>
+</li>
+<li>
+<p>
+* an FFT transformation will be performed on all the slices
+</p>
+</li>
+<li>
+<p>
+power spectrum density and normalization
+</p>
+</li>
+<li>
+<p>
+every spectrum resulted corresponding to a slice, will be inserted into the output data
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateSine(sinewave, 1000, 1000, 30);
+DisplayData(sinewave);
+for (sine_frequency, 30, 100, 2){
+    AppendSine(sinewave, 1000, Iterator(sine_frequency));
+};
+RefreshDataWindow(sinewave, true);
+DataIn(sinewave, sinewave_, 1);
+Spectrogram(sinewave_, 0, fullspectrum, 1, 5 200, ,ampn);
+DisplayData(fullspectrum,fit_width,2D_map);
+Spectrogram(sinewave_, 0, fullspectrum2, 1, 5 200, 87.5,ampn);
+DisplayData(fullspectrum2,fit_width,2D_map);
+DisplayData(manage_windows, tile_horizontally);</code></pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="Spectrum_RT">Spectrum_RT</h4>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+<div class="sect3">
+<h4 id="SpectrumTimeline_RT">SpectrumTimeline_RT</h4>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="SpikeDetect">SpikeDetect</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Detects spikes according to the specified criteria. You have to set two criteria, an amplitude value and a horizontal value. If the samples are above the specified amplitude in the specified width (horizontal value) then in the output variable indicates sample with an index that meets the criteria.</p></div>
+<div class="paragraph"><p>Syntax: <em>SpikeDetect([out_var_name], [in_var_name], [kriter], [spikelen])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>out_var_name</em>: the name of the output variable
+</p>
+</li>
+<li>
+<p>
+<em>in_var_name</em>: the name of the input variable, where you want to detect spikes
+</p>
+</li>
+<li>
+<p>
+<em>kriter</em>: the
+</p>
+</li>
+<li>
+<p>
+<em>spikelen</em>:
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="SpindleCount">SpindleCount</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="SQR_Inplace">SQR_Inplace</h3>
+<div class="paragraph"><p>Work with <em>variable</em>. Squares all sample values in a variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>SQR_Inplace([variable_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>variable_name</em>: the name of the variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><a href="#example_003"><strong>Example</strong></a></p></div>
+</div>
+<div class="sect2">
+<h3 id="SQRT_Inplace">SQRT_Inplace</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Calculates its square roots for all sample values in a variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>SQRT_Inplace(var_name)</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>var_name</em>: the name of the variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="stdev">STDev</h3>
+<div class="paragraph"><p>Calculates the standard deviation of a variable and the <a href="#mean">mean</a> of that variable. The standard deviation is calculated for all the channels, outputting a new variable containing number of channels standard deviation values.</p></div>
+<div class="paragraph"><p>Syntax: <em>STDev([stdev_var_name], [src_var_name], [mean_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>stdev_var_name</em>: the output variable name
+</p>
+</li>
+<li>
+<p>
+<em>src_var_name</em>: the source variable name
+</p>
+</li>
+<li>
+<p>
+<em>mean_var_name</em>: the mean variable name
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Substract">Substract</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Subtracts one variable from the other.</p></div>
+<div class="paragraph"><p>Syntax: <em>Substract(minuend_var, subtrahend_var)</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>minuend_var</em>: the name of the variable from which we subtract the other the variable
+</p>
+</li>
+<li>
+<p>
+<em>subtrahend_var</em>: the name of the variable we subtract from the other variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="swindxdetect">swindxdetect</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+</div>
+<div class="sect2">
+<h3 id="SystemExit">SystemExit</h3>
+<div class="paragraph"><p>Exit from the whole program.</p></div>
+<div class="paragraph"><p>Syntax: <em>SystemExit(0)</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="SystemInterval">SystemInterval</h3>
+<div class="paragraph"><p>SystemInterval function may have a body. The body may contain a script. The script in the body will be called periodically.</p></div>
+<div class="paragraph"><p>If the function does not have a body, a previously defined interval with the same name will be deleted (regardless of the interval&#8217;s period).</p></div>
+<div class="paragraph"><p>Syntax:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>SystemInterval([interval_name], [interval_millisecs])
+{
+    ...
+};</code></pre>
+</div></div>
+<div class="paragraph"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateVector(data, 11);
+DisplayData(data, fit_width,value_list);
+SystemInterval(int1, 1000)
+{
+    AlterSignal(data, 12);
+    RefreshDataWindow(data, fit_width,value_list);
+    SystemInterval(int1);
+};</code></pre>
+</div></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>interval_name</em>: the name of the interval
+</p>
+</li>
+<li>
+<p>
+<em>interval_millisecs</em>: the interval&#8217;s period in milliseoconds
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="ToString">ToString</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>varialbe</em>. Creates a space separated list from the data of the first channel of the input variable and returns it.</p></div>
+<div class="paragraph"><p>Syntax: <em>ToString([input_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>input_var_name</em>: the name of the input variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+a text which is a space separated data list from first channel of the input variable
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateVector(vec, 1 2 3 4 5);
+ToString(vec);</code></pre>
+</div></div>
+<div class="paragraph"><p>The return text: "1.0000000 2.0000000 3.0000000 4.0000000 5.0000000"</p></div>
+</div>
+<div class="sect2">
+<h3 id="Transpose">Transpose</h3>
+<div class="paragraph"><p><em>In progress - Final</em> - Checked_</p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. Transposes a source variable into a destination variable. The <em>start</em> and <em>stop</em> parameters are optional, and if you want to use them you need to set both of them. If you only set the source and the destination variable the <em>Transpose</em> function will transpose the whole data in the source to the destination variable. The indexing starts from 0. The <em>start</em> parameter indexes are inclusive and the <em>stop</em> parameter indexes are exclusive.</p></div>
+<div class="paragraph"><p>Syntax: <em>Transpose([dst_var_name], [src_var_name], [src_start_channel_index], [src_start_element_index], [src_stop_channel_index], [src_stop_element_index])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>dst_var_name</em>: the name of the destination variable
+</p>
+</li>
+<li>
+<p>
+<em>src_var_name</em>: the name of the source variable
+</p>
+</li>
+<li>
+<p>
+<em>src_start_channel_index</em>: Optional by default this is the first channel. In the source variable this is the start number of the channels what we want to transpose to the destination variable.
+</p>
+</li>
+<li>
+<p>
+<em>src_start_element_index</em>: Optional by default this is the first element in the channel(s). In the source variable this is the start number of the element in a channel what we want to transpose to the destination variable.
+</p>
+</li>
+<li>
+<p>
+<em>src_stop_channel_index</em>: Optional by default this is the last channel. In the source variable this is the last channel number exclusively what we want to transpose to the destination variable.
+</p>
+</li>
+<li>
+<p>
+<em>src_stop_element_index</em>: Optional by default this is the last element in the channel(s). In the source variable this is the last element in a channel exclusively what we want to transpose to the destination variable.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>Example</strong>
+We have a variable with 2 channels and each channel have 4 values.</p></div>
+<div class="paragraph"><p>Source variable:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>Element index:         0  1  2  3
+Channel 1 (index 0): [10 11 12 13]
+Channel 2 (index 1): [20 21 22 23]</code></pre>
+</div></div>
+<div class="paragraph"><p>Script:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>Transpose(dst, src, 0, 0, 2, 2,)</code></pre>
+</div></div>
+<div class="paragraph"><p>Destination variable:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>Element index:         0  1
+Channel 1 (index 0): [10 20]
+Channel 2 (index 1): [11 21]</code></pre>
+</div></div>
+<div class="paragraph" id="example_001"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>CreateVector(vec1, 1 2 3 4 5 6);
+Transpose(vec2, vec1);
+DisplayData(vec1, fit_width, value_list);
+DisplayData(vec2, fit_width, value_list);</code></pre>
+</div></div>
+<div class="paragraph"><p>Note: surface views are working slowly if the data has thousands of channels (rows).</p></div>
+</div>
+<div class="sect2">
+<h3 id="TriggerDataChanged">TriggerDataChanged</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p><strong>Obsolate</strong> Description of the given script</p></div>
+<div class="paragraph"><p>Syntax: <em>TriggerDataChanged([data_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>data_var_name</em>: the name of the variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="TruncateSTDev">TruncateSTDev</h3>
+<div class="paragraph"><p>Truncates a signal based on the signal&#8217;s <a href="#median">median</a>, its <a href="#stdev">standard deviation</a>, and a ratio. All the channels of the signal will be truncated in-place (no new output variable will be created).</p></div>
+<div class="ulist"><div class="title">All values</div><ul>
+<li>
+<p>
+above <strong>madian + standard deviation * ratio</strong> will be truncated to <strong>madian + standard deviation * ratio</strong>
+</p>
+</li>
+<li>
+<p>
+and all bellow <strong>-1 * (madian + standard deviation * ratio)</strong> will be truncated to <strong>-1 * (madian + standard deviation * ratio)</strong>.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The function can be used to remove artifacts from a signal.</p></div>
+<div class="paragraph"><p>Before using this functionality the signal is likely to be high-pass filtered, like in the example bellow:</p></div>
+<div class="paragraph"><p><strong>Example</strong></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>FileOpen(Recording_01.bdf, ekgsignaldata);
+DataIn(ekgsignaldata, ekgsignal);
+CreateFilter(bandpass_filter, butterworth bp, 2 2000, 5 30);
+Filter(ekgsignal, bandpass_filter);
+
+Mean(ekg_mean, ekgsignal);
+Median(ekg_median, ekgsignal);
+STDev(ekg_stdev, ekgsignal, ekg_mean);
+TruncateSTDev(ekgsignal, ekg_median, ekg_stdev, 0.2);
+
+DisplayData(ekgsignal);</code></pre>
+</div></div>
+<div class="paragraph"><p><span class="image">
+<img src="res/TruncateSTDev.png" alt="TruncateSTDev" />
+</span></p></div>
+<div class="paragraph"><p>Syntax: <em>STDev([variable_name], [median_variable_name], [stdev_var_name], [ratio])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>variable_name</em>: input and output
+</p>
+</li>
+<li>
+<p>
+<em>median_variable_name</em>:
+</p>
+</li>
+<li>
+<p>
+<em>stdev_var_name</em>:
+</p>
+</li>
+<li>
+<p>
+<em>ratio</em>:
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="UserInput">UserInput</h3>
+<div class="paragraph"><p><em>In progress - Final</em></p></div>
+<div class="paragraph"><p>Works with <em>varialbe</em>. Display the input variable in a separate window and set active that window. This stops the program execution until you close the opened window.</p></div>
+<div class="paragraph"><p>While the window is open, markers on the window can be changed interactively. The changed markers can be used then to change the parameters of the further processing.</p></div>
+<div class="paragraph"><p>Syntax: <em>UserInput([input_var_name], &#8230;)</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>input_var_name</em>: the name of the input variable
+</p>
+</li>
+<li>
+<p>
+<em>&#8230;</em>: same options as the function DisplayData()
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><a href="#example_011"><strong>Example</strong></a></p></div>
+</div>
+<div class="sect2">
+<h3 id="xcorr">xcorr</h3>
+<div class="paragraph"><p><em>In progress</em></p></div>
+<div class="paragraph"><p>Works with <em>variable</em>. The function returns some kind of difference or the correlation between the entries of the input variable and the kernel with the given method.</p></div>
+<div class="paragraph"><p>The following methods can be used:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+EUCL: Euclidian distance
+</p>
+</li>
+<li>
+<p>
+SOSD: Sum of squared distances
+</p>
+</li>
+<li>
+<p>
+TXCB: Manhattan / Taxicab / Cityblock
+</p>
+</li>
+<li>
+<p>
+ANGL: Angle between vectors
+</p>
+</li>
+<li>
+<p>
+PCC (defalut): Pearson correlation
+</p>
+</li>
+<li>
+<p>
+CONV: Convolution
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Syntax: <em>xcorr([dst_var_name], [src_var_name], [kernel_name], [method])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>dst_var_name</em>: the name of the output variable
+</p>
+</li>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable on which we execute the function
+</p>
+</li>
+<li>
+<p>
+<em>kernel_name</em>: the name of the kernel
+</p>
+</li>
+<li>
+<p>
+<em>method</em> (optional): the name of the specified method, the default is <em>PCC</em>. For the methods see the description above.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="ImpArtCanc">ImpArtCanc</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function eliminates big impulse artefacts on each channel of the signal, by replacing the samples that are bigger than the treshold with the mean of the channel.</p></div>
+<div class="paragraph"><p>Syntax: <em>ImpArtCanc([src_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the variable on which we execute the function
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="ICA">ICA</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Independent component analysis. From an <em>n</em> channel signal it will create a new variable with <em>n</em> independent component. It uses the fixed point algorithm of Hyvarinen with deflationary ortogonalization and hyperbolic cosine as contrast function. It uses the random numbers provided in the <em>random_var_name</em> variable as the initial values, when calculating the demixing matrix. The random values should be between -0.5 and 0.5 and the variable should contain at least n*n elements.</p></div>
+<div class="paragraph"><p>Syntax: <em>ICA([src_var_name], [dst_var_name], [random_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable on which we execute the function
+</p>
+</li>
+<li>
+<p>
+<em>dst_var_name</em>: the name of the output variable
+</p>
+</li>
+<li>
+<p>
+<em>random_var_name</em>: the name of a variable with random numbers for initialization
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Whitening">Whitening</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Performs signal whitening. It includes the centering of the signal and the eigen value decomposition of it&#8217;s covariance matrix. The whitening matrix will be the diagonal matrix (containing the square roots of the eigenvalues) multiplied by the transposed eigenvector matrix. The channels of the resulting variable will be uncorrelated and their variances equal unity.</p></div>
+<div class="paragraph"><p>Syntax: <em>Whitening([src_var_name], [dst_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable on which we execute the function
+</p>
+</li>
+<li>
+<p>
+<em>dst_var_name</em>: the name of the output variable
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="ToComplex">ToComplex</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Converts the signal to complex form. The output will be twice as long as the input. The elements with even index will hold the real part and the elements with odd index will hold the imaginary part of the number. As this function converts real signal to complex form the imaginery parts will be 0 for all elements.</p></div>
+<div class="paragraph"><p>Syntax: <em>ToComplex([src_var_name], [dst_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable. Signal in real form.
+</p>
+</li>
+<li>
+<p>
+<em>dst_var_name</em>: the name of the output variable. Signal in complex form.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="ToReal">ToReal</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Converts the signal from complex form to real form. The output will be half as long as the input. The function ignores the imaginary part of the complex numbers and retrieves only the real parts.</p></div>
+<div class="paragraph"><p>Syntax: <em>ToReal([src_var_name], [dst_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable. Signal in complex form.
+</p>
+</li>
+<li>
+<p>
+<em>dst_var_name</em>: the name of the output variable. Signal in real form.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="FastFourierTransform">FastFourierTransform</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Calculates the fast fourier transform of the input using the FFTW libary. The input has to be in complex form, and the output will be in complex form too.</p></div>
+<div class="paragraph"><p>Syntax: <em>FastFourierTransform([src_var_name], [dst_var_name], [sign])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable in complex form.
+</p>
+</li>
+<li>
+<p>
+<em>dst_var_name</em>: the name of the output variable in complex form.
+</p>
+</li>
+<li>
+<p>
+<em>sign</em>: sign of the FFT. Forward FFT: -1. Backward FFT: 1.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="PaddingSpectrum">PaddingSpectrum</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Takes a double sided spectrum (complex form) and extends it with 0s in the higher frequency range. The ratio of the extension will depend on the <em>rate</em> input.</p></div>
+<div class="paragraph"><p>Syntax: <em>PaddingSpectrum([src_var_name], [dst_var_name], [rate])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable in complex form.
+</p>
+</li>
+<li>
+<p>
+<em>dst_var_name</em>: the name of the output variable in complex form.
+</p>
+</li>
+<li>
+<p>
+<em>rate</em>: ratio of the number of new and old samples. It has to be equal or bigger than 2.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Interpolation">Interpolation</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Uses fourier interpolation to create a more detailed signal. It calls the following functions on temporary variables: ToComplex, FastFourierTransform, PaddingSpectrum, FastFourierTransform, ToReal. The output variable will be <em>rate</em> times as long as the input variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>Interpolation([src_var_name], [dst_var_name], [rate])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable.
+</p>
+</li>
+<li>
+<p>
+<em>dst_var_name</em>: the name of the output variable.
+</p>
+</li>
+<li>
+<p>
+<em>rate</em>: ratio of the new and the old sampling frequency. It has to be equal or bigger than 2.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="SelectBestChannel">SelectBestChannel</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. Chooses the best channel for maternal QRS detection, based on a priori knowledge on its pseudo-periodicity. It applies a derivative filter on the signal, with a 16 ms long window, then a moving average filter, with a 9 ms long window. Then it calculates the mean of maximum values of each channel on windows of 8 s, 2 s, and 0.2 (mD6, mD2, mD02). The quality factor of each channel will be determined with the following equation: -mD2 / (mD02 + mD8). The best channel will be the one with the smallest quality value. The best channel from the original input variable will be copied into the output variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>SelectBestChannel([src_var_name], [dst_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable.
+</p>
+</li>
+<li>
+<p>
+<em>dst_var_name</em>: the name of the output variable, with the best channel.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Centering">Centering</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will modify each channel of the signal by subtracting the mean of the channel and dividing with the standard deviation. The resulting channels will have a mean of 0 and a standard deviation of 1.</p></div>
+<div class="paragraph"><p>Syntax: <em>Centering([src_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable. It will be modified, the resulting signal will be centered.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Squaring">Squaring</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will square each sample of each channel.</p></div>
+<div class="paragraph"><p>Syntax: <em>Squaring([src_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable. It will be modified, the resulting signal will be squared.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Normalize">Normalize</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will normalize each channel of the signal, by dividing every sample with the maximum of the channel.</p></div>
+<div class="paragraph"><p>Syntax: <em>Normalize([src_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable. It will be modified, the resulting signal will be normalized.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="Divide">Divide</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will divide each sample of each channel with the divisor.</p></div>
+<div class="paragraph"><p>Syntax: <em>Divide([src_var_name, divisor])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable. It will be modified, the resulting signal will be normalized.
+</p>
+</li>
+<li>
+<p>
+<em>divisor</em>: divide with this.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CustomFilter">CustomFilter</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will create a variable copying the numbers from the denominator to the first channel numerator to the first channel of the filter variable, and the numbers from the numerator to the second channel of the filter. This function works also without denominator input. In this case the first channel will contain zeros.</p></div>
+<div class="paragraph"><p>Syntax: <em>CustomFilter([filt_var_name, numerator, denominator])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>filt_var_name</em>: the name of the output variable.
+</p>
+</li>
+<li>
+<p>
+<em>numerator</em>: the list of the values of the numerator.
+</p>
+</li>
+<li>
+<p>
+<em>denominator</em>: the list of the values of the denominator.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="DerivativeFilter">DerivativeFilter</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will create a temporary derivative filter, and apply that on the input variable. Filter and FilterReverse functions will be used on the input variable.</p></div>
+<div class="paragraph"><p>Syntax: <em>DerivativeFilter([src_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="MovingAverageFilter">MovingAverageFilter</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will calculate the moving average of each channel of the given input. The length of the input will be <em>win_length</em> s long. If <em>win_length</em> is missing, the length of the window will be 0.15 s long.</p></div>
+<div class="paragraph"><p>Syntax: <em>MovingAverageFilter([src_var_name, win_length])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable.
+</p>
+</li>
+<li>
+<p>
+<em>win_length</em>: the length of the moving window in s.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="FindPeaks">FindPeaks</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will find the local maximums on each channels of the given variable. It will modify the input variable, replacing the samples that are peaks with 1, and the samples that are not peaks with 0.  The local maximum will be calculated based on the derivative of the signal. The function will only find the local maximums with a height bigger than a minimum peak height, and with a minimum peak distance between each other.</p></div>
+<div class="paragraph"><p>Syntax: <em>FindPeaks([src_var_name, peak_height, peak_distance])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable.
+</p>
+</li>
+<li>
+<p>
+<em>peak_height</em>: the minimum peak height will be calculated as the <em>peak_height</em> fraction of the biggest value of the channel. Default value: 7
+</p>
+</li>
+<li>
+<p>
+<em>peak_distance</em>: the minimum peak distance in s. Default value: 0.2 s
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CorrectPeaks">CorrectPeaks</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will correct the location of the peaks by searching for the maximum value of the signal in the <em>win_length</em> viscinity of the peaks. The peaks variable will contain 1 where a peak is found on the signal and 0 where there&#8217;s no peak.</p></div>
+<div class="paragraph"><p>Syntax: <em>CorrectPeaks([src_var_name, peaks_var_name, win_length])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input signal.
+</p>
+</li>
+<li>
+<p>
+<em>peaks_var_name</em>: the name of the variable that contains the peaks detected on each channel.
+</p>
+</li>
+<li>
+<p>
+<em>win_length</em>: length of the correction window in s. Default value: 0.08 s
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CreateOutput">CreateOutput</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will create the output variable with 3 channel, containing the first channel of the signal, the maternal peaks and the fetal peaks. The channels of the peaks will contain 1 where a peak is found on the signal and 0 where there&#8217;s no peak.</p></div>
+<div class="paragraph"><p>Syntax: <em>CreateOutput([src_var_name, mother_peaks_var_name, fetal_peaks_var_name, output_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable.
+</p>
+</li>
+<li>
+<p>
+<em>mother_peaks_var_name</em>: the name of the variable containing the maternal peaks.
+</p>
+</li>
+<li>
+<p>
+<em>fetal_peaks_var_name</em>: the name of the variable containing the fetal peaks.
+</p>
+</li>
+<li>
+<p>
+<em>output_var_name</em>: the name of the output variable.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="DeleteChannel">DeleteChannel</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will delete a channel of the variable defined in the index input. The index of the first channel is 0.</p></div>
+<div class="paragraph"><p>Syntax: <em>DeleteChannel([src_var_name, index])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable.
+</p>
+</li>
+<li>
+<p>
+<em>index</em>: index of the channel to delete.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="DownsamplePeaks">DownsamplePeaks</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will determine the difference between the sampling frequencies of the long and short signals and modify the peaks variable. The peaks variable will contain the same peaks but on the smaller sampling frequency. Peaks are signaled with 1 while the non-peak samples are signaled with 0.</p></div>
+<div class="paragraph"><p>Syntax: <em>DownsamplePeaks([long_var_name, short_var_name, peaks_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>long_var_name</em>: the name of the variable containing the signal with the bigger sampling frequency.
+</p>
+</li>
+<li>
+<p>
+<em>short_var_name</em>: the name of the variable containing the signal with the smaller sampling frequency.
+</p>
+</li>
+<li>
+<p>
+<em>peaks_var_name</em>: the name of the input variable containing the peaks to downsample.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CreateMotherSignal">CreateMotherSignal</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will create the mother signal from each channel of the input variable. It will create a matrix containing the QRS complexes defined in the peaks variable. Singular value decomposition will be performed in this matrix. The 3 strongest singular values will be kept, the others will be evaluated before rebuilding the signal. With this, the fetal peaks and the noises will be removed, and only the mother signal will remain.</p></div>
+<div class="paragraph"><p>Syntax: <em>CreateMotherSignal([src_var_name, peaks_var_name, out_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable containing the signal.
+</p>
+</li>
+<li>
+<p>
+<em>peaks_var_name</em>: the name of the peaks variable containing the maternal peaks detected on the signal.
+</p>
+</li>
+<li>
+<p>
+<em>out_var_name</em>: the name of the output variable.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="QrsFDetection">QrsFDetection</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will detect the fetal peaks on each channels of the input variable. The input signal should contain only the fetal QRS complexes, without the mother QRS complexes.</p></div>
+<div class="paragraph"><p>Syntax: <em>QrsFDetection([src_var_name, maternal_peaks_var_name, out_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>src_var_name</em>: the name of the input variable containing the signal.
+</p>
+</li>
+<li>
+<p>
+<em>maternal_peaks_var_name</em>: the name of the peaks variable containing the maternal peaks detected on the signal.
+</p>
+</li>
+<li>
+<p>
+<em>out_var_name</em>: the name of the output variable containing the fetal peaks.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="SelectBestFChannel">SelectBestFChannel</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will select the best channel from the fetal peaks variable. The peaks are signalled with 1, while the non-peak samples are 0.</p></div>
+<div class="paragraph"><p>Syntax: <em>SelectBestFChannel([fetal_peaks_var_name, maternal_peaks_var_name, out_var_name])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>fetal_peaks_var_name</em>: the name of the peaks variable containing the fetal peaks.
+</p>
+</li>
+<li>
+<p>
+<em>maternal_peaks_var_name</em>: the name of the peaks variable containing the maternal peaks.
+</p>
+</li>
+<li>
+<p>
+<em>out_var_name</em>: the name of the output variable containing the chosen fetal peaks channel.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+<div class="sect2">
+<h3 id="CreateRandomVec">CreateRandomVec</h3>
+<div class="paragraph"><p>Works with <em>variable</em>. The function will create a variable. The variable will have 1 channel, with <em>vec_length</em> number of values randomly choosen from the [<em>min_value</em>, <em>max_value</em>) interval, using uniform distribution.</p></div>
+<div class="paragraph"><p>Syntax: <em>CreateRandomVec([out_var_name, vec_length, min_value, max_value])</em></p></div>
+<div class="ulist"><div class="title"><em>Parameters</em></div><ul>
+<li>
+<p>
+<em>out_var_name</em>: the name of the output variable containing the random vector.
+</p>
+</li>
+<li>
+<p>
+<em>vec_length</em>: the length of the random vector.
+</p>
+</li>
+<li>
+<p>
+<em>min_value</em>: minimum random value.
+</p>
+</li>
+<li>
+<p>
+<em>max_value</em>: maximum random value.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title"><em>Returns</em></div><ul>
+<li>
+<p>
+-
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2024-11-05 03:35:08 Central Europe Standard Time
+</div>
+</div>
+</body>
+</html>
