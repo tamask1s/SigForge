@@ -984,7 +984,7 @@ image:res/DetectSpikes.png[Spike detection]
 ** Optional. Default value is '1'.
 * 'refractory_period':
 ** After a spike was detected, within this period no new spike should be detected. The refractory_period is measured in the spike_signal's horizontal units (likely milliseconds).
-** Optional. Default value is '200'.
+** Optional. Default value is '240'.
 * 'previous_spike_reference_ratio':
 ** The new spike, in order to be detected, should be greater than the previous spike multiplied by this ratio
 ** Optional. Default value is '0.5'.
