@@ -462,155 +462,160 @@ public:
 //        return res;
 //    }
 
-    /** removes spikes which has lower normalized sqare of total energy (RMS, normalized L2Norm) than the average. The thrashold ratio is given as parameter. spikes with much bigger energy are also removed. */
+    /** removes spikes which has lower energy (RMS, normalized L2Norm) than the average. The thrashold ratio is given as parameter. spikes with much bigger energy are also removed. */
     char* CleanupSpikes(char* a_var_name, char* a_spikes, char* a_spike_radius, char* a_density_threshold)
     {
-        char* res = 0;
         if (!a_var_name || !a_spikes || !a_spike_radius || !a_density_threshold)
-            res = MakeString(m_newchar_proc, "ERROR: CleanupSpikes: not enough arguments.");
+            return MakeString(m_newchar_proc, "ERROR: CleanupSpikes: not enough arguments.");
+
         CVariable* var = m_variable_list_ref->variablemap_find(a_var_name);
         if (!var)
-            res = MakeString(m_newchar_proc, "ERROR: CleanupSpikes ", a_var_name, " not found.");
+            return MakeString(m_newchar_proc, "ERROR: CleanupSpikes ", a_var_name, " not found.");
+
         CVariable* spikes = m_variable_list_ref->variablemap_find(a_spikes);
         if (!spikes)
-            res = MakeString(m_newchar_proc, "ERROR: CleanupSpikes ", a_spikes, " not found.");
+            return MakeString(m_newchar_proc, "ERROR: CleanupSpikes ", a_spikes, " not found.");
 
-        if (!res)
+        unsigned int nr_channels = var->m_total_samples.m_size;
+        double density_threshold = atof(a_density_threshold);
+
+        for (unsigned int ch = 0; ch < nr_channels; ++ch)
         {
-            unsigned int nr_channels = var->m_total_samples.m_size;
-            double density_threshold = atof(a_density_threshold);
-
-            for (unsigned int ch = 0; ch < nr_channels; ++ch)
-            {
-                double density_accum = 0;
-                unsigned int spike_count = 0;
-                int spike_radius = (atof(a_spike_radius) * var->m_sample_rates.m_data[ch]);
-                for (unsigned int i = spike_radius; i < spikes->m_total_samples.m_data[ch] - spike_radius; ++i)
-                    if (spikes->m_data[ch][i])
-                    {
-                        ++spike_count;
-                        density_accum += PSignalMetrics::lp_norm(var->m_data[ch] + i - spike_radius, spike_radius * 2);
-                    }
-                density_accum /= spike_count;
-                double density_threshold_value = density_accum * density_threshold;
-                for (unsigned int i = spike_radius; i < spikes->m_total_samples.m_data[ch] - spike_radius; ++i)
-                    if (spikes->m_data[ch][i] && density_threshold_value)
-                    {
-                        double density = PSignalMetrics::lp_norm(var->m_data[ch] + i - spike_radius, spike_radius * 2);
-                        if (density < density_threshold_value || density > density_threshold_value * 5)
-                            spikes->m_data[ch][i] = 0;
-                    }
-            }
+            double density_accum = 0;
+            unsigned int spike_count = 0;
+            int spike_radius = (atof(a_spike_radius) * var->m_sample_rates.m_data[ch]);
+            for (unsigned int i = spike_radius; i < spikes->m_total_samples.m_data[ch] - spike_radius; ++i)
+                if (spikes->m_data[ch][i])
+                {
+                    ++spike_count;
+                    density_accum += PSignalMetrics::lp_norm(var->m_data[ch] + i - spike_radius, spike_radius * 2);
+                }
+            density_accum /= spike_count;
+            double density_threshold_value = density_accum * density_threshold;
+            for (unsigned int i = spike_radius; i < spikes->m_total_samples.m_data[ch] - spike_radius; ++i)
+                if (spikes->m_data[ch][i] && density_threshold_value)
+                {
+                    double density = PSignalMetrics::lp_norm(var->m_data[ch] + i - spike_radius, spike_radius * 2);
+                    if (density < density_threshold_value || density > density_threshold_value * 5)
+                        spikes->m_data[ch][i] = 0;
+                }
         }
-        return res;
+        return 0;
+    }
+
+    void double_from_str(double& var, const char* str)
+    {
+        if (str && strlen(str))
+            var = atof(str);
+    }
+
+    void int_from_str(int& var, const char* str)
+    {
+        if (str && strlen(str))
+            var = atoi(str);
     }
 
     /** refines spike locations to the position of a nearby local minimum or maximum in the original variable. The maximum proximity of searching is defined by the radius. */
     char* RefineSpikes(char* a_var_name, char* a_spikes, char* a_spike_radius, char* a_sign)
     {
-        char* res = 0;
         if (!a_var_name || !a_spikes || !a_spike_radius)
-            res = MakeString(m_newchar_proc, "ERROR: RefineSpikes: not enough arguments.");
+            return MakeString(m_newchar_proc, "ERROR: RefineSpikes: not enough arguments.");
+
         CVariable* var = m_variable_list_ref->variablemap_find(a_var_name);
         if (!var)
-            res = MakeString(m_newchar_proc, "ERROR: RefineSpikes ", a_var_name, " not found.");
+            return MakeString(m_newchar_proc, "ERROR: RefineSpikes ", a_var_name, " not found.");
+
         CVariable* spikes = m_variable_list_ref->variablemap_find(a_spikes);
         if (!spikes)
-            res = MakeString(m_newchar_proc, "ERROR: RefineSpikes ", a_spikes, " not found.");
+            return MakeString(m_newchar_proc, "ERROR: RefineSpikes ", a_spikes, " not found.");
+
         int sign = 0;
-        if (a_sign && strlen(a_sign))
-            sign = atoi(a_sign);
-        if (!res)
+        int_from_str(sign, a_sign);
+
+        for (unsigned int ch = 0; ch < var->m_total_samples.m_size; ++ch)
         {
-            for (unsigned int ch = 0; ch < var->m_total_samples.m_size; ++ch)
-            {
-                int spike_radius = (atof(a_spike_radius) * var->m_sample_rates.m_data[ch]);
-                for (unsigned int i = spike_radius; i < spikes->m_total_samples.m_data[ch] - spike_radius; ++i)
-                    if (spikes->m_data[ch][i])
+            int spike_radius = (atof(a_spike_radius) * var->m_sample_rates.m_data[ch]);
+            for (unsigned int i = spike_radius; i < spikes->m_total_samples.m_data[ch] - spike_radius; ++i)
+                if (spikes->m_data[ch][i])
+                {
+                    double spikeval = var->m_data[ch][i];
+                    unsigned int newspikeindx = i;
+                    bool positive_spike = spikeval > 0;
+                    if (sign)
+                        positive_spike = sign > 0;
+                    if (positive_spike)
                     {
-                        double spikeval = var->m_data[ch][i];
-                        unsigned int newspikeindx = i;
-                        bool positive_spike = spikeval > 0;
-                        if (sign)
-                            positive_spike = sign > 0;
-                        if (positive_spike)
-                        {
-                            for (int j = -1 * spike_radius; j < spike_radius; ++j)
-                                if (var->m_data[ch][i + j] > spikeval)
-                                {
-                                    spikeval = var->m_data[ch][i + j];
-                                    newspikeindx = i + j;
-                                }
-                        }
-                        else
-                        {
-                            for (int j = -1 * spike_radius; j < spike_radius; ++j)
-                                if (var->m_data[ch][i + j] < spikeval)
-                                {
-                                    spikeval = var->m_data[ch][i + j];
-                                    newspikeindx = i + j;
-                                }
-                        }
-                        if (i != newspikeindx)
-                        {
-                            spikes->m_data[ch][newspikeindx] = spikes->m_data[ch][i];
-                            spikes->m_data[ch][i] = 0;
-                        }
+                        for (int j = -1 * spike_radius; j < spike_radius; ++j)
+                            if (var->m_data[ch][i + j] > spikeval)
+                            {
+                                spikeval = var->m_data[ch][i + j];
+                                newspikeindx = i + j;
+                            }
                     }
-            }
+                    else
+                    {
+                        for (int j = -1 * spike_radius; j < spike_radius; ++j)
+                            if (var->m_data[ch][i + j] < spikeval)
+                            {
+                                spikeval = var->m_data[ch][i + j];
+                                newspikeindx = i + j;
+                            }
+                    }
+                    if (i != newspikeindx)
+                    {
+                        spikes->m_data[ch][newspikeindx] = spikes->m_data[ch][i];
+                        spikes->m_data[ch][i] = 0;
+                    }
+                }
         }
-        return res;
+        return 0;
     }
 
     /** refines spike locations to the position of a maximum correlation around the current spike. Correlation is calculated between the original var and kernel. The radius of searching can be set by radius. */
     char* RefineSpikesWithCorr(char* a_var_name, char* a_kernel, char* a_spikes, char* a_spike_radius, char* a_correlation_threshold, char* a_method)
     {
-        char* res = 0;
         if (!a_var_name || !a_spikes || !a_spike_radius || !a_kernel)
-            res = MakeString(m_newchar_proc, "ERROR: RefineSpikesWithCorr: not enough arguments.");
+            return MakeString(m_newchar_proc, "ERROR: RefineSpikesWithCorr: not enough arguments.");
         CVariable* var = m_variable_list_ref->variablemap_find(a_var_name);
         if (!var)
-            res = MakeString(m_newchar_proc, "ERROR: RefineSpikesWithCorr ", a_var_name, " not found.");
+            return MakeString(m_newchar_proc, "ERROR: RefineSpikesWithCorr ", a_var_name, " not found.");
         CVariable* spikes = m_variable_list_ref->variablemap_find(a_spikes);
         if (!spikes)
-            res = MakeString(m_newchar_proc, "ERROR: RefineSpikesWithCorr ", a_spikes, " not found.");
+            return MakeString(m_newchar_proc, "ERROR: RefineSpikesWithCorr ", a_spikes, " not found.");
         CVariable* kernel = m_variable_list_ref->variablemap_find(a_kernel);
         if (!kernel)
-            res = MakeString(m_newchar_proc, "ERROR: RefineSpikesWithCorr ", a_kernel, " not found.");
+            return MakeString(m_newchar_proc, "ERROR: RefineSpikesWithCorr ", a_kernel, " not found.");
         int method = (a_method && strlen(a_method)) ? atoi(a_method) : PCC;
         double correlation_threshold = (a_correlation_threshold && strlen(a_correlation_threshold)) ? atof(a_correlation_threshold) : -1.0;
 
-        if (!res)
+        for (unsigned int ch = 0; ch < var->m_total_samples.m_size; ++ch)
         {
-            for (unsigned int ch = 0; ch < var->m_total_samples.m_size; ++ch)
-            {
-                int spike_radius = (atof(a_spike_radius) * var->m_sample_rates.m_data[ch]);
-                int kernel_radius = kernel->m_total_samples.m_data[0] / 2;
-                for (unsigned int i = spike_radius + kernel_radius + 1; i < spikes->m_total_samples.m_data[ch] - spike_radius - kernel_radius - 1; ++i)
-                    if (spikes->m_data[ch][i])
+            int spike_radius = (atof(a_spike_radius) * var->m_sample_rates.m_data[ch]);
+            int kernel_radius = kernel->m_total_samples.m_data[0] / 2;
+            for (unsigned int i = spike_radius + kernel_radius + 1; i < spikes->m_total_samples.m_data[ch] - spike_radius - kernel_radius - 1; ++i)
+                if (spikes->m_data[ch][i])
+                {
+                    double corr = -100.0;
+                    int corrindx = 0;
+                    for (int j = -1 * spike_radius; j < spike_radius; ++j)
                     {
-                        double corr = -100.0;
-                        int corrindx = 0;
-                        for (int j = -1 * spike_radius; j < spike_radius; ++j)
+                        double corrtmp = PCorrelator::Distance(kernel->m_data[0], var->m_data[ch] + i + j - kernel_radius,  kernel_radius * 2, (DistanceMetric)method);
+                        if (corrtmp > corr)
                         {
-                            double corrtmp = PCorrelator::Distance(kernel->m_data[0], var->m_data[ch] + i + j - kernel_radius,  kernel_radius * 2, (DistanceMetric)method);
-                            if (corrtmp > corr)
-                            {
-                                corr = corrtmp;
-                                corrindx = j;
-                            }
-                        }
-                        if (corr < correlation_threshold)
-                            spikes->m_data[ch][i] = 0;
-                        else if (corrindx)
-                        {
-                            spikes->m_data[ch][i] = 0;
-                            spikes->m_data[ch][i + corrindx] = 1;
+                            corr = corrtmp;
+                            corrindx = j;
                         }
                     }
-            }
+                    if (corr < correlation_threshold)
+                        spikes->m_data[ch][i] = 0;
+                    else if (corrindx)
+                    {
+                        spikes->m_data[ch][i] = 0;
+                        spikes->m_data[ch][i + corrindx] = 1;
+                    }
+                }
         }
-        return res;
+        return 0;
     }
 
     void XCorr(double* a_lhs, unsigned int a_lhs_len, double* a_rhs, unsigned int a_rhs_len, double& a_xcorr, int& a_corr_indx)
@@ -764,30 +769,26 @@ public:
 
     char* DetectSpikes(char* a_dst_name, char* a_spike_signal, char* a_threshold_signal, char* a_marker_val, char* a_refracter, char* a_previous_spike_reference_ratio, char* a_previous_spike_reference_attenuation)
     {
-        char* res = 0;
         if (!a_dst_name || !a_spike_signal || !a_threshold_signal)
-            res = MakeString(m_newchar_proc, "ERROR: DetectSpikes: not enough arguments.");
+            return MakeString(m_newchar_proc, "ERROR: DetectSpikes: not enough arguments.");
+
         CVariable* spike_signal = m_variable_list_ref->variablemap_find(a_spike_signal);
         if (!spike_signal)
-            res = MakeString(m_newchar_proc, "ERROR: DetectSpikes ", a_spike_signal, " not found.");
+            return MakeString(m_newchar_proc, "ERROR: DetectSpikes ", a_spike_signal, " not found.");
 
         CVariable* threshold_signal = m_variable_list_ref->variablemap_find(a_threshold_signal);
         if (!threshold_signal)
-            res = MakeString(m_newchar_proc, "ERROR: DetectSpikes ", a_threshold_signal, " not found.");
+            return MakeString(m_newchar_proc, "ERROR: DetectSpikes ", a_threshold_signal, " not found.");
 
         double marker_val = 1;
         double refracter = 240;
         double previous_spike_reference_ratio = 0.5;
         double previous_spike_reference_attenuation = 30;
 
-        if (a_marker_val && strlen(a_marker_val))
-            marker_val = atof(a_marker_val);
-        if (a_refracter && strlen(a_refracter))
-            refracter = atof(a_refracter);
-        if (a_previous_spike_reference_ratio && strlen(a_previous_spike_reference_ratio))
-            previous_spike_reference_ratio = atof(a_previous_spike_reference_ratio);
-        if (a_previous_spike_reference_attenuation && strlen(a_previous_spike_reference_attenuation))
-            previous_spike_reference_attenuation = atof(a_previous_spike_reference_attenuation);
+        double_from_str(marker_val, a_marker_val);
+        double_from_str(refracter, a_refracter);
+        double_from_str(previous_spike_reference_ratio, a_previous_spike_reference_ratio);
+        double_from_str(previous_spike_reference_attenuation, a_previous_spike_reference_attenuation);
 
         unsigned int nr_channels = spike_signal->m_total_samples.m_size;
 
@@ -841,7 +842,7 @@ public:
                 }
             }
         }
-        return res;
+        return 0;
     }
 
     char* AverageSignalAroundTrigger(char* a_src, char* a_dst, char* a_trigger, char* a_radius_left, char* a_radius_right, char* a_correlation_treshold, char* a_all_correlated_slices_varname) /// trigger must be 1 channel wih proper size
