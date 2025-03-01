@@ -9,7 +9,7 @@ After you read this document, you may want to check link:../../devDoc/devDoc.htm
 
 SigForge is scriptable data viewing, data acquisition, and digital signal processing application, running under Windows OS.
 
-image:res/SigForge2.png[SigForge]
+image:Res/SigForge2.png[SigForge]
 
 The data representations are 2 dimensional data sets, typical to multichannel biological data.
 
@@ -176,7 +176,7 @@ function1(param1, param2 param3, param4, ...);
 
 SigForges’s script editor is a text editor with a basic syntax highlight.
 
-image:res/scripting_window.gif[Scripting window]
+image:Res/scripting_window.gif[Scripting window]
 
 == *Scripting functions delivered with SigForge and its basic signal processing plugins*
 
@@ -250,7 +250,7 @@ DisplayData(amp_normalized, fit_width,, B, 21);
 
 ==== Data display's features
 
-image:res/DisplayData01.png[Displaying spectrum]
+image:Res/DisplayData01.png[Displaying spectrum]
 
 Note: heatmap views are working slowly if the data has thousands of channels (rows).
 
@@ -263,13 +263,13 @@ Visible channels can be set up by using the 'Settings' window of the display win
 * vertical units
 * data length
 
-image:res/SettingsWindow.gif[Settings window]
+image:Res/SettingsWindow.gif[Settings window]
 
 In the abouve settings window the visible channels of a data with 2 channels can be set. The data has no labels. Vertical units are in 'mV', the sampling rate is '1000 Samples per second', and the data length is '10 seconds'.
 
 ==== Data display's relative scaling of 'y' axis
 
-image:res/RelativeScaling.png[Settings window]
+image:Res/RelativeScaling.png[Settings window]
 
 By clicking the bar on the left of the display window, a panel with sliders can be shown. By adjusting the sliders, a relative scaling of the 'y' axis of the corresponding channel can be achieved.
 
@@ -817,7 +817,7 @@ Syntax: 'DataAq([dataAq_device_type], [dataAq_params], [sampling_rates], [gain],
 .'Returns'
 * -
 
-image:res/DataAq.png[DataAq]
+image:Res/DataAq.png[DataAq]
 
 [[DataIn]]
 === DataIn
@@ -972,7 +972,7 @@ DisplayData(ekgsignal);
 
 ----
 
-image:res/DetectSpikes.png[Spike detection]
+image:Res/DetectSpikes.png[Spike detection]
 
 .'Parameters'
 
@@ -1092,7 +1092,7 @@ DisplayData(difference);
 
 Note: destination variable must be created preamble with proper number of channels.
 
-image:res/DotDiff.jpg[Spike detection]
+image:Res/DotDiff.jpg[Spike detection]
 
 
 [[DownsampleGauss]]
@@ -1430,7 +1430,7 @@ Syntax: 'GenerateModulatedECG([out_data_name], [number_of_samples_list], [sample
 * 'sample_rate_list': a list containing the sampling rates of the sine waves
 * 'simulation_params' and 'qrs_params':
 
-image:res/GenerateModulatedECG.png[Generation parameters]
+image:Res/GenerateModulatedECG.png[Generation parameters]
 
 .'Returns'
 * -
@@ -1476,7 +1476,7 @@ DisplayData(s1);
 
 ----
 
-image:res/ecg_1ch.png[Generated ECG]
+image:Res/ecg_1ch.png[Generated ECG]
 
 * Sine curve with 2 channels and multiple modulations
 ----
@@ -1517,7 +1517,7 @@ DisplayData(s1);
 
 ----
 
-image:res/ecg.png[Generated ECG]
+image:Res/ecg.png[Generated ECG]
 
 [[GetDataName]]
 === GetDataName
@@ -2009,7 +2009,7 @@ DisplayData(spectrain, fit_width);
 
 
 
-image:res/MeanSpectrum_01.png[Mean Spectrum]
+image:Res/MeanSpectrum_01.png[Mean Spectrum]
 
 [[median]]
 === Median
@@ -2797,7 +2797,7 @@ DisplayData(ekgsignal);
 
 ----
 
-image:res/TruncateSTDev.png[TruncateSTDev]
+image:Res/TruncateSTDev.png[TruncateSTDev]
 
 Syntax: 'STDev([variable_name], [median_variable_name], [stdev_var_name], [ratio])'
 
