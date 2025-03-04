@@ -1,0 +1,62 @@
+// ECG R DETECTOR
+
+#define SAMPLING_RATE 1000
+
+#include c:\SOME_PATH_MIGHT_NEED_TO_BE_CHANGED\SigForge\Scripts\049_filenames.txt 
+
+FileOpen(INPUT_FILE, Data1);
+DataIn(Data1, orig_sig, 1);
+
+Mean(orig_sig_mean, orig_sig);
+IProd(orig_sig_mean, -1);
+IAdd(orig_sig, GetVal(orig_sig_mean, 0, 0));
+
+CreateFilter(bandpass_filter, butterworth bp, 2 SAMPLING_RATE, 0.7 400);
+Filter(orig_sig, bandpass_filter);
+FilterReverse(orig_sig, bandpass_filter);
+
+CreateFilter(bandstop_filter, butterworth bs, 2 SAMPLING_RATE, 49.9 50.1);
+Filter(orig_sig, bandstop_filter);
+FilterReverse(orig_sig, bandstop_filter);
+
+Copy(sig_copy, orig_sig, 0);
+
+def SpikeDetector(ekgsignal, spikes, spike_radius, density_threshold, bo_low, bo_high, show_details)
+{
+    CreateFilter(bandpass_filter, butterworth bp, 2 SAMPLING_RATE, bo_low bo_high);
+    CreateFilter(derivative_filter, butterworth hp, 2 SAMPLING_RATE, 10);
+    CreateFilter(integrative_filter, butterworth lp, 2 SAMPLING_RATE, 8);
+    CreateFilter(threshold_filter, butterworth lp, 2 SAMPLING_RATE, 1.5);
+    Filter(ekgsignal, bandpass_filter);
+    FilterReverse(ekgsignal, bandpass_filter);
+    Filter(ekgsignal, derivative_filter);
+    FilterReverse(ekgsignal, derivative_filter);
+    SQR_Inplace(ekgsignal); 
+    Filter(ekgsignal, integrative_filter);
+    FilterReverse(ekgsignal, integrative_filter);
+    Copy(threshold_signal, ekgsignal);
+    Filter(threshold_signal, threshold_filter);
+    FilterReverse(threshold_signal, threshold_filter);
+    DetectSpikes(spikes, ekgsignal, threshold_signal, 5000);
+    CleanupSpikes(ekgsignal, spikes, spike_radius, density_threshold);
+    if (show_details)
+    {
+        Cat(threshold_signal, ekgsignal);
+        Cat(threshold_signal, spikes);
+        //DisplayData(threshold_signal,,, B, 001);
+    };
+};
+
+SpikeDetector(sig_copy, spikes, 0.01, 0.6, 8, 20, true);
+RefineSpikes(orig_sig, spikes, 0.3);
+
+Cat(orig_sig, spikes);
+
+//DisplayData(orig_sig); //, fit_width,, C, 001);
+//DisplayData(manage_windows, tile_horizontally);
+
+//BindScrolling(threshold_signal, orig_sig);
+DisplayData(spikes);
+SaveDataToFile(spikes, OUTPUT_FILE, 100, 1);
+
+SystemExit(0);
