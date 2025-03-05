@@ -32,8 +32,8 @@ public:
     pointing to, but don't even think about rebuilding them!!!------*/
     HDC        Hdc;
     BITMAPINFO Bmi;
-    byte*      BmBits;
-    byte***    BmRGBLayers;
+    unsigned char*      BmBits;
+    unsigned char***    BmRGBLayers;
     int**      BmRGBQuads;
     /*--------------------------------------------------------------*/
     Bitmap32   (char* imagefile);
@@ -44,16 +44,16 @@ public:
     void       AALine    (int x1, int y1, int x2, int y2, int color, int width = 3);
     virtual ~Bitmap32  ();
     Bitmap32   ();
-    Bitmap32   (int width, int height, int fill = NOCOLOR, byte* inbmbits = 0);
-    bool       Rebuild (BITMAPINFOHEADER* inbmih = 0, byte* inbmbits = 0, int fill = NOCOLOR);
-    bool       Rebuild2(BITMAPINFOHEADER* inbmih = 0, byte* inbmbits = 0, int fill = NOCOLOR);
+    Bitmap32   (int width, int height, int fill = NOCOLOR, unsigned char* inbmbits = 0);
+    bool       Rebuild (BITMAPINFOHEADER* inbmih = 0, unsigned char* inbmbits = 0, int fill = NOCOLOR);
+    bool       Rebuild2(BITMAPINFOHEADER* inbmih = 0, unsigned char* inbmbits = 0, int fill = NOCOLOR);
     void       Fill(int fill = NOCOLOR);
-    bool       Rebuild (int width, int height, int fill = NOCOLOR, byte* inbmbits = 0);
+    bool       Rebuild (int width, int height, int fill = NOCOLOR, unsigned char* inbmbits = 0);
     bool       LoadPicture (char* imagefile, bool forcefreeimage = false);
     HBITMAP    ToHBitmap();
     virtual    int   GetSerializedLen ();
-    virtual    byte* Serialize        (unsigned int* nrbytes = 0);
-    virtual    bool  Deserialize      (byte* buffer, int* nrbytes = 0);
+    virtual    unsigned char* Serialize        (unsigned int* nrbytes = 0);
+    virtual    bool  Deserialize      (unsigned char* buffer, int* nrbytes = 0);
     bool       SavePicture(char* a_filename, int format = FIF_JPEGCOLOR);
 };
 
@@ -81,8 +81,8 @@ public:
     void WTResetObject();
     virtual ~WTransform();
     int GetSerializedLen ();
-    byte* Serialize (unsigned int* nrbytes = 0);
-    bool Deserialize (byte* buffer, int* nrbytes = 0);
+    unsigned char* Serialize (unsigned int* nrbytes = 0);
+    bool Deserialize (unsigned char* buffer, int* nrbytes = 0);
 };
 
 #endif // BITMAP_H_

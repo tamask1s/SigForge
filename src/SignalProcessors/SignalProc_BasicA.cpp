@@ -1410,7 +1410,7 @@ char* SaveJSON(char* a_input_var_name, char* a_file_name)
         char* str1 = (char*)jsonstr.c_str();
         if (str1)
         {
-            SaveBuffer(a_file_name, (byte*)str1, strlen(str1), 0, true);
+            SaveBuffer(a_file_name, (unsigned char*)str1, strlen(str1), 0, true);
             delete[] str1;
             return 0;
         }

@@ -57,7 +57,7 @@ void Debugger::Watch(float* indv, int datalen, int tableindx, bool jumptoend)
     VISINT((void*)indv, 3, datalen, tableindx, jumptoend);
 }
 
-void Debugger::Watch(byte* indv, int datalen, int tableindx, bool jumptoend)
+void Debugger::Watch(unsigned char* indv, int datalen, int tableindx, bool jumptoend)
 {
     VISINT((void*)indv, 4, datalen, tableindx, jumptoend);
 }
@@ -1614,23 +1614,23 @@ int BitmapLayer::GetSerializedLen()
     return numofbytes + 14 * 4;
 }
 
-byte* BitmapLayer::Serialize (unsigned int* nrbytes)
+unsigned char* BitmapLayer::Serialize (unsigned int* nrbytes)
 {
     int numofbytes = 0;
 
     unsigned int numofBitmapBytes;
-    byte* BitmapData = Bitmap32::Serialize(&numofBitmapBytes);
+    unsigned char* BitmapData = Bitmap32::Serialize(&numofBitmapBytes);
     numofbytes += numofBitmapBytes;
 
     unsigned int numofChildLayersBytes;
-    byte* ChildLayersData = ChildLayers.Serialize(&numofChildLayersBytes);
+    unsigned char* ChildLayersData = ChildLayers.Serialize(&numofChildLayersBytes);
     numofbytes += numofChildLayersBytes;
 
     unsigned int numofTransformBytes;
-    byte* TransformData = Transform.Serialize(&numofTransformBytes);
+    unsigned char* TransformData = Transform.Serialize(&numofTransformBytes);
     numofbytes += numofTransformBytes;
 
-    byte* result = new byte[numofbytes + 14 * 4];
+    unsigned char* result = new unsigned char[numofbytes + 14 * 4];
     *((int*)result) = numofbytes + 14 * 4;
     *((int*)&result[4]) = Alpha;
     *((int*)&result[8]) = Stretch;
@@ -1663,7 +1663,7 @@ byte* BitmapLayer::Serialize (unsigned int* nrbytes)
     return result;
 }
 
-bool BitmapLayer::Deserialize(byte* buffer, int* nrbytes)
+bool BitmapLayer::Deserialize(unsigned char* buffer, int* nrbytes)
 {
     bool result = false;
     Alpha = *((int*)&buffer[4]);

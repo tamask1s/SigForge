@@ -1243,7 +1243,7 @@ char* CatToFile (char* a_var_name, char* a_indexes, char* a_file_name, char* a_n
         char* str1 = ColFromMxToStringRow(var->m_data, var->m_total_samples.m_size, l_max_data_width, l_index, a_name);
         if (str1)
         {
-            SaveBuffer(a_file_name, (byte*)str1, strlen(str1), ENDOFFILE, true);
+            SaveBuffer(a_file_name, (unsigned char*)str1, strlen(str1), ENDOFFILE, true);
             delete[] str1;
             return 0;
         }
@@ -1266,7 +1266,7 @@ char* WriteAscii(char* a_input_var_name, char* a_file_name, char* type)
         char* str1 = mxtostring(var->m_data, var->m_total_samples.m_size, var->m_widths.m_data[0], as_integer);
         if (str1)
         {
-            SaveBuffer(a_file_name, (byte*)str1, strlen(str1), 0, true);
+            SaveBuffer(a_file_name, (unsigned char*)str1, strlen(str1), 0, true);
             delete[] str1;
             return 0;
         }

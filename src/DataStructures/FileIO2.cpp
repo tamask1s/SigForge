@@ -33,7 +33,7 @@ int GetFileLen(const char*Filename)
         return -1;
 }
 
-int SaveBuffer(const char Filename[], byte* buffer, int length, int offset, bool rewrite)
+int SaveBuffer(const char Filename[], unsigned char* buffer, int length, int offset, bool rewrite)
 {
     int result = 0;
     FILE* f;
@@ -58,7 +58,7 @@ int SaveBuffer(const char Filename[], byte* buffer, int length, int offset, bool
     }
 }
 
-int SaveBuffer(FILE*f, byte* buffer, int length, int offset)
+int SaveBuffer(FILE*f, unsigned char* buffer, int length, int offset)
 {
     int result = 0;
     if (!f)
@@ -71,7 +71,7 @@ int SaveBuffer(FILE*f, byte* buffer, int length, int offset)
         {/*DO NOTHING*/}
         if (offset >= 0)
             fseek(f, offset, SEEK_SET);
-        result = fwrite(buffer, sizeof(byte), length, f);
+        result = fwrite(buffer, sizeof(unsigned char), length, f);
     }
     if (result != length)
         ThrowError(NULL, "FileIO::SaveBufferOffset Message: Write Error. Disk may be full.", "FILE", 0);
@@ -79,9 +79,9 @@ int SaveBuffer(FILE*f, byte* buffer, int length, int offset)
     return result;
 }
 
-byte*  LoadBuffer(const char Filename[], int offset, int* nrofbytesreaded, int nrbytestoread)
+unsigned char*  LoadBuffer(const char Filename[], int offset, int* nrofbytesreaded, int nrbytestoread)
 {
-    byte* buffer = 0;
+    unsigned char* buffer = 0;
     FILE* f = fopen(Filename, "rb");
     if (f)
     {
@@ -98,9 +98,9 @@ byte*  LoadBuffer(const char Filename[], int offset, int* nrofbytesreaded, int n
     }
 }
 
-byte* LoadBuffer(FILE* f, int offset, int* nrofbytesreaded, int nrbytestoread)
+unsigned char* LoadBuffer(FILE* f, int offset, int* nrofbytesreaded, int nrbytestoread)
 {
-    byte* buffer = 0;
+    unsigned char* buffer = 0;
     if (f)
     {
         if (nrbytestoread == WHOLEFILE)
@@ -110,8 +110,8 @@ byte* LoadBuffer(FILE* f, int offset, int* nrofbytesreaded, int nrbytestoread)
             nrbytestoread = flength - offset;
         }
         fseek(f, offset, SEEK_SET);
-        buffer = new byte[nrbytestoread];
-        int tf = fread(buffer, sizeof(byte), nrbytestoread, f);
+        buffer = new unsigned char[nrbytestoread];
+        int tf = fread(buffer, sizeof(unsigned char), nrbytestoread, f);
         if (nrofbytesreaded)
             *nrofbytesreaded = tf;
         if (tf != nrbytestoread)
@@ -126,11 +126,11 @@ byte* LoadBuffer(FILE* f, int offset, int* nrofbytesreaded, int nrbytestoread)
     return buffer;
 }
 
-byte LoadByte(FILE* f, int offset)
+unsigned char LoadByte(FILE* f, int offset)
 {
-    byte buffer;
+    unsigned char buffer;
     fseek(f, offset, SEEK_SET);
-    fread(&buffer,/*sizeof(byte)*/1, 1, f);
+    fread(&buffer,/*sizeof(unsigned char)*/1, 1, f);
     return buffer;
 }
 
@@ -162,19 +162,19 @@ int IFileIO::LoadFromFile     (FILE*f, int offset, int*totalstreamlen)
         int packer;
         int uncompressedlen;
         fseek(f, offset, SEEK_SET);
-        fread((byte*)&totallen,/*sizeof(byte)*/1, 4, f);
-        fread((byte*)&additionals,/*sizeof(byte)*/1, 4, f);
-        fread((byte*)&packer,/*sizeof(byte)*/1, 4, f);
-        fread((byte*)&uncompressedlen,/*sizeof(byte)*/1, 4, f);
-        byte* buffer = 0;
+        fread((unsigned char*)&totallen,/*sizeof(unsigned char)*/1, 4, f);
+        fread((unsigned char*)&additionals,/*sizeof(unsigned char)*/1, 4, f);
+        fread((unsigned char*)&packer,/*sizeof(unsigned char)*/1, 4, f);
+        fread((unsigned char*)&uncompressedlen,/*sizeof(unsigned char)*/1, 4, f);
+        unsigned char* buffer = 0;
         if (totallen)
         {
             if (totalstreamlen)
                 *totalstreamlen = totallen + additionals;
-            buffer = new byte[totallen];
-            fread(buffer,/*sizeof(byte)*/1, totallen, f);
-            byte* unpackedbuffer = 0;
-            byte* buffertodeserialize = buffer;
+            buffer = new unsigned char[totallen];
+            fread(buffer,/*sizeof(unsigned char)*/1, totallen, f);
+            unsigned char* unpackedbuffer = 0;
+            unsigned char* buffertodeserialize = buffer;
             result = 2;
             if (totallen)
                 Deserialize(buffertodeserialize);
@@ -249,18 +249,18 @@ int IFileIO::SaveToFile       (FILE*f, int offset, int packer, int additionalbyt
         else
             fseek(f, offset, SEEK_SET);
 
-        byte* buffer = Serialize(&totallen);
+        unsigned char* buffer = Serialize(&totallen);
         int uncompressedlen = 0;
         if (buffer)
         {
-            byte* packedbuffer = 0;
-            byte* buffertosave = buffer;
+            unsigned char* packedbuffer = 0;
+            unsigned char* buffertosave = buffer;
 
-            result += fwrite((byte*)&totallen,/*sizeof(byte)*/1, 4, f);
-            result += fwrite((byte*)&additionalbytes,/*sizeof(byte)*/1, 4, f);
-            result += fwrite((byte*)&packer,/*sizeof(byte)*/1, 4, f);
-            result += fwrite((byte*)&uncompressedlen,/*sizeof(byte)*/1, 4, f);
-            result += fwrite(buffertosave,/*sizeof(byte)*/1, totallen, f);
+            result += fwrite((unsigned char*)&totallen,/*sizeof(unsigned char)*/1, 4, f);
+            result += fwrite((unsigned char*)&additionalbytes,/*sizeof(unsigned char)*/1, 4, f);
+            result += fwrite((unsigned char*)&packer,/*sizeof(unsigned char)*/1, 4, f);
+            result += fwrite((unsigned char*)&uncompressedlen,/*sizeof(unsigned char)*/1, 4, f);
+            result += fwrite(buffertosave,/*sizeof(unsigned char)*/1, totallen, f);
             if (packedbuffer)
                 delete[] packedbuffer;
             delete[]buffer;
@@ -268,17 +268,17 @@ int IFileIO::SaveToFile       (FILE*f, int offset, int packer, int additionalbyt
         else
         {
             totallen = 0;
-            result += fwrite((byte*)&totallen,/*sizeof(byte)*/1, 4, f);
-            result += fwrite((byte*)&additionalbytes,/*sizeof(byte)*/1, 4, f);
-            result += fwrite((byte*)&packer,/*sizeof(byte)*/1, 4, f);
-            result += fwrite((byte*)&uncompressedlen,/*sizeof(byte)*/1, 4, f);
+            result += fwrite((unsigned char*)&totallen,/*sizeof(unsigned char)*/1, 4, f);
+            result += fwrite((unsigned char*)&additionalbytes,/*sizeof(unsigned char)*/1, 4, f);
+            result += fwrite((unsigned char*)&packer,/*sizeof(unsigned char)*/1, 4, f);
+            result += fwrite((unsigned char*)&uncompressedlen,/*sizeof(unsigned char)*/1, 4, f);
         }
         if (additionalbytes)
         {
-            byte*buffer4 = new byte[additionalbytes];
+            unsigned char*buffer4 = new unsigned char[additionalbytes];
             for (int i = 0; i < additionalbytes; i++)
                 buffer4[i] = 0;
-            result += fwrite(buffer4,/*sizeof(byte)*/1, additionalbytes, f);
+            result += fwrite(buffer4,/*sizeof(unsigned char)*/1, additionalbytes, f);
             delete[]buffer4;
         }
     }
@@ -294,7 +294,7 @@ int IFileIO::SaveToFile       (FILE*f, int offset, int packer, int additionalbyt
 
 void IFileIO::Equal(IFileIO& fioin)
 {
-    byte* buff = fioin.Serialize();
+    unsigned char* buff = fioin.Serialize();
     Deserialize(buff);
     if (buff)
         delete[]buff;
@@ -327,11 +327,11 @@ CBuffer::~CBuffer()
 void CBuffer::Create(int nrelements)
 {
     Deinitialize();
-    buffer = new byte[nrelements];
+    buffer = new unsigned char[nrelements];
     bufferlen = nrelements;
 }
 
-bool CBuffer::CatBuffer(byte* bufftoadd, int bufftoaddlen)
+bool CBuffer::CatBuffer(unsigned char* bufftoadd, int bufftoaddlen)
 {
     if ((!buffer) || (!bufferlen))
         return false;
@@ -350,7 +350,7 @@ bool CBuffer::CatBuffer(IFileIO* inbuffer)
     if (offset + bufftoaddlen > bufferlen)
         return false;
     unsigned int bufftoaddlen2 = 0;
-    byte* bufftoadd = inbuffer->Serialize(&bufftoaddlen2);
+    unsigned char* bufftoadd = inbuffer->Serialize(&bufftoaddlen2);
     memcpy(buffer + offset, bufftoadd, bufftoaddlen);
     delete[] bufftoadd;
     offset += bufftoaddlen;
@@ -365,7 +365,7 @@ bool CBuffer::Finished()
         return false;
 }
 
-byte* CBuffer::GetBuffer()
+unsigned char* CBuffer::GetBuffer()
 {
     if (Finished())
     {

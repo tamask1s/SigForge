@@ -47,7 +47,7 @@ public:
     void Watch(int* indv, int datalen, int tableindx, bool jumptoend = false);
     void Watch(unsigned int* indv, int datalen, int tableindx, bool jumptoend = false);
     void Watch(float* indv, int datalen, int tableindx, bool jumptoend = false);
-    void Watch(byte* indv, int datalen, int tableindx, bool jumptoend = false);
+    void Watch(unsigned char* indv, int datalen, int tableindx, bool jumptoend = false);
     void Watch(char** indv, int datalen, int tableindx, bool jumptoend = false);
     void Watch(double* indv, int datalen, int tableindx, bool jumptoend = false);
 private:
@@ -77,8 +77,8 @@ public:
     void  Draw             (int childlayertoredraw = NOREDRAW);
     void  AddChildLayer    ();
     int   GetSerializedLen ();
-    byte* Serialize        (unsigned int* nrbytes = 0);
-    bool  Deserialize      (byte* buffer, int* nrbytes = 0);
+    unsigned char* Serialize        (unsigned int* nrbytes = 0);
+    bool  Deserialize      (unsigned char* buffer, int* nrbytes = 0);
     bool  ApplyTransform   ();
 };
 

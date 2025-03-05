@@ -490,10 +490,10 @@ public:
         return buffsiz;
     }
 
-    virtual byte* Serialize(unsigned int* a_nrbytes = 0)
+    virtual unsigned char* Serialize(unsigned int* a_nrbytes = 0)
     {
         int buffsiz = CMatrix<VType>::GetSerializedLen();
-        byte* buff1 = new byte[buffsiz];
+        unsigned char* buff1 = new unsigned char[buffsiz];
         *((int*)buff1) = buffsiz;
         *((int*)&buff1[4]) = m_width;
         *((int*)&buff1[8]) = m_height;
@@ -504,7 +504,7 @@ public:
         return buff1;
     }
 
-    virtual bool Deserialize(byte* a_buffer, int* a_nrbytes = 0)
+    virtual bool Deserialize(unsigned char* a_buffer, int* a_nrbytes = 0)
     {
         bool result = 0;
         Deinitialize();
@@ -633,12 +633,12 @@ public:
         return buffsiz;
     }
 
-    virtual byte* Serialize(unsigned int* a_nrbytes = 0)
+    virtual unsigned char* Serialize(unsigned int* a_nrbytes = 0)
     {
         int buffsiz = CMatrixVarLen<VType>::GetSerializedLen();
         CBuffer l_buffer;
         l_buffer.Create(buffsiz);
-        l_buffer.CatBuffer((byte*)&buffsiz, sizeof(int));
+        l_buffer.CatBuffer((unsigned char*)&buffsiz, sizeof(int));
         unsigned int tmplen = 0;
         unsigned char* tmp = Serialize(&tmplen);
         l_buffer.CatBuffer(tmp, tmplen);
@@ -646,13 +646,13 @@ public:
         int nrtotalelements = GetTotalNrElements();
 
         if (nrtotalelements)
-            l_buffer.CatBuffer((byte*)m_data[0], nrtotalelements * sizeof(VType));
+            l_buffer.CatBuffer((unsigned char*)m_data[0], nrtotalelements * sizeof(VType));
         if (a_nrbytes)
             *a_nrbytes = nrtotalelements * sizeof(VType);
         return l_buffer.GetBuffer();
     }
 
-    virtual bool Deserialize(byte* a_buffer, int* a_nrbytes = 0)
+    virtual bool Deserialize(unsigned char* a_buffer, int* a_nrbytes = 0)
     {
         bool result = false;
         if (a_buffer)

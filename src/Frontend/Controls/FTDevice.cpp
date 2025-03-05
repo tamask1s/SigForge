@@ -170,13 +170,13 @@ int FTDevice::GetTxStatus()
     return 0;
 }
 
-void FTDevice::Obj_OnRecieve(byte* buffer, int wParam, int lParam)
+void FTDevice::Obj_OnRecieve(unsigned char* buffer, int wParam, int lParam)
 {
     for (unsigned int i = 0; i < OnRecieve.m_size; i++)
         (ParentObj->*OnRecieve.m_data[i])(this, buffer, wParam, lParam);
 }
 
-int FTDevice::WriteBuffer(byte* buffer, unsigned int buffersize)
+int FTDevice::WriteBuffer(unsigned char* buffer, unsigned int buffersize)
 {
     unsigned int lpdwBytesWritten = 0;
     if (devhandle == 0)
@@ -185,7 +185,7 @@ int FTDevice::WriteBuffer(byte* buffer, unsigned int buffersize)
     return lpdwBytesWritten;
 }
 
-int FTDevice::ReadBuffer(byte* buffer, unsigned int buffersize)
+int FTDevice::ReadBuffer(unsigned char* buffer, unsigned int buffersize)
 {
     unsigned int lpdwBytesRead = 0;
     if (devhandle == 0)

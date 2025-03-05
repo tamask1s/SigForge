@@ -7,8 +7,8 @@
 #include "bitmap.h"
 #include "math.h"
 
-typedef byte* (*LoadBitmap32_PROCTYPE)(char* a_filename, BITMAPINFOHEADER* bmih);
-typedef bool  (*SaveBitmap32_PROCTYPE)(char* a_filename, byte* BmBits, int width, int height, int ifif);
+typedef unsigned char* (*LoadBitmap32_PROCTYPE)(char* a_filename, BITMAPINFOHEADER* bmih);
+typedef bool  (*SaveBitmap32_PROCTYPE)(char* a_filename, unsigned char* BmBits, int width, int height, int ifif);
 LoadBitmap32_PROCTYPE  LoadBitmap32_PROC = 0;
 SaveBitmap32_PROCTYPE  SaveBitmap32_PROC = 0;
 
@@ -335,7 +335,7 @@ void DrawBitmap32(HDC hdcWindow, HBITMAP hBMP, int posx, int posy, int w, int h,
 bool Bitmap32::LoadFreeimage(char* filename)
 {
     bool result = false;
-    byte* bmbits = 0;
+    unsigned char* bmbits = 0;
     if (LoadBitmap32_PROC)
         bmbits = LoadBitmap32_PROC(filename, &Bmi.bmiHeader);
     if (bmbits)
@@ -379,7 +379,7 @@ bool Bitmap32::SavePicture(char* a_filename, int format)
     return result;
 }
 
-bool Bitmap32::Rebuild (BITMAPINFOHEADER* inbmih, byte* inbmbits, int fill)
+bool Bitmap32::Rebuild (BITMAPINFOHEADER* inbmih, unsigned char* inbmbits, int fill)
 {
     static BITMAPINFOHEADER temih;
 
@@ -402,8 +402,8 @@ bool Bitmap32::Rebuild (BITMAPINFOHEADER* inbmih, byte* inbmbits, int fill)
     HBmpp = CreateDIBSection (Hdc, &Bmi, DIB_RGB_COLORS, (VOID**)&BmBits, NULL, 0);
     oldmbpp = (HBITMAP)SelectObject(Hdc, HBmpp);
     DeleteObject(HBmpp);
-    BmRGBLayers   = new byte**[inbmih->biHeight];
-    byte** rawdat = new byte* [inbmih->biHeight * inbmih->biWidth];
+    BmRGBLayers   = new unsigned char**[inbmih->biHeight];
+    unsigned char** rawdat = new unsigned char* [inbmih->biHeight * inbmih->biWidth];
 
     for (int i = 0; i < inbmih->biHeight; i++)
     {
@@ -480,13 +480,13 @@ Bitmap32::Bitmap32(char* imagefile)
     LoadPicture(imagefile);
 }
 
-Bitmap32::Bitmap32 (int width, int height, int fill, byte* inbmbits)
+Bitmap32::Bitmap32 (int width, int height, int fill, unsigned char* inbmbits)
 {
     InitializeObject();
     Rebuild(width, height, fill, inbmbits);
 }
 
-bool Bitmap32::Rebuild (int width, int height, int fill, byte* inbmbits)
+bool Bitmap32::Rebuild (int width, int height, int fill, unsigned char* inbmbits)
 {
     Bmi.bmiHeader.biWidth = width;
     Bmi.bmiHeader.biHeight = height;
@@ -1003,11 +1003,11 @@ int Bitmap32::GetSerializedLen ()
     return bufflen;
 }
 
-byte* Bitmap32::Serialize  (unsigned int* nrbytes)
+unsigned char* Bitmap32::Serialize  (unsigned int* nrbytes)
 {
     int bufflen = Bitmap32::GetSerializedLen();
 
-    byte* result = new byte [bufflen];
+    unsigned char* result = new byte [bufflen];
     *((int*)result) = bufflen;
     *((int*)(&result[4])) = Bmi.bmiHeader.biWidth;
     *((int*)(&result[8])) = Bmi.bmiHeader.biHeight;
@@ -1019,7 +1019,7 @@ byte* Bitmap32::Serialize  (unsigned int* nrbytes)
     return result;
 }
 
-bool Bitmap32::Deserialize(byte* buffer, int* nrbytes)
+bool Bitmap32::Deserialize(unsigned char* buffer, int* nrbytes)
 {
     if (!buffer)
         return false;
@@ -1075,11 +1075,11 @@ int WTransform::GetSerializedLen ()
     return bufflen;
 }
 
-byte* WTransform::Serialize (unsigned int* nrbytes)
+unsigned char* WTransform::Serialize (unsigned int* nrbytes)
 {
-    byte* buff = 0;
+    unsigned char* buff = 0;
     int bufflen = WTransform::GetSerializedLen ();
-    buff = new byte[bufflen];
+    buff = new unsigned char[bufflen];
     *((int*)buff) = bufflen;
     if (WTIndexes)
         *((int*)&buff[4]) = WTdstw * WTdsth * 4;
@@ -1099,7 +1099,7 @@ byte* WTransform::Serialize (unsigned int* nrbytes)
     return buff;
 }
 
-bool WTransform::Deserialize (byte* buffer, int* nrbytes)
+bool WTransform::Deserialize (unsigned char* buffer, int* nrbytes)
 {
     if (!buffer)
     {
