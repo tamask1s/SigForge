@@ -2176,7 +2176,7 @@ public:
 #define MAXINT      2147483647
 #define MININT      -2147483647
 
-    void normalize(double* data, size_t data_samples, double minimum, double maximum)
+    void normalize(double* data, size_t data_samples, double minimum, double maximum, bool double_prec)
     {
         double lmin = MAXINT;
         double lmax = MININT;
@@ -2190,12 +2190,16 @@ public:
         double amp_inv = 0;
         if (lmax - lmin)
             amp_inv = (1.0 / (lmax - lmin)) * (maximum - minimum);
-        for (unsigned int j = 0; j < data_samples; j++)
-            //data[j] = (data[j] - lmin) * amp_inv + minimum;
-            data[j] = ceil((data[j] - lmin) * amp_inv + minimum);
+        if (double_prec)
+            for (unsigned int j = 0; j < data_samples; j++)
+                data[j] = (data[j] - lmin) * amp_inv + minimum;
+        else
+            for (unsigned int j = 0; j < data_samples; j++)
+                data[j] = ceil((data[j] - lmin) * amp_inv + minimum);
+
     }
 
-    char* Normalize(char* a_invarname, char* a_minimum, char* a_maximum)
+    char* Normalize(char* a_invarname, char* a_minimum, char* a_maximum, char* double_prec)
     {
         char* l_error = 0;
         if (!a_invarname)
@@ -2214,7 +2218,7 @@ public:
             else
             {
                 for (unsigned int ch = 0; ch < l_invar->m_total_samples.m_size; ch++)
-                    normalize(l_invar->m_data[ch], l_invar->m_widths.m_data[ch], minimum, maximum);
+                    normalize(l_invar->m_data[ch], l_invar->m_widths.m_data[ch], minimum, maximum, double_prec);
             }
         }
         return l_error;
@@ -2297,7 +2301,7 @@ extern "C"
         case 33:
             return CBasicD::BasicD().CreateFIRFilter(a_param1, a_param2, a_param3, a_param4, a_param5, a_param6);
         case 34:
-            return CBasicD::BasicD().Normalize(a_param1, a_param2, a_param3);
+            return CBasicD::BasicD().Normalize(a_param1, a_param2, a_param3, a_param4);
         }
         return 0;
     }

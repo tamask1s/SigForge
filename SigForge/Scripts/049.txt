@@ -20,6 +20,13 @@ Filter(orig_sig, bandstop_filter);
 FilterReverse(orig_sig, bandstop_filter);
 
 Copy(sig_copy, orig_sig, 0);
+DerivReal(artifacts, orig_sig);
+SQR_Inplace(artifacts); 
+CreateFilter(artifact_integr_filter, butterworth lp, 2 SAMPLING_RATE, 3);
+Filter(artifacts, artifact_integr_filter);
+FilterReverse(artifacts, artifact_integr_filter);
+SQR_Inplace(artifacts);
+Normalize(artifacts, 1, 10, true);
 
 def SpikeDetector(ekgsignal, spikes, spike_radius, density_threshold, bo_low, bo_high, show_details)
 {
@@ -37,6 +44,7 @@ def SpikeDetector(ekgsignal, spikes, spike_radius, density_threshold, bo_low, bo
     Copy(threshold_signal, ekgsignal);
     Filter(threshold_signal, threshold_filter);
     FilterReverse(threshold_signal, threshold_filter);
+    Div(ekgsignal, artifacts);
     DetectSpikes(spikes, ekgsignal, threshold_signal, 5000);
     CleanupSpikes(ekgsignal, spikes, spike_radius, density_threshold);
     if (show_details)
@@ -53,10 +61,11 @@ RefineSpikes(orig_sig, spikes, 0.3);
 Cat(orig_sig, spikes);
 
 //DisplayData(orig_sig); //, fit_width,, C, 001);
+//DisplayData(artifacts);
 //DisplayData(manage_windows, tile_horizontally);
 
 //BindScrolling(threshold_signal, orig_sig);
-DisplayData(spikes);
+//DisplayData(spikes);
 SaveDataToFile(spikes, OUTPUT_FILE, 100, 1);
 
 SystemExit(0);

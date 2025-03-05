@@ -51,7 +51,7 @@ int CFunctionLibraryList::Fill(const char* Path, WIN32_FIND_DATA * a_find_data)
     strcpy(libpath, Path);
     CutFileFormFullPath(libpath);
     strcat(libpath, a_find_data->cFileName);
-    cout << "Load: " << libpath;
+    //cout << "Load: " << libpath;
     if (HMODULE hDll = LoadLibrary(libpath))
     {
         if (GetProcedureList_Proc GetProcedureList = (GetProcedureList_Proc) GetProcAddress(hDll, "GetProcedureList"))
@@ -60,7 +60,6 @@ int CFunctionLibraryList::Fill(const char* Path, WIN32_FIND_DATA * a_find_data)
             InitLib_PROC InitLib = (InitLib_PROC)GetProcAddress(hDll, "InitLib");
             if (SPR && InitLib)
             {
-                cout << " Succes." << endl;
                 resize(size() + 1);
                 at(size() - 1).m_module_handle = (long long)hDll;
                 strcpy(at(size() - 1).m_library_name, a_find_data->cFileName);

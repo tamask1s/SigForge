@@ -6,6 +6,8 @@
 #include <vector>
 #include <math.h>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 using namespace std;
 
 #include "fileio2.h"
@@ -1045,6 +1047,48 @@ double findmax(double* a_inp, int a_size)
     return val;
 }
 
+int get_precision_for_val(double val, int nr_characters = 8)
+{
+    int width = (val <= 0) ? 1 : floor(log10(fabs(val))) + 1;
+    if (width < 0)
+        width = 0;
+    return (width > nr_characters) ? 0 : nr_characters - width;
+}
+
+char* GetMax(char* a_invarname)
+{
+    if (CVariable* var = m_variable_list_ref->variablemap_find(a_invarname))
+    {
+        std::ostringstream oss;
+        for (unsigned int ch = 0; ch < var->m_total_samples.m_size; ch++)
+        {
+            double val = findmax(var->m_data[ch], var->m_widths.m_data[ch]);
+            oss << std::fixed << std::setprecision(get_precision_for_val(val)) << val << " ";
+        }
+        std::string result = oss.str();
+        return MakeString(NewChar, "RESULT: ", result.c_str());
+    }
+    else
+        return MakeString(NewChar, "ERROR: GetMax: can't find data in variablelist: '", a_invarname, "'");
+}
+
+char* GetMin(char* a_invarname)
+{
+    if (CVariable* var = m_variable_list_ref->variablemap_find(a_invarname))
+    {
+        std::ostringstream oss;
+        for (unsigned int ch = 0; ch < var->m_total_samples.m_size; ch++)
+        {
+            double val = findmin(var->m_data[ch], var->m_widths.m_data[ch]);
+            oss << std::fixed << std::setprecision(get_precision_for_val(val)) << val << " ";
+        }
+        std::string result = oss.str();
+        return MakeString(NewChar, "RESULT: ", result.c_str());
+    }
+    else
+        return MakeString(NewChar, "ERROR: GetMin: can't find data in variablelist: '", a_invarname, "'");
+}
+
 char* swindxdetect(char* a_invarname, char* a_outdataname, char* a_spswkrits)
 {
     if (!a_invarname || !a_outdataname || !a_spswkrits)
@@ -1512,6 +1556,29 @@ char* IProd(char* a_invarname, char* a_value)
     return l_error;
 }
 
+char* IDiv(char* a_invarname, char* a_value)
+{
+    char* l_error = nullptr;
+    CVariable* l_invar = nullptr;
+    DoubleVec l_params;
+    if (!a_invarname || !a_value)
+        l_error = MakeString(NewChar, "ERROR: IDiv: not enough arguments, 'invarname' or 'value' is missing!");
+    if(!l_error)
+    {
+        l_params.AddElement(a_value);
+        l_invar = m_variable_list_ref->variablemap_find(a_invarname);
+    }
+    if (!l_error && !l_invar)
+        l_error = MakeString(NewChar, "ERROR: IDiv: can't find '", a_invarname, "' in variablelist");
+
+    if (!l_error)
+        for (unsigned int ch = 0; ch < l_invar->m_total_samples.m_size; ch++)
+            for (unsigned int i = 0; i < l_invar->m_widths.m_data[ch]; ++i)
+                l_invar->m_data[ch][i] /= l_params.m_data[0];
+
+    return l_error;
+}
+
 char* IAdd(char* a_invarname, char* a_value)
 {
     char* l_error = nullptr;
@@ -1694,11 +1761,72 @@ char* Add(char* a_var1, char* a_var2)
 
         unsigned int l_var1_samples = l_var1->m_total_samples.m_data[i];
         unsigned int l_var2_samples = l_var2->m_total_samples.m_data[l_var2_channel_index];
-        if (l_var1_samples != l_var2_samples)
-            return MakeString(NewChar, "ERROR: Add: variable sample numbers should match.");
+        l_var1_samples = l_var1_samples < l_var2_samples ? l_var1_samples : l_var2_samples;
 
         for (unsigned int j = 0; j < l_var1_samples; ++j)
             l_var1->m_data[i][j] += l_var2->m_data[l_var2_channel_index][j];
+    }
+    return 0;
+}
+
+char* Div(char* a_var1, char* a_var2)
+{
+    if (!a_var1 || !a_var2)
+        return MakeString(NewChar, "ERROR: Div: Not enough arguments.");
+
+    CVariable* l_var1 = m_variable_list_ref->variablemap_find(a_var1);
+    CVariable* l_var2 = m_variable_list_ref->variablemap_find(a_var2);
+    if (!l_var1 || !l_var2)
+        return MakeString(NewChar, "ERROR: Div: variable does not exists.");
+
+    unsigned int l_var1_channels = l_var1->m_total_samples.m_size;
+    unsigned int l_var2_channels = l_var2->m_total_samples.m_size;
+    if (l_var1_channels != l_var2_channels && l_var2_channels != 1)
+        return MakeString(NewChar, "ERROR: Div: variable channel numbers should either match, or the subtrahend's should be 1.");
+
+    for (unsigned int i = 0; i < l_var1_channels; ++i)
+    {
+        unsigned int l_var2_channel_index = 0;
+        if (l_var1_channels == l_var2_channels)
+            l_var2_channel_index = i;
+
+        unsigned int l_var1_samples = l_var1->m_total_samples.m_data[i];
+        unsigned int l_var2_samples = l_var2->m_total_samples.m_data[l_var2_channel_index];
+        l_var1_samples = l_var1_samples < l_var2_samples ? l_var1_samples : l_var2_samples;
+
+        for (unsigned int j = 0; j < l_var1_samples; ++j)
+            l_var1->m_data[i][j] /= l_var2->m_data[l_var2_channel_index][j];
+    }
+    return 0;
+}
+
+char* Prod(char* a_var1, char* a_var2)
+{
+    if (!a_var1 || !a_var2)
+        return MakeString(NewChar, "ERROR: Div: Not enough arguments.");
+
+    CVariable* l_var1 = m_variable_list_ref->variablemap_find(a_var1);
+    CVariable* l_var2 = m_variable_list_ref->variablemap_find(a_var2);
+    if (!l_var1 || !l_var2)
+        return MakeString(NewChar, "ERROR: Div: variable does not exists.");
+
+    unsigned int l_var1_channels = l_var1->m_total_samples.m_size;
+    unsigned int l_var2_channels = l_var2->m_total_samples.m_size;
+    if (l_var1_channels != l_var2_channels && l_var2_channels != 1)
+        return MakeString(NewChar, "ERROR: Div: variable channel numbers should either match, or the subtrahend's should be 1.");
+
+    for (unsigned int i = 0; i < l_var1_channels; ++i)
+    {
+        unsigned int l_var2_channel_index = 0;
+        if (l_var1_channels == l_var2_channels)
+            l_var2_channel_index = i;
+
+        unsigned int l_var1_samples = l_var1->m_total_samples.m_data[i];
+        unsigned int l_var2_samples = l_var2->m_total_samples.m_data[l_var2_channel_index];
+        l_var1_samples = l_var1_samples < l_var2_samples ? l_var1_samples : l_var2_samples;
+
+        for (unsigned int j = 0; j < l_var1_samples; ++j)
+            l_var1->m_data[i][j] *= l_var2->m_data[l_var2_channel_index][j];
     }
     return 0;
 }
@@ -1969,6 +2097,32 @@ char* Mutato2(char* a_spavgpos1, char* a_spavgneg1, char* a_spavgpos2, char* a_s
     return 0;
 }
 
+char* Cout(char* a_param1, char* a_param2, char* a_param3, char* a_param4, char* a_param5, char* a_param6, char* a_param7, char* a_param8, char* a_param9, char* a_param10)
+{
+    if (a_param1)
+        cout << a_param1 << "  ";
+    if (a_param2)
+        cout << a_param2 << "  ";
+    if (a_param3)
+        cout << a_param3 << "  ";
+    if (a_param4)
+        cout << a_param4 << "  ";
+    if (a_param5)
+        cout << a_param5 << "  ";
+    if (a_param6)
+        cout << a_param6 << "  ";
+    if (a_param7)
+        cout << a_param7 << "  ";
+    if (a_param8)
+        cout << a_param8 << "  ";
+    if (a_param9)
+        cout << a_param9 << "  ";
+    if (a_param10)
+        cout << a_param10 << "  ";
+    cout << endl;
+    return 0;
+}
+
 char* Transpose(char* a_dst_var_name, char* a_src_var_name, char* a_src_start_x, char* a_src_start_y, char* a_src_stop_x, char* a_src_stop_y)
 {
     CVariable* l_src_var = m_variable_list_ref->variablemap_find(a_src_var_name);
@@ -2101,6 +2255,18 @@ extern "C"
             return FIRFilter(a_param1, a_param2);
         case 34:
             return FilterL(a_param1, a_param2);
+        case 35:
+            return IDiv(a_param1, a_param2);
+        case 36:
+            return Div(a_param1, a_param2);
+        case 37:
+            return Prod(a_param1, a_param2);
+        case 38:
+            return GetMin(a_param1);
+        case 39:
+            return GetMax(a_param1);
+        case 40:
+            return Cout(a_param1, a_param2, a_param3, a_param4, a_param5, a_param6, a_param6, a_param6, a_param6, a_param7);
         }
         return 0;
     }
@@ -2152,6 +2318,12 @@ extern "C"
         FunctionList.AddElement("DotProdInplace(a_lhs, a_rhs)");
         FunctionList.AddElement("FIRFilter(indataname'the input data', filter_name'FIR filter coefficient')");
         FunctionList.AddElement("FilterL(dataname, filter)");
+        FunctionList.AddElement("IDiv(invarname, value)");
+        FunctionList.AddElement("Div(var1, var2)");
+        FunctionList.AddElement("Prod(var1, var2)");
+        FunctionList.AddElement("GetMin(invarname)");
+        FunctionList.AddElement("GetMax(invarname)");
+        FunctionList.AddElement("Cout(a_param1, a_param2, a_param3, a_param4, a_param5, a_param6, a_param6, a_param6, a_param6, a_param7)");
         a_functionlibrary_reference->ParseFunctionList(&FunctionList);
         return FunctionList.m_size;
     }

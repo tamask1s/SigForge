@@ -7,13 +7,13 @@ DataDelete();
 FileOpen(simulated_ecg.raw, Data1);
 DataIn(Data1, orig_sig, 1);
 
-CreateFilter(bandpass_filter2, butterworth bp, 2 SAMPLING_RATE, 0.7 400);
-Filter(orig_sig, bandpass_filter2);
-FilterReverse(orig_sig, bandpass_filter2);
+CreateFilter(bandpass_filt, butterworth bp, 2 SAMPLING_RATE, 0.7 400);
+Filter(orig_sig, bandpass_filt);
+FilterReverse(orig_sig, bandpass_filt);
 
-CreateFilter(bandstop_filter2, butterworth bs, 2 SAMPLING_RATE, 49.9 50.1);
-Filter(orig_sig, bandstop_filter2);
-FilterReverse(orig_sig, bandstop_filter2);
+CreateFilter(bandstop_filter, butterworth bs, 2 SAMPLING_RATE, 49.9 50.1);
+Filter(orig_sig, bandstop_filter);
+FilterReverse(orig_sig, bandstop_filter);
 
 Copy(sig_copy, orig_sig, 0);
 
