@@ -65,7 +65,7 @@ Cat(orig_sig, spikes);
 //DisplayData(manage_windows, tile_horizontally);
 
 //BindScrolling(threshold_signal, orig_sig);
-//DisplayData(spikes);
+DisplayData(spikes);
 SaveDataToFile(spikes, OUTPUT_FILE, 100, 1);
 
 SystemExit(0);
