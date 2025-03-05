@@ -1,2 +1,3 @@
-#define  INPUT_FILE c:\SOME_PATH_MIGHT_NEED_TO_BE_CHANGED\SOME_FILENAME.edf
-#define OUTPUT_FILE c:\SOME_PATH_MIGHT_NEED_TO_BE_CHANGED\SOME_FILENAME_spikes.edf
+#define  INPUT_FILE ..\Data\simulated_ecg.raw
+#define OUTPUT_FILE ..\Data\simulated_ecg_spikes.edf
+

@@ -54,4 +54,4 @@ Cat(sim2, sim2);
 Cat(sim2, sim2);
 
 DisplayData(sim2,,, A2, 000);
-SaveDataToFile(sim2, simulated_ecg.raw, 100, 10);
+SaveDataToFile(sim2, ../Data/simulated_ecg.raw, 100, 10);

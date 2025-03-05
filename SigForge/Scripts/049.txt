@@ -2,7 +2,7 @@
 
 #define SAMPLING_RATE 1000
 
-#include c:\SOME_PATH_MIGHT_NEED_TO_BE_CHANGED\SigForge\Scripts\049_filenames.txt 
+#include 049_filenames.txt 
 
 FileOpen(INPUT_FILE, Data1);
 DataIn(Data1, orig_sig, 1);

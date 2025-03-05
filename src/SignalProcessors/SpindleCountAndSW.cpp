@@ -28,6 +28,8 @@ CSignalCodec_List* m_data_list_ref = 0;     /// reference for the application's 
 NewChar_Proc       NewChar;                 /// function call for application's "new char[n]" constructor. Strings that are going to be deleted by other parts of the system, needs to be allocated with this.
 NewCVariable_Proc  NewCVariable;            /// function call for application's "new CVariable" constructor. Variables that are going to be deleted by other parts of the system (added to m_variable_list_ref), needs to be allocated with this.
 Call_Proc          Call;                    /// function implemented by the application. Executes a script in the current running script's context / sandbox.
+string             app_path;
+string             scripts_path;
 
 char* CreateFilter(char* a_outdataname, char* a_shape_kind, char* a_order_samplingrate, char* a_edges, char* a_iripple, char* a_iellipstopbandedge)
 {
@@ -1938,7 +1940,7 @@ char* LoadKrit(char* a_outdataname, char* a_critfilename)
     CVariable* output2 = NewCVariable();
     unsigned int output2sizes[4];
 
-    byte* buff = LoadBuffer(a_critfilename);
+    unsigned char* buff = LoadBuffer(a_critfilename);
     DoubleVec dv1;
     dv1.RebuildFrom((char*)buff);
 
@@ -2179,6 +2181,31 @@ char* Transpose(char* a_dst_var_name, char* a_src_var_name, char* a_src_start_x,
     return 0;
 }
 
+#include "Windows.h"
+
+char* GetDir(char* a_param1)
+{
+    if (!strcmp(a_param1, "Scripts"))
+        return MakeString(NewChar, "RESULT: ", scripts_path.c_str());
+    else
+        return MakeString(NewChar, "RESULT: ", app_path.c_str());
+}
+
+char* ChangeDir(char* a_param1)
+{
+    if (!SetCurrentDirectory(a_param1))
+        return MakeString(NewChar, "ERROR: ChangeDir: Failed to set directory: ", a_param1);
+
+    return 0;
+}
+
+void step_dir_up(std::string& path)
+{
+    size_t pos = path.find_last_of("\\/");
+    if (pos != std::string::npos)
+        path = path.substr(0, pos);
+}
+
 extern "C"
 {
     char* __declspec (dllexport) Procedure(int procindx, char* a_statement_body, char* a_param1, char* a_param2, char* a_param3, char* a_param4, char* a_param5, char* a_param6, char* a_param7, char* a_param8, char* a_param9, char* a_param10, char* a_param11, char* a_param12)
@@ -2267,6 +2294,10 @@ extern "C"
             return GetMax(a_param1);
         case 40:
             return Cout(a_param1, a_param2, a_param3, a_param4, a_param5, a_param6, a_param6, a_param6, a_param6, a_param7);
+        case 41:
+            return ChangeDir(a_param1);
+        case 42:
+            return GetDir(a_param1);
         }
         return 0;
     }
@@ -2324,6 +2355,8 @@ extern "C"
         FunctionList.AddElement("GetMin(invarname)");
         FunctionList.AddElement("GetMax(invarname)");
         FunctionList.AddElement("Cout(a_param1, a_param2, a_param3, a_param4, a_param5, a_param6, a_param6, a_param6, a_param6, a_param7)");
+        FunctionList.AddElement("ChangeDir(a_param1)");
+        FunctionList.AddElement("GetDir(a_param1)");
         a_functionlibrary_reference->ParseFunctionList(&FunctionList);
         return FunctionList.m_size;
     }
@@ -2337,6 +2370,23 @@ extern "C"
 
     bool __stdcall DllMain(int a_hInst, int a_reason, int a_reserved)
     {
+        if (a_reason == DLL_PROCESS_ATTACH)
+        {
+            char l_app_path[2048];
+            DWORD result = GetModuleFileName(NULL, l_app_path, MAX_PATH);
+            if (result != 0)
+            {
+                app_path = l_app_path;
+                step_dir_up(app_path);
+                scripts_path = app_path;
+                step_dir_up(scripts_path);
+                scripts_path = scripts_path + "\\Scripts";
+                std::cout << "Application path: " << app_path << std::endl;
+                std::cout << "Scrips path: " << scripts_path << std::endl;
+            }
+            else
+                std::cerr << "Failed to get application path." << std::endl;
+        }
         return true;
     }
 }

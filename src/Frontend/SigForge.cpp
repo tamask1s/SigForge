@@ -100,16 +100,26 @@ public:
         PostQuitMessage(0);
     };
 
+    static inline void step_dir_up(std::string& path)
+    {
+        size_t pos = path.find_last_of("\\/");
+        if (pos != std::string::npos)
+            path = path.substr(0, pos);
+    }
+
     void ExecuteScriptFile(const char* a_fiename)
     {
         int size;
-        byte* buff = LoadBuffer(a_fiename, 0, &size);
+        unsigned char* buff = LoadBuffer(a_fiename, 0, &size);
         if (buff)
         {
             char Script[size + 1];
             memcpy(Script, buff, size);
             Script[size] = 0;
             delete[] buff;
+            string script_dir = a_fiename;
+            step_dir_up(script_dir);
+            SetCurrentDirectory(script_dir.c_str());
             m_backend->RunScript(Script, true);
         }
     }
@@ -211,6 +221,16 @@ private:
 
     void ScriptEditor1_On_RunScript(CScriptEditor* a_sender, const char* a_script)
     {
+        char l_app_path[2048];
+        DWORD result = GetModuleFileName(NULL, l_app_path, MAX_PATH);
+        if (result != 0)
+        {
+            string app_path = l_app_path;
+            step_dir_up(app_path);
+            step_dir_up(app_path);
+            app_path = app_path + "\\Scripts";
+            SetCurrentDirectory(app_path.c_str());
+        }
         m_backend->RunScript(a_script, true);
     }
 

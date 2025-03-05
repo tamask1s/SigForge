@@ -759,7 +759,7 @@ void ProcessScriptIncludes(string& a_script)
         string file = a_script.substr(incl_pos + strlen("#include "), nl_pos - incl_pos - strlen("#include "));
         a_script.erase(incl_pos, nl_pos - incl_pos + 2);
         int fsize;
-        if (byte* buff = LoadBuffer(file.c_str(), 0, &fsize))
+        if (unsigned char* buff = LoadBuffer(file.c_str(), 0, &fsize))
         {
             string included((char*)buff, fsize);
             replace_all_between(included, "main ", ";");

@@ -236,7 +236,7 @@ public:
     void ExecuteScriptFile(const char* a_fiename)
     {
         int size;
-        byte* buff = LoadBuffer(a_fiename, 0, &size);
+        unsigned char* buff = LoadBuffer(a_fiename, 0, &size);
         if (buff)
         {
             char Script[size + 1];

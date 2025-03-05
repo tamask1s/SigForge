@@ -4,7 +4,7 @@
 
 DataDelete();
 
-FileOpen(simulated_ecg.raw, Data1);
+FileOpen(../Data/simulated_ecg.raw, Data1);
 DataIn(Data1, orig_sig, 1);
 
 CreateFilter(bandpass_filt, butterworth bp, 2 SAMPLING_RATE, 0.7 400);

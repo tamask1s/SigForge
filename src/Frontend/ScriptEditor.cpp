@@ -138,7 +138,7 @@ bool CScriptEditor::LoadScript(const char* a_file)
 {
     int size;
     if (CheckFile(a_file ? a_file : "../Scripts/003_DataAq.txt"))
-        if (byte* buff = LoadBuffer(a_file ? a_file : "../Scripts/003_DataAq.txt", 0, &size))
+        if (unsigned char* buff = LoadBuffer(a_file ? a_file : "../Scripts/003_DataAq.txt", 0, &size))
         {
             char Script [size + 1] ;
             memcpy(Script, buff, size);
@@ -158,7 +158,7 @@ void CScriptEditor::m_button_load_script_OnClick(CControl_Base* CBitButton, int 
     if (GetFileNameT(hWnd, FileName, FALSE, 2, "All Files (*.*)\0*.*\0Text Files (*.txt)\0*.txt\0\0"))
     {
         int size;
-        byte* buff = LoadBuffer (FileName, 0, &size);
+        unsigned char* buff = LoadBuffer (FileName, 0, &size);
         if (buff)
         {
             char Script [size + 1] ;
@@ -180,7 +180,7 @@ void CScriptEditor::ButtonSaveScript_OnClick(CControl_Base* CBitButton, int butt
     {
         char Script [txlen + 1];
         GetWindowText(m_script_edit->hWnd, Script, txlen + 1);
-        SaveBuffer (FileName, (byte*)Script, txlen, 0, true);
+        SaveBuffer (FileName, (unsigned char*)Script, txlen, 0, true);
     }
     SetFocus(hWnd);
     HiglightText(m_script_edit->hWnd, m_function_library_list_ref);
