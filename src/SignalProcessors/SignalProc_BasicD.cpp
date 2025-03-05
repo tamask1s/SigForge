@@ -816,7 +816,7 @@ public:
 //                deb->m_data[ch][i] = 0;
                 if (searching_for_spikes)
                 {
-                    if (spike_signal->m_data[ch][i] > threshold_signal->m_data[ch][i] * 1.5)
+                    if (spike_signal->m_data[ch][i] > threshold_signal->m_data[ch][i] * 1.45)
                     {
                         if (spike_signal->m_data[ch][i] > spike_signal->m_data[ch][i + 1])
                         {

@@ -2381,8 +2381,6 @@ extern "C"
                 scripts_path = app_path;
                 step_dir_up(scripts_path);
                 scripts_path = scripts_path + "\\Scripts";
-                std::cout << "Application path: " << app_path << std::endl;
-                std::cout << "Scrips path: " << scripts_path << std::endl;
             }
             else
                 std::cerr << "Failed to get application path." << std::endl;
