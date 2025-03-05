@@ -39,7 +39,7 @@ def SpikeDetector(ekgsignal, spikes, spike_radius, density_threshold, bo_low, bo
 };
 
 SpikeDetector(sig_copy, spikes, 0.3, 0.5, 8, 20, true);
-RefineSpikes(orig_sig, spikes, 0.3);
+//RefineSpikes(orig_sig, spikes, 0.3);
 
 
 https://tamask1s.github.io/SigForge/#DetectSpikes
